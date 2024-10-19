@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    
+    <!-- Vinculación del archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="navbar"> <h1>Delicias Al Horno</h1></div>
+    </nav>
+
+    <!-- Contenedor principal que incluye ambos lados (izquierda y derecha) -->
+    <div class="container">
+        <!-- Sección izquierda del contenedor -->
+        <div class="left-content">
+            <img src="{{ url_for('static', filename='IMAGES/logotipo.jpg') }}" class="large-image" alt="Logo Delicias Al Horno">
+        </div>
+
+        <!-- Sección derecha del contenedor que incluye el formulario de inicio de sesión -->
+        <div class="container-form">
+            <form class="sign-in">
+                <h2>Iniciar Sesión</h2>
+                <!-- Icono de usuario y campo de entrada -->
+                <div class="container-input">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input type="text" placeholder="Usuario">
+                </div>
+
+                <!-- Icono de contraseña y campo de entrada -->
+                <div class="container-input">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" placeholder="Contraseña">
+                </div>
+
+                <!-- Botón con imagen para el login -->
+                <button type="button" class="image-button" onclick="miFuncion()">
+                    <img src="{{ url_for('static', filename='IMAGES/login.jpg') }}" alt="Botón de imagen">
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        function miFuncion() {
+            // Redirige a la página de inicio usando Flask
+            window.location.href = "{{ url_for('inicio') }}"; 
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturar</title>
+
+    <!-- Vinculación del archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- Vinculación del archivo CSS de Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav>
+        <div class="navbar">
+            <div class="container-icon">
+                <a href="{{ url_for('inicio') }}">
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                </a>
+            </div>
+            <h1>Delicias Al Horno</h1>
+        </div>
+    </nav>
+
+    <!-- Contenedor principal para la sección de facturación -->
+    <div class="contenedor-general-facturar">
+        <!-- Título secundario -->
+        <div class="ttsecundario"><h1>Facturar</h1></div> 
+    
+        <!-- Sección de información principal -->
+        <div class="info">
+            <!-- Sub-información de etiquetas -->
+            <div class="Psub-info">
+                <div class="sub-info"><h2>Número de Factura:</h2></div>
+                <div class="sub-info"><h2>Fecha de Emisión:</h2></div>
+                <div class="sub-info"><h2>Cliente:</h2></div>
+            </div>
+        
+            <!-- Campos de entrada de información -->
+            <div class="p2">
+                <div class="inf2">
+                    <input type="number" placeholder="Número de Factura">
+                </div>
+                <div class="inf2">
+                    <input type="text" class="custom-date" placeholder="Seleccionar fecha">
+                </div>
+                <div class="inf2">
+                    <input type="text" placeholder="Nombre del cliente">
+                </div>
+            </div>
+        
+            <!-- Imagen decorativa -->
+            <div class="pimage">
+                <img src="{{ url_for('static', filename='IMAGES/logotipo.jpg') }}" width="80%" alt="Imagen decorativa">
+            </div>
+        </div>
+    
+        <!-- Tabla de facturación -->
+        <div class="contenedor-tabla">
+            <table class="factura-tabla">
+                <thead>
+                    <tr>
+                        <th>Código De Artículo</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                        <th></th> <!-- Columna para el botón de borrar -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>12</td>
+                        <td>croissant</td>
+                        <td>2</td>
+                        <td>1.500</td>
+                        <td>3.000</td>
+                        <td><button class="btn-borrar">Borrar</button></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>hojaldre</td>
+                        <td>10</td>
+                        <td>500</td>
+                        <td>5.000</td>
+                        <td><button class="btn-borrar">Borrar</button></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Importe Total:</td>
+                        <td>8.000</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    
+        <!-- Botones para agregar producto y terminar factura -->
+        <div class="terminar">
+            <button class="btn-accion">Agregar Producto</button>
+            <button class="btn-accion">Terminar Factura</button>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        // Inicialización del selector de fecha (flatpickr)
+        flatpickr(".custom-date", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y"
+        });
+    </script>
+</body>
+</html>
+

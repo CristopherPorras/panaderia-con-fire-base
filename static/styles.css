@@ -1,0 +1,599 @@
+/* ------------------------------
+   Importación de Fuente Externa
+------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap');
+
+/* ------------------------------
+   Estilos Generales
+------------------------------ */
+* {
+    font-family: "Signika Negative", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: #ffdfcd;
+}
+
+/* ------------------------------
+   Navbar
+------------------------------ */
+/* Barra de navegación */
+.navbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Alinea verticalmente el contenido */
+    background: black;
+    color: white;
+    padding: 10px;
+    border: 15px solid black;
+    font-size: 35px;
+    position: relative; /* Para que el icono no afecte el centrado del texto */
+}
+
+/* Icono en la barra de navegación */
+.container-icon {
+    font-size: 35px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px; /* Mantiene el icono a la derecha */
+}
+
+
+.container-icon a {
+    color: white; /* Cambia el color del ícono a blanco */
+    text-decoration: none;
+}
+
+.container-icon a:hover {
+    opacity: 0.8;
+}
+
+/* ------------------------------
+   Título Secundario
+------------------------------ */
+.ttsecundario {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* ------------------------------
+   Página Principal (Casillas)
+------------------------------ */
+.contenedor-principal,
+.contenedor-secundario {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffdfcd;
+    padding: 20px;
+    text-align: center;
+}
+
+.casilla, .pedidos {
+    background-color: #7ba68c;
+    color: white;
+    font-size: 20px;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    display: flex;
+    justify-content: center;  /* Centra el texto horizontalmente */
+    align-items: center;      /* Centra el texto verticalmente */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .contenedor-principal,
+    .contenedor-secundario {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ------------------------------
+   Página de Inicio de Sesión
+------------------------------ */
+.container {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    background: black;
+}
+
+.left-content, .container-form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #ffdfcd;
+}
+
+.container-form {
+    padding: 20px;
+    text-align: center;
+}
+
+.sign-in {
+    padding: 1%;
+}
+
+.container-form h2 {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+/* Contenedor para los campos de entrada (usuario y contraseña) */
+.container-input {
+    width: 300px;
+    height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between; /* Asegura que el ícono y el input estén bien alineados */
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.container-input input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+    font-size: 18px;
+    color: #333;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+
+/* Botón de imagen en el formulario */
+.image-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.image-button img {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin-top: 20px;
+}
+
+.image-button img:hover {
+    opacity: 0.8;
+}
+
+/* ------------------------------
+   Sección de Facturación
+------------------------------ */
+
+.contenedor-general-facturar {
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Título secundario */
+.ttsecundario {
+    margin: 11px;
+    border: 7px solid #fff8f1;
+    background-color: #fff8f1;
+    text-align: center;
+    border-radius: 230px;
+    padding: 10px;
+    font-size: 24px; /* Reduce el tamaño de la fuente */
+    font-weight: bold;
+    color: #333;
+}
+
+/* Estilos para la información de la factura */
+.info {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    align-items: center;
+    background-color: #ffdfcd;
+    padding: 20px;
+    border-radius: 15px;
+    position: relative; /* Añadido para un mejor control de la alineación */
+}
+
+/* Contenedor de los títulos de la factura */
+.Psub-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-right: 20px; /* Añade espacio a la derecha para separar del campo de entrada */
+}
+
+/* Estilo de los títulos de la factura */
+.sub-info h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 15px 0;
+}
+
+/* Contenedor de los campos de entrada de la factura */
+.p2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-left: 20px; /* Añade espacio a la izquierda para separar de los títulos */
+}
+
+/* Estilo de los campos de entrada */
+.inf2 {
+    margin-bottom: 20px;
+    background-color: #d8d8d8;
+    padding: 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    height: 60px; /* Ajusta la altura de los campos de entrada */
+}
+
+.inf2 input,
+.inf2 .custom-date {
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    outline: none;
+}
+
+/* Estilo adicional para alinear los íconos en los campos de fecha */
+.inf2 input[type="date"] {
+    text-align: left; /* Alinea el texto a la izquierda para el campo de fecha */
+    padding-left: 10px;
+}
+
+.inf2 input[type="date"]::before {
+    content: attr(placeholder);
+    color: #333;
+    position: absolute;
+    padding-left: 10px;
+}
+
+/* Ajustes para el contenedor de la imagen */
+.pimage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding-left: 20px;
+}
+
+.pimage img {
+    border-radius: 15px;
+    max-width: 100%;
+}
+
+
+/* ------------------------------
+   Sección de Totales y Tabla de Facturación
+------------------------------ */
+.totales,
+.pinfobarra,
+.ptotalbarra {
+    width: 98%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.totales {
+    background: black;
+}
+
+.titulos-barra,
+.infobarra,
+.totalbarra {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.titulos2,
+.infobarra2,
+.tbarra {
+    flex: 1;
+    text-align: center;
+}
+
+.titulos-barra h2 {
+    color: white;
+    margin: 0;
+}
+
+.infobarra h2,
+.totalbarra h2 {
+    color: black;
+    margin: 0;
+}
+
+.pinfobarra {
+    background: white;
+}
+
+.ptotalbarra {
+    background: #a7ddbd;
+}
+
+.factura-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    background-color: #f7f1ed;
+}
+
+.factura-tabla thead th {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.factura-tabla tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.factura-tabla tbody tr:nth-child(even) {
+    background-color: #d1d1d1;
+}
+
+.factura-tabla tfoot td {
+    background-color: #d6e5d6;
+    font-weight: bold;
+    text-align: right;
+    padding: 10px;
+}
+
+.factura-tabla td {
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* ------------------------------
+   Botones de Acción
+------------------------------ */
+.btn-borrar {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.terminar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    padding: 50px;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffdfcd;
+}
+
+.btn-accion {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-accion:hover {
+    background-color: #3498db;
+}
+
+/* ------------------------------
+   Barra de Búsqueda
+------------------------------ */
+.busqueda-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.busqueda {
+    display: flex;
+    align-items: center;
+    border: 7px solid #fff8f1;
+    background-color: #fff8f1;
+    border-radius: 230px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.busqueda input[type="text"] {
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 10px;
+    border-radius: 230px;
+    flex: 1;
+}
+
+.search-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.search-btn ion-icon {
+    color: #000;
+    font-size: 24px;
+}
+
+/* Selector de fecha */
+.custom-date {
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 10px;
+    border-radius: 230px;
+    flex: 1;
+}
+
+
+
+.container-factura {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffdfcd; /* Fondo similar al mostrado en la imagen */
+    padding: 20px;
+    border-radius: 15px; /* Bordes redondeados */
+}
+
+.factura-info {
+    background-color: #d1d1d1; /* Fondo gris claro */
+    border-radius: 25px; /* Bordes redondeados */
+    padding: 20px;
+    text-align: center;
+    width: 100%; /* Ancho completo */
+    max-width: 600px; /* Ancho máximo */
+}
+
+.factura-titulos {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 18px; /* Tamaño del texto */
+    color: white; /* Color del texto */
+}
+
+.factura-datos {
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px; /* Tamaño del texto */
+    color: #333; /* Color del texto */
+}
+
+/*  barra de seleccion */
+
+.categoria-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.categoria select {
+    padding: 10px 20px;
+    border: 7px solid #fff8f1;
+    background-color: #fff8f1;
+    border-radius: 230px;
+    font-size: 18px;
+    color: #9c9c9c;
+    font-weight: bold;
+    appearance: none; /* Elimina la apariencia predeterminada del selector */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%239C9C9C" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 10px) center;
+    background-size: 12px 12px;
+}
+
+.categoria select:focus {
+    outline: none;
+}
+
+.categoria select::-ms-expand {
+    display: none; /* Elimina la flecha predeterminada en IE */
+}
+
+
+/* productos */
+
+.productos-container {
+    display: flex;
+    justify-content: center; /* Centra los productos horizontalmente */
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px; /* Añade padding alrededor del contenedor */
+}
+
+.producto {
+    background-color: #d8d8d8;
+    border-radius: 15px;
+    padding: 20px;
+    width: 180px; /* Fijar el ancho de todos los contenedores */
+    height: 300px; /* Fijar la altura de todos los contenedores */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px; /* Añade un margen para separar los contenedores entre sí */
+}
+
+.producto img {
+    max-width: 100%;
+    max-height: 140px; /* Limitar la altura de la imagen */
+    object-fit: contain; /* Asegurar que la imagen mantenga sus proporciones */
+    margin-bottom: 10px;
+}
+
+.producto p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+.botones {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-editar,
+.btn-ver {
+    background-color: #7ba68c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
