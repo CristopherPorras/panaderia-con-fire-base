@@ -1,94 +1,67 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <!-- Vinculación del archivo CSS compatible con Flask -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <!-- Enlace corregido para ser compatible con Flask -->
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>Delicias Al Horno</h1>
-        </div>
-    </nav>
-    <div class="ttsecundario"><h1>Consultar Facturas</h1></div> 
+<!-- consultar-facturas.html -->
+{% extends "base.html" %}
 
-    <div class="busqueda-container">
-        <div class="busqueda ttsecundario">
-            <input type="text" placeholder="Buscar">
-            <button class="search-btn">
-                <ion-icon name="search-outline"></ion-icon>
-            </button>
-        </div>
+{% block title %}Consultar Facturas - Delicias Al Horno{% endblock %}
+
+{% block content %}
+<div class="ttsecundario"><h1>Consultar Facturas</h1></div> 
+
+<div class="busqueda-container">
+    <div class="busqueda ttsecundario">
+        <input type="text" placeholder="Buscar">
+        <button class="search-btn">
+            <ion-icon name="search-outline"></ion-icon>
+        </button>
     </div>
+</div>
     
-    <div class="busqueda-container">
-        <div class="busqueda ttsecundario">
-            <input type="date" class="custom-date" id="date-input">
-        </div>
+<div class="busqueda-container">
+    <div class="busqueda ttsecundario">
+        <input type="date" class="custom-date" id="date-input">
     </div>
+</div>
     
-    <div class="container-factura">
-        <div class="factura-info">
-            <div class="factura-titulos">
-                <span>Fecha</span>
-                <span>N Factura</span>
-                <span>Cliente</span>
-            </div>
-            <div class="factura-datos">
-                <span>02/07/2024</span>
-                <span>| 2 |</span>
-                <span>Diego</span>
-            </div>
+<div class="container-factura">
+    <div class="factura-info">
+        <div class="factura-titulos">
+            <span>Fecha</span>
+            <span>N Factura</span>
+            <span>Cliente</span>
+        </div>
+        <div class="factura-datos">
+            <span>02/07/2024</span>
+            <span>| 2 |</span>
+            <span>Diego</span>
         </div>
     </div>
+</div>
 
-    <div class="contenedor-tabla">
-        <table class="factura-tabla">
-            <thead>
-                <tr>
-                    <th>Código De Artículo</th>
-                    <th>Descripción</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>12</td>
-                    <td>croissant</td>
-                    <td>2</td>
-                    <td>1.500</td>
-                    <td>3.000</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>hojaldrado</td>
-                    <td>10</td>
-                    <td>500</td>
-                    <td>5.000</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4">Importe Total:</td>
-                    <td>8.000</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-    <!-- Scripts de Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+<div class="contenedor-tabla">
+    <table class="factura-tabla">
+        <thead>
+            <tr>
+                <th>Código De Artículo</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12</td>
+                <td>croissant</td>
+                <td>2</td>
+                <td>1.500</td>
+                <td>3.000</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">Importe Total:</td>
+                <td>8.000</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}

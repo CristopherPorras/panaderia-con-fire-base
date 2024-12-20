@@ -596,4 +596,538 @@ body {
 }
 
 
+/* Estilos del contenedor principal */
+.contenedor {
+    margin: 2rem auto;
+    max-width: 900px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
+/* Título */
+.titulo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #3c3c3c;
+}
+
+/* Estilos del formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 1rem;
+    color: #5c5c5c;
+    margin-bottom: 0.3rem;
+}
+
+input, select {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #6c63ff;
+    outline: none;
+}
+
+/* Botones */
+.btn {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #5954d6;
+}
+
+.btn-cancelar {
+    background-color: #f44336;
+    margin-top: 0;
+}
+
+.btn-cancelar:hover {
+    background-color: #d9342a;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.producto-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    background: #fefefe;
+}
+
+.producto-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.producto-nombre {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-editar, .btn-ver {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-ver {
+    background-color: #0275d8;
+    color: white;
+}
+
+.no-productos {
+    font-size: 1.2em;
+    color: gray;
+}
+
+/* Estilo para el botón de cargar archivo en registrar productos */
+.btn-archivo {
+    padding: 10px 15px;
+    background-color: #8c9094; /* Azul claro */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-top: 10px;
+}
+
+.btn-archivo:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+}
+
+/* Ajuste al formulario de registro */
+.contenedor-registro {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffe0cc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contenedor-registro .form-group {
+    margin-bottom: 15px;
+}
+
+.contenedor-registro label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.contenedor-registro input,
+.contenedor-registro select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.contenedor-registro input:focus,
+.contenedor-registro select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Botón principal */
+.contenedor-registro .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.contenedor-registro .btn:hover {
+    background-color: #3498db;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .contenedor-registro {
+        width: 90%;
+        margin: 10px auto;
+        padding: 15px;
+    }
+
+    .contenedor-registro input,
+    .contenedor-registro select {
+        font-size: 12px;
+    }
+
+    .contenedor-registro .btn {
+        font-size: 14px;
+    }
+}
+
+
+/* Asegura que las imágenes se ajusten correctamente al recuadro del producto */
+.producto img {
+    width: 100%; /* Ancho completo del contenedor */
+    height: auto; /* Ajusta la altura proporcionalmente */
+    max-height: 140px; /* Limita la altura máxima */
+    object-fit: contain; /* Escala la imagen manteniendo sus proporciones */
+    border-radius: 8px; /* Opcional: redondea los bordes */
+    margin-bottom: 10px; /* Espacio inferior */
+}
+
+.detalle-producto-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.detalle-producto-imagen {
+    flex: 1;
+    text-align: center;
+}
+
+.detalle-producto-info {
+    flex: 2;
+    background-color: #d8d8d8;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.producto-img-detalle {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+.botones {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-volver {
+    background-color: #7ba68c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* ------------------------------
+   Detalle del Producto (Corrección Aplicada)
+------------------------------ */
+.detalle-producto {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.imagen-producto {
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 15px;
+    margin-right: 20px;
+}
+
+.info-producto {
+    flex: 1;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.info-producto p {
+    margin: 10px 0;
+}
+
+.acciones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.acciones .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #ec971f;
+}
+
+.btn-cancelar {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #c9302c;
+}
+
+/* ------------------------------
+   Corrección de Botones
+------------------------------ */
+.acciones {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Añade espacio entre los botones */
+    margin-top: 20px;
+}
+
+.acciones .btn {
+    padding: 10px 30px; /* Ajusta el tamaño del botón */
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #ec971f;
+}
+
+.btn-cancelar {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #c9302c;
+}
+
+/* ------------------------------
+   Corrección de Imagen de Producto
+------------------------------ */
+.imagen-producto {
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: cover; /* Ajusta la imagen sin distorsión */
+    border-radius: 15px;
+    display: block;
+    margin: 0 auto; /* Centra la imagen */
+    background-color: #f0f0f0; /* Fondo para el contenedor */
+}
+
+.imagen-producto::after {
+    content: "Imagen no disponible";
+    font-size: 14px;
+    color: #777;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* ------------------------------
+   Uniformidad en Tamaño de Botones
+------------------------------ */
+.acciones .btn {
+    padding: 10px 30px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 150px; /* Fija un ancho uniforme para los botones */
+    border-radius: 5px;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #ec971f;
+}
+
+.btn-cancelar {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #c9302c;
+}
+
+/* ------------------------------
+   Botones con Ancho Uniforme
+------------------------------ */
+.acciones .btn {
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 150px; /* Ancho uniforme para ambos botones */
+    height: 50px; /* Altura fija para asegurar consistencia */
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #ec971f;
+}
+
+.btn-cancelar {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #c9302c;
+}
+
+/* ------------------------------
+   Botones en la misma línea
+------------------------------ */
+.acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Asegura que estén alineados verticalmente */
+    gap: 20px; /* Espacio uniforme entre los botones */
+    margin-top: 20px;
+}
+
+.acciones .btn {
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 150px; /* Ancho uniforme */
+    height: 50px; /* Altura fija */
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centra el contenido dentro del botón */
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #ec971f;
+}
+
+.btn-cancelar {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #c9302c;
+}
