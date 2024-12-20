@@ -17,6 +17,7 @@ body {
     width: 100%;
     height: 100vh;
     background: #ffdfcd;
+    font-family: Arial, sans-serif;
 }
 
 /* ------------------------------
@@ -412,53 +413,53 @@ body {
     background-color: #3498db;
 }
 
-/* ------------------------------
-   Barra de Búsqueda
------------------------------- */
-.busqueda-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 20px;
-    box-sizing: border-box;
+/* Contenedor principal de la barra de búsqueda y categorías */
+.busqueda-container, .categoria-container {
+    display: flex; /* Alinea los hijos en una fila */
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente */
+    margin: 20px 0; /* Espaciado superior e inferior */
 }
 
-.busqueda {
-    display: flex;
-    align-items: center;
-    border: 7px solid #fff8f1;
-    background-color: #fff8f1;
-    border-radius: 230px;
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 10px;
-    box-sizing: border-box;
-    text-align: center;
+/* Contenedor para input y botón */
+.input-group {
+    display: flex; /* Alinea el input y el botón en una fila */
+    align-items: center; /* Centra los elementos verticalmente */
+    gap: 10px; /* Espaciado entre el input y el botón */
 }
 
-.busqueda input[type="text"] {
-    border: none;
-    background: transparent;
-    outline: none;
+/* Cuadros de entrada y selección (misma altura y ancho) */
+.form-input, .form-select {
+    width: 250px; /* Tamaño fijo del cuadro */
+    height: 45px; /* Altura uniforme */
     padding: 10px;
-    border-radius: 230px;
-    flex: 1;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box; /* Asegura que padding no afecte el tamaño total */
 }
 
-.search-btn {
-    background: transparent;
+/* Botones (misma altura y estilo) */
+.search-btn, .filter-btn {
+    height: 45px; /* Misma altura que los cuadros */
+    padding: 0 20px; /* Espaciado interno ajustado */
+    font-size: 16px;
+    color: white;
+    background-color: #2980b9;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    padding: 0;
     display: flex;
-    align-items: center;
-    margin-left: 10px;
+    align-items: center; /* Centra el ícono dentro del botón */
+    justify-content: center; /* Centra el texto e ícono horizontalmente */
+    gap: 5px; /* Espacio entre el ícono y el texto */
+    transition: background-color 0.3s ease;
 }
 
-.search-btn ion-icon {
-    color: #000;
-    font-size: 24px;
+.search-btn:hover, .filter-btn:hover {
+    background-color: #3498db;
 }
+
 
 /* Selector de fecha */
 .custom-date {
@@ -469,8 +470,6 @@ body {
     border-radius: 230px;
     flex: 1;
 }
-
-
 
 .container-factura {
     display: flex;
@@ -567,7 +566,6 @@ body {
 .producto img {
     max-width: 100%;
     max-height: 140px; /* Limitar la altura de la imagen */
-    object-fit: contain; /* Asegurar que la imagen mantenga sus proporciones */
     margin-bottom: 10px;
 }
 
@@ -584,7 +582,7 @@ body {
     gap: 10px;
 }
 
-.btn-editar,
+.btn-editar, .btn-eliminar
 .btn-ver {
     background-color: #7ba68c;
     color: white;
@@ -678,9 +676,6 @@ input:focus, select:focus {
     justify-content: space-between;
 }
 
-body {
-    font-family: Arial, sans-serif;
-}
 
 .grid-container {
     display: grid;
@@ -716,16 +711,11 @@ body {
     margin-top: 10px;
 }
 
-.btn-editar, .btn-ver {
+.btn-editar, .btn-ver{
     padding: 8px 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.btn-editar {
-    background-color: #f0ad4e;
-    color: white;
 }
 
 .btn-ver {
@@ -740,21 +730,36 @@ body {
 
 /* Estilo para el botón de cargar archivo en registrar productos */
 .btn-archivo {
-    padding: 10px 15px;
-    background-color: #8c9094; /* Azul claro */
+    padding: 12px 20px;
+    background-color: #6c757d; /* Gris elegante */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Bordes más redondeados */
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
-    display: block;
-    margin-top: 10px;
+    font-weight: bold; /* Hace el texto más llamativo */
+    transition: all 0.3s ease; /* Transición suave para todos los efectos */
+    display: inline-block;
+    margin-top: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    text-align: center;
 }
 
+/* Estilo hover */
 .btn-archivo:hover {
-    background-color: #0056b3; /* Azul más oscuro */
+    background-color: #495057; /* Gris más oscuro */
+    color: #f8f9fa; /* Texto más claro */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Sombra más profunda */
+    transform: translateY(-2px); /* Efecto de levitación */
 }
+
+/* Efecto de click */
+.btn-archivo:active {
+    background-color: #343a40; /* Gris aún más oscuro */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra más pequeña */
+    transform: translateY(0); /* Sin levitación */
+}
+
 
 /* Ajuste al formulario de registro */
 .contenedor-registro {
@@ -796,6 +801,7 @@ body {
 
 /* Botón principal */
 .contenedor-registro .btn {
+    font-size: 14px;
     display: block;
     width: 100%;
     padding: 10px;
@@ -824,10 +830,6 @@ body {
     .contenedor-registro input,
     .contenedor-registro select {
         font-size: 12px;
-    }
-
-    .contenedor-registro .btn {
-        font-size: 14px;
     }
 }
 
@@ -899,6 +901,7 @@ body {
     text-align: center;
     border: none;
     cursor: pointer;
+    margin-top: 0;
 }
 
 /* ------------------------------
@@ -986,14 +989,6 @@ body {
     cursor: pointer;
 }
 
-.btn-editar {
-    background-color: #f0ad4e;
-    color: white;
-}
-
-.btn-editar:hover {
-    background-color: #ec971f;
-}
 
 .btn-cancelar {
     background-color: #d9534f;
@@ -1038,14 +1033,6 @@ body {
     border-radius: 5px;
 }
 
-.btn-editar {
-    background-color: #f0ad4e;
-    color: white;
-}
-
-.btn-editar:hover {
-    background-color: #ec971f;
-}
 
 .btn-cancelar {
     background-color: #d9534f;
@@ -1070,15 +1057,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.btn-editar {
-    background-color: #f0ad4e;
-    color: white;
-}
-
-.btn-editar:hover {
-    background-color: #ec971f;
 }
 
 .btn-cancelar {
@@ -1114,15 +1092,6 @@ body {
     align-items: center; /* Centra el contenido dentro del botón */
 }
 
-.btn-editar {
-    background-color: #f0ad4e;
-    color: white;
-}
-
-.btn-editar:hover {
-    background-color: #ec971f;
-}
-
 .btn-cancelar {
     background-color: #d9534f;
     color: white;
@@ -1130,4 +1099,31 @@ body {
 
 .btn-cancelar:hover {
     background-color: #c9302c;
+}
+
+.producto-img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain; /* Ajusta la imagen dentro del contenedor sin recortar */
+    background-color: #f0f0f0; /* Opcional: Color de fondo para áreas vacías */
+    border-radius: 8px; /* Bordes redondeados, opcional */
+}
+
+
+/* botones de eliminar productos*/
+.btn-eliminar {
+    background-color: #c0392b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+.btn-eliminar:hover {
+    background-color: #e74c3c;
 }

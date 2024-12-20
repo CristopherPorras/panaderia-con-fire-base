@@ -7,9 +7,9 @@ class Producto(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     descripcion = Column(String(300), unique=True, nullable=False)
-    valor_unitario = Column(Float, nullable=False)
+    valor_unitario = Column(Integer, nullable=False)
     unidad_medida = Column(String(3), nullable=False)
-    cantidad_stock = Column(Float, nullable=False)
+    cantidad_stock = Column(Integer, nullable=False)
     categoria_id = Column(Integer, ForeignKey('categorias.id'), nullable=False)
     imagen = Column(String(300), nullable=True)
 

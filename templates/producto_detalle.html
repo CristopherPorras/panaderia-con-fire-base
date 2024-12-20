@@ -22,10 +22,11 @@
             <img src="{{ url_for('static', filename=producto.imagen) }}" alt="Imagen del producto" class="imagen-producto">
             <div class="info-producto">
                 <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-                <p><strong>Precio Unitario:</strong> {{ producto.valor_unitario }} COP</p>
+                <p><strong>Precio Unitario:</strong> {{ producto.valor_unitario|int }} COP</p>
                 <p><strong>Unidad de Medida:</strong> {{ producto.unidad_medida }}</p>
-                <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock }}</p>
+                <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock|int }}</p>
                 <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+
             </div>
         </div>
         <div class="acciones">

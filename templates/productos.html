@@ -12,7 +12,7 @@
     <nav>
         <div class="navbar">
             <div class="container-icon">
-                <a href="{{ url_for('inicio') }}"> 
+                <a href="{{ url_for('inicio') }}">
                     <ion-icon name="close-circle-outline"></ion-icon>
                 </a>
             </div>
@@ -23,7 +23,7 @@
     <!-- Título secundario -->
     <div class="ttsecundario">
         <h1>Productos</h1>
-    </div> 
+    </div>
 
     <!-- Barra de búsqueda -->
     <div class="busqueda-container">
@@ -70,7 +70,7 @@
             <div class="producto-card">
                 <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="producto-link">
                     <img 
-                        src="{{ url_for('static', filename='images/' + producto.descripcion + '.png') }}" 
+                        src="{{ url_for('static', filename=producto.imagen) }}" 
                         alt="{{ producto.descripcion }}" 
                         class="producto-img"
                         onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">
@@ -79,6 +79,14 @@
                 <div class="botones">
                     <a href="{{ url_for('editar_producto', id=producto.id) }}" class="btn-editar">Editar</a>
                     <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="btn-ver">Ver</a>
+                    <form action="{{ url_for('eliminar_producto', id=producto.id) }}" method="POST" style="display: inline;">
+                        <button 
+                            type="submit" 
+                            class="btn-eliminar" 
+                            onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+                            Eliminar
+                        </button>
+                    </form>
                 </div>
             </div>
             {% endfor %}

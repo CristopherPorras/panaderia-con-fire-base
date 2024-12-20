@@ -94,6 +94,7 @@ def producto_detalle(id):
 @app.route('/facturar', methods=['GET', 'POST'])
 def facturar():
     try:
+        # Aquí puedes agregar lógica de facturación en caso de ser necesario
         return render_template('facturar.html')
     except Exception as e:
         flash(f"Error al cargar la página de facturación: {e}", "error")
@@ -114,7 +115,7 @@ def registrar_producto():
     if request.method == 'POST':
         try:
             descripcion = request.form['descripcion']
-            valor_unitario = request.form.get('valor_unitario', type=float)
+            valor_unitario = request.form.get('valor_unitario', type=int)
             unidad_medida = request.form['unidad_medida']
             cantidad_stock = request.form.get('cantidad_stock', type=int)
             categoria_id = request.form.get('categoria_id', type=int)
@@ -130,7 +131,7 @@ def registrar_producto():
                 unidad_medida=unidad_medida,
                 cantidad_stock=cantidad_stock,
                 categoria_id=categoria_id,
-                imagen=None  # Se inicializa sin imagen
+                imagen=None
             )
 
             if 'imagen' in request.files and request.files['imagen'].filename:
@@ -161,7 +162,7 @@ def editar_producto(id):
     if request.method == 'POST':
         try:
             descripcion = request.form.get('descripcion', '').strip()
-            valor_unitario = request.form.get('valor_unitario', type=float)
+            valor_unitario = request.form.get('valor_unitario', type=int)
             unidad_medida = request.form.get('unidad_medida', '').strip()
             cantidad_stock = request.form.get('cantidad_stock', type=int)
             categoria_id = request.form.get('categoria_id', type=int)
@@ -188,6 +189,26 @@ def editar_producto(id):
 
     categorias = db_session.query(Categoria).all()
     return render_template('editar_producto.html', producto=producto, categorias=categorias)
+
+# Ruta para eliminar producto
+@app.route('/eliminar_producto/<int:id>', methods=['POST'])
+def eliminar_producto(id):
+    producto = db_session.query(Producto).get(id)
+    if not producto:
+        flash('El producto no existe.', 'error')
+        return redirect(url_for('productos'))
+    
+    try:
+        if producto.imagen and os.path.exists(os.path.join(BASE_DIR, 'static', producto.imagen)):
+            os.remove(os.path.join(BASE_DIR, 'static', producto.imagen))
+        db_session.delete(producto)
+        db_session.commit()
+        flash('Producto eliminado con éxito.', 'success')
+    except Exception as e:
+        db_session.rollback()
+        flash(f"Error al eliminar el producto: {e}", 'error')
+
+    return redirect(url_for('productos'))
 
 # Ruta para favicon
 @app.route('/favicon.ico')
