@@ -79,7 +79,7 @@ body {
 }
 
 .casilla, .pedidos {
-    background-color: #7ba68c;
+    background-color: #7ba68c; /* Color base */
     color: white;
     font-size: 20px;
     border-radius: 25px;
@@ -87,9 +87,18 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-decoration: none;
     display: flex;
-    justify-content: center;  /* Centra el texto horizontalmente */
-    align-items: center;      /* Centra el texto verticalmente */
+    justify-content: center; /* Centra el texto horizontalmente */
+    align-items: center;    /* Centra el texto verticalmente */
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+    cursor: pointer; /* Cambia el cursor para indicar interactividad */
 }
+
+.casilla:hover, .pedidos:hover {
+    background-color: #69b383; /* Color de fondo más claro y armonioso */
+    transform: translateY(-5px) scale(1.05); /* Mueve hacia arriba y agranda ligeramente */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Aumenta el efecto de sombra */
+}
+
 
 /* Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {
@@ -658,16 +667,23 @@ input:focus, select:focus {
     transition: background-color 0.3s;
 }
 
-.btn:hover {
-    background-color: #5954d6;
-}
-
+/* botones de volver y cancelar de productos al verlos*/
 .btn-cancelar {
     background-color: #f44336;
-    margin-top: 0;
+    color: white;
 }
 
 .btn-cancelar:hover {
+    background-color: #d9342a;
+}
+
+.btn-volver1 {
+    background-color: #f44336;
+    margin-top: 0;
+    color: white;
+}
+
+.btn-volver1:hover {
     background-color: #d9342a;
 }
 
@@ -721,6 +737,11 @@ input:focus, select:focus {
 .btn-ver {
     background-color: #0275d8;
     color: white;
+}
+
+.btn-ver:hover{
+    background-color: #007bff;
+
 }
 
 .no-productos {
@@ -813,6 +834,26 @@ input:focus, select:focus {
     cursor: pointer;
     text-align: center;
     transition: background-color 0.3s ease;
+}
+
+/* boton de guardar al cargar o editar un producto*/
+
+.btn-guardar {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-guardar:hover {
+     background-color: #7d78e6;
 }
 
 .contenedor-registro .btn:hover {
@@ -963,15 +1004,6 @@ input:focus, select:focus {
     background-color: #ec971f;
 }
 
-.btn-cancelar {
-    background-color: #d9534f;
-    color: white;
-}
-
-.btn-cancelar:hover {
-    background-color: #c9302c;
-}
-
 /* ------------------------------
    Corrección de Botones
 ------------------------------ */
@@ -987,16 +1019,6 @@ input:focus, select:focus {
     font-size: 16px;
     text-align: center;
     cursor: pointer;
-}
-
-
-.btn-cancelar {
-    background-color: #d9534f;
-    color: white;
-}
-
-.btn-cancelar:hover {
-    background-color: #c9302c;
 }
 
 /* ------------------------------
@@ -1033,16 +1055,6 @@ input:focus, select:focus {
     border-radius: 5px;
 }
 
-
-.btn-cancelar {
-    background-color: #d9534f;
-    color: white;
-}
-
-.btn-cancelar:hover {
-    background-color: #c9302c;
-}
-
 /* ------------------------------
    Botones con Ancho Uniforme
 ------------------------------ */
@@ -1057,15 +1069,6 @@ input:focus, select:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.btn-cancelar {
-    background-color: #d9534f;
-    color: white;
-}
-
-.btn-cancelar:hover {
-    background-color: #c9302c;
 }
 
 /* ------------------------------
@@ -1090,15 +1093,6 @@ input:focus, select:focus {
     display: flex;
     justify-content: center;
     align-items: center; /* Centra el contenido dentro del botón */
-}
-
-.btn-cancelar {
-    background-color: #d9534f;
-    color: white;
-}
-
-.btn-cancelar:hover {
-    background-color: #c9302c;
 }
 
 .producto-img {

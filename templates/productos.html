@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos - Delicias Al Horno</title>
 
+    <!-- Archivo CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -70,7 +71,7 @@
             <div class="producto-card">
                 <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="producto-link">
                     <img 
-                        src="{{ url_for('static', filename=producto.imagen) }}" 
+                        src="{{ url_for('static', filename=producto.imagen if producto.imagen else 'images/default.png') }}" 
                         alt="{{ producto.descripcion }}" 
                         class="producto-img"
                         onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">

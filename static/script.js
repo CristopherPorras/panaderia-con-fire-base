@@ -9,6 +9,33 @@ function setCurrentDate() {
 window.onload = setCurrentDate;
 
 
+// Lógica para habilitar cantidades y actualizar el total
+document.querySelectorAll("#productos-container .producto-opcion").forEach(opcion => {
+    const checkbox = opcion.querySelector('input[type="checkbox"]');
+    const cantidadInput = opcion.querySelector('input[type="number"]');
 
-// productos
+    checkbox.addEventListener('change', () => {
+        cantidadInput.disabled = !checkbox.checked;
+        if (!checkbox.checked) {
+            cantidadInput.value = ''; // Limpia la cantidad si el producto se desmarca
+        }
+        actualizarTotal();
+    });
 
+    cantidadInput.addEventListener('input', actualizarTotal);
+});
+
+function actualizarTotal() {
+    let total = 0;
+    document.querySelectorAll("#productos-container .producto-opcion").forEach(opcion => {
+        const checkbox = opcion.querySelector('input[type="checkbox"]');
+        const cantidadInput = opcion.querySelector('input[type="number"]');
+        const label = opcion.querySelector('label');
+        const precio = parseFloat(label.textContent.split('-')[1].trim().replace('COP', ''));
+
+        if (checkbox.checked && cantidadInput.value) {
+            total += precio * parseFloat(cantidadInput.value);
+        }
+    });
+    document.getElementById('total_factura').value = total.toFixed(2) + " COP";
+}

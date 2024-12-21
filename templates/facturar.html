@@ -3,78 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturar</title>
+    <title>Facturación</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
     <nav>
         <div class="navbar">
             <div class="container-icon">
                 <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="close-circle-outline"></ion-icon>
+                    <ion-icon name="arrow-back-circle-outline"></ion-icon>
                 </a>
             </div>
-            <h1>Delicias Al Horno</h1>
+            <h1>Facturación</h1>
         </div>
     </nav>
-
-    <div class="contenedor-general-facturar">
-        <div class="ttsecundario"><h1>Facturar</h1></div>
-        <div class="info">
-            <div class="Psub-info">
-                <div class="sub-info"><h2>Número de Factura:</h2></div>
-                <div class="sub-info"><h2>Fecha de Emisión:</h2></div>
-                <div class="sub-info"><h2>Cliente:</h2></div>
+    <div class="contenedor">
+        <h2 class="titulo">Nueva Factura</h2>
+        <form id="facturaForm" method="POST">
+            <div class="form-group">
+                <label for="numero_factura">Número de Factura</label>
+                <input type="text" id="numero_factura" name="numero_factura" value="{{ numero_factura }}" readonly>
             </div>
-            <div class="p2">
-                <div class="inf2">
-                    <input type="number" id="factura-numero" placeholder="Número de Factura">
-                </div>
-                <div class="inf2">
-                    <input type="text" id="factura-fecha" class="custom-date" placeholder="Seleccionar fecha">
-                </div>
-                <div class="inf2">
-                    <input type="text" id="factura-cliente" placeholder="Nombre del cliente">
-                </div>
+
+            <div class="form-group">
+                <label for="cliente">Cliente</label>
+                <select id="cliente" name="cliente_id" required>
+                    <option value="" selected disabled>Seleccionar Cliente</option>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>
 
-        <div class="contenedor-tabla">
-            <table class="factura-tabla" id="tabla-productos">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Descripción</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unitario</th>
-                        <th>Total</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4">Importe Total:</td>
-                        <td id="importe-total">0.00</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+            <div class="form-group">
+                <label for="buscar_producto">Buscar Producto</label>
+                <input type="text" id="buscar_producto" placeholder="Escriba para buscar productos" autocomplete="off">
+                <ul id="resultados" class="dropdown"></ul>
+            </div>
 
-        <div class="terminar">
-            <button id="agregar-producto" class="btn-accion">Agregar Producto</button>
-            <button id="guardar-factura" class="btn-accion">Guardar Factura</button>
-        </div>
+            <div id="productos_seleccionados">
+                <!-- Aquí se agregarán dinámicamente los productos seleccionados -->
+            </div>
+
+            <div class="form-group">
+                <label for="total">Total:</label>
+                <input type="text" id="total" name="total" value="0" readonly>
+            </div>
+
+            <button type="submit" class="btn-guardar">Guardar Factura</button>
+            <a href="{{ url_for('inicio') }}" class="btn btn-cancelar">Cancelar</a>
+        </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
-        flatpickr(".custom-date", { dateFormat: "Y-m-d" });
+    document.addEventListener("DOMContentLoaded", () => {
+        const buscarProductoInput = document.getElementById("buscar_producto");
+        const resultados = document.getElementById("resultados");
+        const productosSeleccionados = document.getElementById("productos_seleccionados");
+        const totalInput = document.getElementById("total");
+
+        let productos = [];
+
+        // Buscar productos dinámicamente
+        buscarProductoInput.addEventListener("input", () => {
+            const query = buscarProductoInput.value.trim();
+            if (query.length > 2) {
+                fetch(`/buscar_productos?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        productos = data;
+                        resultados.innerHTML = "";
+                        productos.forEach(producto => {
+                            const li = document.createElement("li");
+                            li.textContent = `${producto.descripcion} - ${producto.valor_unitario} COP`;
+                            li.dataset.id = producto.id;
+                            li.dataset.valorUnitario = producto.valor_unitario;
+
+                            li.addEventListener("click", () => {
+                                buscarProductoInput.value = producto.descripcion;
+                                agregarProducto(producto.descripcion, producto.id, producto.valor_unitario);
+                                buscarProductoInput.value = "";
+                                resultados.innerHTML = "";
+                            });
+
+                            resultados.appendChild(li);
+                        });
+                    });
+            } else {
+                resultados.innerHTML = "";
+            }
+        });
+
+        // Agregar producto seleccionado a la lista
+        function agregarProducto(descripcion, id, valorUnitario) {
+            const div = document.createElement("div");
+            div.classList.add("producto-seleccionado");
+            div.innerHTML = `
+                <span>${descripcion}</span>
+                <input type="number" name="cantidades[]" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
+                <button type="button" class="eliminar">Eliminar</button>
+            `;
+            div.querySelector(".eliminar").addEventListener("click", () => {
+                div.remove();
+                calcularTotal();
+            });
+
+            productosSeleccionados.appendChild(div);
+            calcularTotal();
+        }
+
+        // Calcular total en tiempo real
+        productosSeleccionados.addEventListener("input", (event) => {
+            if (event.target.tagName === "INPUT" && event.target.type === "number") {
+                calcularTotal();
+            }
+        });
+
+        function calcularTotal() {
+            let total = 0;
+            productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
+                const cantidad = parseInt(input.value, 10) || 0;
+                const valorUnitario = parseFloat(input.dataset.valorUnitario);
+                total += cantidad * valorUnitario;
+            });
+            totalInput.value = total.toFixed(2);
+        }
+    });
     </script>
 </body>
 </html>

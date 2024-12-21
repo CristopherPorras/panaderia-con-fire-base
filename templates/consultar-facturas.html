@@ -4,64 +4,77 @@
 {% block title %}Consultar Facturas - Delicias Al Horno{% endblock %}
 
 {% block content %}
-<div class="ttsecundario"><h1>Consultar Facturas</h1></div> 
+<div class="ttsecundario"><h1>Consultar Facturas</h1></div>
 
+<!-- Buscador por texto -->
 <div class="busqueda-container">
     <div class="busqueda ttsecundario">
-        <input type="text" placeholder="Buscar">
-        <button class="search-btn">
-            <ion-icon name="search-outline"></ion-icon>
-        </button>
+        <form method="GET" action="{{ url_for('consultar_facturas') }}">
+            <input type="text" name="query" placeholder="Buscar factura o cliente" value="{{ request.args.get('query', '') }}">
+            <button type="submit" class="search-btn">
+                <ion-icon name="search-outline"></ion-icon>
+            </button>
+        </form>
     </div>
 </div>
-    
+
+<!-- Filtro por fecha -->
 <div class="busqueda-container">
     <div class="busqueda ttsecundario">
-        <input type="date" class="custom-date" id="date-input">
+        <form method="GET" action="{{ url_for('consultar_facturas') }}">
+            <input type="date" name="fecha" class="custom-date" id="date-input" value="{{ request.args.get('fecha', '') }}">
+            <button type="submit" class="btn">Filtrar</button>
+        </form>
     </div>
 </div>
-    
+
+<!-- Facturas Listadas -->
 <div class="container-factura">
+    {% for factura in facturas %}
     <div class="factura-info">
         <div class="factura-titulos">
             <span>Fecha</span>
-            <span>N Factura</span>
+            <span>N° Factura</span>
             <span>Cliente</span>
         </div>
         <div class="factura-datos">
-            <span>02/07/2024</span>
-            <span>| 2 |</span>
-            <span>Diego</span>
+            <span>{{ factura.fecha.strftime('%d/%m/%Y') }}</span>
+            <span>| {{ factura.numero }} |</span>
+            <span>{{ factura.cliente.nombre }}</span>
         </div>
     </div>
-</div>
 
-<div class="contenedor-tabla">
-    <table class="factura-tabla">
-        <thead>
-            <tr>
-                <th>Código De Artículo</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>12</td>
-                <td>croissant</td>
-                <td>2</td>
-                <td>1.500</td>
-                <td>3.000</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4">Importe Total:</td>
-                <td>8.000</td>
-            </tr>
-        </tfoot>
-    </table>
+    <!-- Tabla de Detalles de Factura -->
+    <div class="contenedor-tabla">
+        <table class="factura-tabla">
+            <thead>
+                <tr>
+                    <th>Código De Artículo</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in factura.detalles %}
+                <tr>
+                    <td>{{ detalle.producto.id }}</td>
+                    <td>{{ detalle.producto.descripcion }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>{{ "%.2f"|format(detalle.precio_unitario) }}</td>
+                    <td>{{ "%.2f"|format(detalle.total) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">Importe Total:</td>
+                    <td>{{ "%.2f"|format(factura.total) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
