@@ -19,13 +19,19 @@
     </nav>
     <div class="contenedor">
         <div class="detalle-producto">
-            <img src="{{ url_for('static', filename=producto.imagen) }}" alt="Imagen del producto" class="imagen-producto">
+            <img id="imagen-producto"
+                src="{{ producto.imagen if producto.imagen else url_for('static', filename='images/default.png') }}" 
+                alt="{{ producto.descripcion }}" 
+                class="producto-img"
+                onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">
+
+
             <div class="info-producto">
                 <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
                 <p><strong>Precio Unitario:</strong> {{ producto.valor_unitario|int }} COP</p>
                 <p><strong>Unidad de Medida:</strong> {{ producto.unidad_medida }}</p>
                 <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock|int }}</p>
-                <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+                <p><strong>Categoría:</strong> {{ producto.categoria_id }}</p>
 
             </div>
         </div>

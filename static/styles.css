@@ -45,7 +45,6 @@ body {
     right: 20px; /* Mantiene el icono a la derecha */
 }
 
-
 .container-icon a {
     color: white; /* Cambia el color del ícono a blanco */
     text-decoration: none;
@@ -549,6 +548,12 @@ body {
 
 
 /* productos */
+
+/*Imagen del producto en detalles */
+#imagen-producto{
+    margin: 1rem;
+}
+
 
 .productos-container {
     display: flex;

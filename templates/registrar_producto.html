@@ -10,7 +10,7 @@
     <nav>
         <div class="navbar">
             <div class="container-icon">
-                <a href="{{ url_for('productos') }}">
+                <a href="{{ url_for('inicio') }}">
                     <ion-icon name="arrow-back-circle-outline"></ion-icon>
                 </a>
             </div>
@@ -37,12 +37,13 @@
                 <input type="number" id="cantidad_stock" name="cantidad_stock" step="1" required>
             </div>
             <div class="form-group">
-                <label for="categoria">Categoría:</label>
-                <select id="categoria" name="categoria_id" required>
-                    {% for categoria in categorias %}
-                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-                    {% endfor %}
-                </select>
+                <label for="productos">Selecciona un producto:</label>
+                    <select id="categoria_id" name="categoria_id" required>
+                    <option value="" disabled selected>Elija un producto</option>
+                    <option value="Pan">Pan</option>
+                    <option value="Reposteria">Reposteria</option>
+                    <option value="La otra que no me acuerdo">La otra que no me acuerdo</option>
+                    </select>
             </div>
             <div class="form-group">
                 <label for="imagen">Subir Imagen:</label>
