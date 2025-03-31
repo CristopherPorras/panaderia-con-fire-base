@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "base-de-datos-panaderia-f4398",
+  "private_key_id": "70d208bddcc041ef8888419e41082a62684bc245",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCs0dJK1rLU2yVf\nAVNBSEonlq0zyegCB5diEboy3Uu0RfMkKHSSWvmRh5YQTLdLKVr3iTUNVn1hMCqE\nwxMYEaCYleg4wTpW9uS1lp5fOupLwOp+G9+Y4lbSi3VBGdDX6ACLCxhSAENJNoy9\nLnIcjtv8/N/iJScgxRRE7Nq4HCxNOUzxmrgzpwHIXFVxg9Qcd0Aco41rE9eamv+1\nKsk0npfPPYGlPKJxrz1y9y9DzuQWccTrwjnWMR4rRVcFbxn6GiuaDINp1UfgjXDK\nTj71c3M2k+s72v9lcQUOzIrNdIpvTJOc9f4v2sk8z+vYqMk15ICj6N/Nx3QTbKfz\ncgy4plWZAgMBAAECggEAExntYgF1Ombe7G9pb/KhJJtIOUxImRnU8v1V3NueC5a8\nKyvQB6Gnyjyn2tUZ4MQ5RlkbXKYpvUFdP7eOf5dqLldKV6SO0dAf4wy65DhvL1CL\nMoVa60tgEI0iuH91mHmPfs7LATw/c6MEfv/4U5z8JmweRED6QEpcJUqfGaCeimnb\nLU3m+3uVeB04VvaAjpJaNdrsnND/sxKhhAy4gEL5jiCsVZXLyV7BK8Dk2Nuiw7v0\n8yGhstIRER7ta18TjSfXy3ge0vJ5ZUyxpmojyUvJrS9XJY59iMLxk3lrDEAEJyyR\noOMCdQaxn5+be7A0NVjmG3KyaOuTBr4TNOPYHpLsIQKBgQDvB6W3DLkNewbZq3lT\nAO29ehakG5LG01x2PPSgHxJGXoUoJLT8mAOFC06znLvsR/9OSat2B+8xvOTL6cx+\nQXxUwJu98FmZANR0M7Gbk25nNGDBNlrF7ZbIdLAr9PBWV/TKxsNkyiU7wJx7gA2x\n69VdHrS2nBYJOue0hoITxze4OQKBgQC5Fs6S5lT2hqjr+wX+QNtCHuYdP+Ea9D+t\nk+SpT/NfELK/1TZPR67I5VR2zU0FUf5KJyIcbi+MzKsRdOYgWo3/zI6hAjaFZT+H\nYQvOb3gLYLlsXqvYiRGnRQxz68VT8Ll9Ci4UvfSvUVmifnVt9Bd9YZzvgiO2ohKC\nIYoB94XIYQKBgQC20JaB5g0yrkGTAX8NaMxr+pCOezhLMSSqmfxO6vTDNU+KYGi8\nOFeYzgknflyMXpR5gAbPg0oCNIKZIvvwJI2/FIEJSGZ+iw/ywAa7AouSC5FktPnA\nH/MO5ZBITlHy99qVrGeNEr5fcPU9z7apucG6Mt3sPHzuGktU2vtpvRh0oQKBgQCV\nvdLgXAJu9GDjkdG2cogwxUjMbyrSILsH1jfPlwRBbAQBWSC4ITlSBN9BwjTG0iAV\no/Vf5PEJS2g3Fkk78aciRT87Gcw8Pb6Y6zWfDOWk5tr8xtbmt3YVyrIZcqzRjVaz\nx7GiTFASKpGG+iJNE4aRhJBv4Oy9y/+HUlUR5ExS4QKBgQCBLIMT8KwZswO8C47J\nTvWQbo4KPDFQMztCKumldMYrGWyGUUIyYmR8Ygeo/MZ2dp1HCgAXqNmd6lMiLNto\n8VGHvE/7Mu2QMN1eCxOXiupP0W45ew8vFmA22BPEjaTJiRIPbBCafJmuqNVFuPCB\nBYCXdTZF2t2U//zC1p+pp7cA3Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-gg538@base-de-datos-panaderia-f4398.iam.gserviceaccount.com",
+  "client_id": "111697983000153478619",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gg538%40base-de-datos-panaderia-f4398.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
