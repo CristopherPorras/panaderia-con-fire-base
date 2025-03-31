@@ -1,0 +1,1200 @@
+/* ------------------------------
+   Importación de Fuente Externa
+------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap');
+
+/* ------------------------------
+   Estilos Generales
+------------------------------ */
+* {
+    font-family: "Signika Negative", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: #ffdfcd;
+    font-family: Arial, sans-serif;
+}
+
+/* ------------------------------
+   Navbar
+------------------------------ */
+/* Barra de navegación */
+.navbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Alinea verticalmente el contenido */
+    background: black;
+    color: white;
+    padding: 10px;
+    border: 15px solid black;
+    font-size: 35px;
+    position: relative; /* Para que el icono no afecte el centrado del texto */
+}
+
+/* Icono en la barra de navegación */
+.container-icon {
+    font-size: 35px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px; /* Mantiene el icono a la derecha */
+}
+
+.container-icon a {
+    color: white; /* Cambia el color del ícono a blanco */
+    text-decoration: none;
+}
+
+.container-icon a:hover {
+    opacity: 0.8;
+}
+
+/* ------------------------------
+   Título Secundario
+------------------------------ */
+.ttsecundario {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* ------------------------------
+   Página Principal (Casillas)
+------------------------------ */
+.contenedor-principal,
+.contenedor-secundario {
+    display: grid; /* Usamos CSS Grid para organizar los elementos en filas y columnas */
+    grid-template-columns: repeat(3, 1fr); /* Se reparten 3 columnas iguales (1fr = una fracción del espacio disponible) */
+    grid-gap: 32px; /* Espacio entre cada casilla */
+    justify-content: center; /* Centra el grid horizontalmente dentro de su contenedor */
+    align-items: center; /* Centra los elementos dentro de cada celda (en su eje vertical) */
+    background-color: #ffdfcd; /* Color de fondo cálido tipo pastel para el contenedor */
+    padding: 20px; /* Espacio interno entre el borde del contenedor y las casillas */
+    text-align: center; /* Alinea el texto dentro de las casillas (útil para textos directos) */
+}
+ 
+.casilla, .pedidos {
+    background-color: #7ba68c; /* Color de fondo verde pastel para cada casilla */
+    color: white; /* Color del texto dentro de las casillas */
+    font-size: 40px; /* Tamaño del texto */
+    border-radius: 25px; /* Bordes redondeados que suavizan el diseño */
+    padding: 40px; /* Espaciado interno (da aire al contenido dentro de la casilla) */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave debajo de la casilla para dar profundidad */
+    text-decoration: none; /* Quita el subrayado de los enlaces (<a>) */
+    
+    display: flex; /* Activa Flexbox para alinear contenido interno */
+    flex-direction: column; /* Organiza los elementos uno debajo del otro (ícono y texto) */
+    justify-content: center; /* Centra los elementos verticalmente */
+    align-items: center; /* Centra los elementos horizontalmente */
+    
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
+    /* Animaciones suaves al pasar el mouse: tamaño, color y sombra */
+    
+    cursor: pointer; /* Muestra una mano al pasar el mouse, indicando que es interactivo */
+    min-height: 400px; /* Altura mínima de la casilla (para que sea alta en pantalla) */
+    min-width: 200px; /* Ancho mínimo de la casilla */
+    font-weight: bold; /* Texto en negrita */
+    letter-spacing: 0.5px; /* Espaciado entre letras para mejorar la legibilidad */
+    text-align: center; /* Centra el texto por si se comporta como bloque */
+}
+
+/* Íconos dentro de las casillas */
+.casilla ion-icon, .pedidos ion-icon {
+    font-size: 36px; /* Tamaño grande para que el ícono destaque */
+    color: white; /* Color blanco del ícono */
+}
+
+/* Efecto hover de íconos */
+.casilla:hover ion-icon, .pedidos:hover ion-icon {
+    transform: scale(1.2); /* Agranda ligeramente el ícono al pasar el mouse */
+}
+
+/* Texto dentro de las casillas */
+.casilla span, .pedidos span {
+    display: block; /* El texto se comporta como un bloque, ocupa toda la línea */
+    text-align: center; /* Centra horizontalmente el texto */
+    margin: 0; /* Quita márgenes por defecto */
+    padding: 0; /* Quita relleno por defecto */
+    line-height: 1.2; /* Altura del renglón compacta pero legible */
+}
+
+/* Efecto hover general en la casilla */
+.casilla:hover, .pedidos:hover {
+    background-color: #69b383; /* Cambia a un tono más claro de verde al pasar el mouse */
+    transform: translateY(-5px) scale(1.05); /* Levanta la casilla ligeramente y la agranda un poco */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Aumenta la sombra para simular efecto flotante */
+}
+
+/* Responsivo para pantallas medianas */
+@media (max-width: 992px) {
+    .contenedor-principal,
+    .contenedor-secundario {
+        grid-template-columns: repeat(2, 1fr); /* Solo 2 columnas en lugar de 3 */
+    }
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 600px) {
+    .contenedor-principal,
+    .contenedor-secundario {
+        grid-template-columns: 1fr; /* Una sola columna para móvil */
+    }
+
+    .casilla, .pedidos {
+        min-width: unset; /* Se adapta al ancho disponible */
+    }
+}
+
+
+/* -------------------------------------------
+   Estilo para mostrar la tecla asignada a cada casilla
+   Sistema de facturación - Atajos visuales
+---------------------------------------------- */
+
+.casilla .tecla {
+    margin-top: 10px; /* Espacio entre el texto principal (ej. "Facturar") y la tecla */
+    
+    font-size: 20px; /* Tamaño pequeño para no robar protagonismo al contenido principal */
+    
+    background-color: rgba(255, 255, 255, 0.15); /* Fondo blanco semitransparente para visibilidad sin romper el diseño */
+    
+    padding: 5px 10px; /* Espaciado interno para que el texto no quede apretado */
+    
+    border-radius: 12px; /* Bordes redondeados para suavizar el estilo */
+    
+    color: #fff; /* Texto blanco para que haga buen contraste con el fondo verde */
+    
+    opacity: 0.7; /* Opacidad reducida para que sea visualmente más sutil */
+    
+    font-weight: normal; /* Evita que el texto sea en negrita (opcional según diseño) */
+    
+    user-select: none; /* Evita que el usuario seleccione este texto al hacer clic o arrastrar */
+    
+    pointer-events: none; /* Hace que este elemento no bloquee clics ni eventos del mouse */
+}
+
+
+
+/* ------------------------------
+   Página de Inicio de Sesión
+------------------------------ */
+.container {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    background: black;
+}
+
+.left-content, .container-form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #ffdfcd;
+}
+
+.container-form {
+    padding: 20px;
+    text-align: center;
+}
+
+.sign-in {
+    padding: 1%;
+}
+
+.container-form h2 {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+/* Contenedor para los campos de entrada (usuario y contraseña) */
+.container-input {
+    width: 300px;
+    height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between; /* Asegura que el ícono y el input estén bien alineados */
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.container-input input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+    font-size: 18px;
+    color: #333;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+
+/* Botón de imagen en el formulario */
+.image-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.image-button img {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin-top: 20px;
+}
+
+.image-button img:hover {
+    opacity: 0.8;
+}
+
+/* ------------------------------
+   Sección de Facturación
+------------------------------ */
+
+.contenedor-general-facturar {
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Título secundario */
+.ttsecundario {
+    margin: 11px;
+    border: 7px solid #fff8f1;
+    background-color: #fff8f1;
+    text-align: center;
+    border-radius: 230px;
+    padding: 10px;
+    font-size: 24px; /* Reduce el tamaño de la fuente */
+    font-weight: bold;
+    color: #333;
+}
+
+/* Estilos para la información de la factura */
+.info {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    align-items: center;
+    background-color: #ffdfcd;
+    padding: 20px;
+    border-radius: 15px;
+    position: relative; /* Añadido para un mejor control de la alineación */
+}
+
+/* Contenedor de los títulos de la factura */
+.Psub-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-right: 20px; /* Añade espacio a la derecha para separar del campo de entrada */
+}
+
+/* Estilo de los títulos de la factura */
+.sub-info h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 15px 0;
+}
+
+/* Contenedor de los campos de entrada de la factura */
+.p2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-left: 20px; /* Añade espacio a la izquierda para separar de los títulos */
+}
+
+/* Estilo de los campos de entrada */
+.inf2 {
+    margin-bottom: 20px;
+    background-color: #d8d8d8;
+    padding: 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    height: 60px; /* Ajusta la altura de los campos de entrada */
+}
+
+.inf2 input,
+.inf2 .custom-date {
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    outline: none;
+}
+
+/* Estilo adicional para alinear los íconos en los campos de fecha */
+.inf2 input[type="date"] {
+    text-align: left; /* Alinea el texto a la izquierda para el campo de fecha */
+    padding-left: 10px;
+}
+
+.inf2 input[type="date"]::before {
+    content: attr(placeholder);
+    color: #333;
+    position: absolute;
+    padding-left: 10px;
+}
+
+/* Ajustes para el contenedor de la imagen */
+.pimage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding-left: 20px;
+}
+
+.pimage img {
+    border-radius: 15px;
+    max-width: 100%;
+}
+
+
+/* ------------------------------
+   Sección de Totales y Tabla de Facturación
+------------------------------ */
+.totales,
+.pinfobarra,
+.ptotalbarra {
+    width: 98%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.totales {
+    background: black;
+}
+
+.titulos-barra,
+.infobarra,
+.totalbarra {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.titulos2,
+.infobarra2,
+.tbarra {
+    flex: 1;
+    text-align: center;
+}
+
+.titulos-barra h2 {
+    color: white;
+    margin: 0;
+}
+
+.infobarra h2,
+.totalbarra h2 {
+    color: black;
+    margin: 0;
+}
+
+.pinfobarra {
+    background: white;
+}
+
+.ptotalbarra {
+    background: #a7ddbd;
+}
+
+.factura-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    background-color: #f7f1ed;
+}
+
+.factura-tabla thead th {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.factura-tabla tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.factura-tabla tbody tr:nth-child(even) {
+    background-color: #d1d1d1;
+}
+
+.factura-tabla tfoot td {
+    background-color: #d6e5d6;
+    font-weight: bold;
+    text-align: right;
+    padding: 10px;
+}
+
+.factura-tabla td {
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* ------------------------------
+   Botones de Acción
+------------------------------ */
+.btn-borrar {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.terminar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    padding: 50px;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffdfcd;
+}
+
+.btn-accion {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-accion:hover {
+    background-color: #3498db;
+}
+
+/* Contenedor principal de la barra de búsqueda y categorías */
+.busqueda-container, .categoria-container {
+    display: flex; /* Alinea los hijos en una fila */
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente */
+    margin: 20px 0; /* Espaciado superior e inferior */
+}
+
+/* Contenedor para input y botón */
+.input-group {
+    display: flex; /* Alinea el input y el botón en una fila */
+    align-items: center; /* Centra los elementos verticalmente */
+    gap: 10px; /* Espaciado entre el input y el botón */
+}
+
+/* Cuadros de entrada y selección (misma altura y ancho) */
+.form-input, .form-select {
+    width: 250px; /* Tamaño fijo del cuadro */
+    height: 45px; /* Altura uniforme */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box; /* Asegura que padding no afecte el tamaño total */
+}
+
+/* Botones (misma altura y estilo) */
+.search-btn, .filter-btn {
+    height: 45px; /* Misma altura que los cuadros */
+    padding: 0 20px; /* Espaciado interno ajustado */
+    font-size: 16px;
+    color: white;
+    background-color: #2980b9;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Centra el ícono dentro del botón */
+    justify-content: center; /* Centra el texto e ícono horizontalmente */
+    gap: 5px; /* Espacio entre el ícono y el texto */
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover, .filter-btn:hover {
+    background-color: #3498db;
+}
+
+
+/* Selector de fecha */
+.custom-date {
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 10px;
+    border-radius: 230px;
+    flex: 1;
+}
+
+.container-factura {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffdfcd; /* Fondo similar al mostrado en la imagen */
+    padding: 20px;
+    border-radius: 15px; /* Bordes redondeados */
+}
+
+.factura-info {
+    background-color: #d1d1d1; /* Fondo gris claro */
+    border-radius: 25px; /* Bordes redondeados */
+    padding: 20px;
+    text-align: center;
+    width: 100%; /* Ancho completo */
+    max-width: 600px; /* Ancho máximo */
+}
+
+.factura-titulos {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 18px; /* Tamaño del texto */
+    color: white; /* Color del texto */
+}
+
+.factura-datos {
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px; /* Tamaño del texto */
+    color: #333; /* Color del texto */
+}
+
+/*  barra de seleccion */
+
+.categoria-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.categoria select {
+    padding: 10px 20px;
+    border: 7px solid #fff8f1;
+    background-color: #fff8f1;
+    border-radius: 230px;
+    font-size: 18px;
+    color: #9c9c9c;
+    font-weight: bold;
+    appearance: none; /* Elimina la apariencia predeterminada del selector */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%239C9C9C" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 10px) center;
+    background-size: 12px 12px;
+}
+
+.categoria select:focus {
+    outline: none;
+}
+
+.categoria select::-ms-expand {
+    display: none; /* Elimina la flecha predeterminada en IE */
+}
+
+
+/* productos */
+
+/*Imagen del producto en detalles */
+#imagen-producto{
+    margin: 1rem;
+}
+
+
+.productos-container {
+    display: flex;
+    justify-content: center; /* Centra los productos horizontalmente */
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px; /* Añade padding alrededor del contenedor */
+}
+
+.producto {
+    background-color: #d8d8d8;
+    border-radius: 15px;
+    padding: 20px;
+    width: 180px; /* Fijar el ancho de todos los contenedores */
+    height: 300px; /* Fijar la altura de todos los contenedores */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px; /* Añade un margen para separar los contenedores entre sí */
+}
+
+.producto img {
+    max-width: 100%;
+    max-height: 140px; /* Limitar la altura de la imagen */
+    margin-bottom: 10px;
+}
+
+.producto p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+.botones {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-editar, .btn-eliminar
+.btn-ver {
+    background-color: #7ba68c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* Estilos del contenedor principal */
+.contenedor {
+    margin: 2rem auto;
+    max-width: 900px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Título */
+.titulo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #3c3c3c;
+}
+
+/* Estilos del formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 1rem;
+    color: #5c5c5c;
+    margin-bottom: 0.3rem;
+}
+
+input, select {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #6c63ff;
+    outline: none;
+}
+
+/* Botones */
+.btn {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* botones de volver y cancelar de productos al verlos*/
+.btn-cancelar {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #d9342a;
+}
+
+.btn-volver1 {
+    background-color: #f44336;
+    margin-top: 0;
+    color: white;
+}
+
+.btn-volver1:hover {
+    background-color: #d9342a;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.producto-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    background: #fefefe;
+}
+
+.producto-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.producto-nombre {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-editar, .btn-ver{
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-ver {
+    background-color: #0275d8;
+    color: white;
+}
+
+.btn-ver:hover{
+    background-color: #007bff;
+
+}
+
+.no-productos {
+    font-size: 1.2em;
+    color: gray;
+}
+
+/* Estilo para el botón de cargar archivo en registrar productos */
+.btn-archivo {
+    padding: 12px 20px;
+    background-color: #6c757d; /* Gris elegante */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold; /* Hace el texto más llamativo */
+    transition: all 0.3s ease; /* Transición suave para todos los efectos */
+    display: inline-block;
+    margin-top: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    text-align: center;
+}
+
+/* Estilo hover */
+.btn-archivo:hover {
+    background-color: #495057; /* Gris más oscuro */
+    color: #f8f9fa; /* Texto más claro */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Sombra más profunda */
+    transform: translateY(-2px); /* Efecto de levitación */
+}
+
+/* Efecto de click */
+.btn-archivo:active {
+    background-color: #343a40; /* Gris aún más oscuro */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra más pequeña */
+    transform: translateY(0); /* Sin levitación */
+}
+
+
+/* Ajuste al formulario de registro */
+.contenedor-registro {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffe0cc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contenedor-registro .form-group {
+    margin-bottom: 15px;
+}
+
+.contenedor-registro label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.contenedor-registro input,
+.contenedor-registro select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.contenedor-registro input:focus,
+.contenedor-registro select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Botón principal */
+.contenedor-registro .btn {
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+/* boton de guardar al cargar o editar un producto*/
+
+.btn-guardar {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-guardar:hover {
+     background-color: #7d78e6;
+}
+
+.contenedor-registro .btn:hover {
+    background-color: #3498db;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .contenedor-registro {
+        width: 90%;
+        margin: 10px auto;
+        padding: 15px;
+    }
+
+    .contenedor-registro input,
+    .contenedor-registro select {
+        font-size: 12px;
+    }
+}
+
+
+/* Asegura que las imágenes se ajusten correctamente al recuadro del producto */
+.producto img {
+    width: 100%; /* Ancho completo del contenedor */
+    height: auto; /* Ajusta la altura proporcionalmente */
+    max-height: 140px; /* Limita la altura máxima */
+    object-fit: contain; /* Escala la imagen manteniendo sus proporciones */
+    border-radius: 8px; /* Opcional: redondea los bordes */
+    margin-bottom: 10px; /* Espacio inferior */
+}
+
+.detalle-producto-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.detalle-producto-imagen {
+    flex: 1;
+    text-align: center;
+}
+
+.detalle-producto-info {
+    flex: 2;
+    background-color: #d8d8d8;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.producto-img-detalle {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+.botones {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-volver {
+    background-color: #7ba68c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+/* ------------------------------
+   Detalle del Producto (Corrección Aplicada)
+------------------------------ */
+.detalle-producto {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.imagen-producto {
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 15px;
+    margin-right: 20px;
+}
+
+.info-producto {
+    flex: 1;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.info-producto p {
+    margin: 10px 0;
+}
+
+.acciones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.acciones .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #ec971f;
+}
+
+/* ------------------------------
+   Corrección de Botones
+------------------------------ */
+.acciones {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Añade espacio entre los botones */
+    margin-top: 20px;
+}
+
+.acciones .btn {
+    padding: 10px 30px; /* Ajusta el tamaño del botón */
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* ------------------------------
+   Corrección de Imagen de Producto
+------------------------------ */
+.imagen-producto {
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: cover; /* Ajusta la imagen sin distorsión */
+    border-radius: 15px;
+    display: block;
+    margin: 0 auto; /* Centra la imagen */
+    background-color: #f0f0f0; /* Fondo para el contenedor */
+}
+
+.imagen-producto::after {
+    content: "Imagen no disponible";
+    font-size: 14px;
+    color: #777;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* ------------------------------
+   Uniformidad en Tamaño de Botones
+------------------------------ */
+.acciones .btn {
+    padding: 10px 30px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 150px; /* Fija un ancho uniforme para los botones */
+    border-radius: 5px;
+}
+
+/* ------------------------------
+   Botones con Ancho Uniforme
+------------------------------ */
+.acciones .btn {
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 150px; /* Ancho uniforme para ambos botones */
+    height: 50px; /* Altura fija para asegurar consistencia */
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ------------------------------
+   Botones en la misma línea
+------------------------------ */
+.acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Asegura que estén alineados verticalmente */
+    gap: 20px; /* Espacio uniforme entre los botones */
+    margin-top: 20px;
+}
+
+.acciones .btn {
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 150px; /* Ancho uniforme */
+    height: 50px; /* Altura fija */
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centra el contenido dentro del botón */
+}
+
+.producto-img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain; /* Ajusta la imagen dentro del contenedor sin recortar */
+    background-color: #f0f0f0; /* Opcional: Color de fondo para áreas vacías */
+    border-radius: 8px; /* Bordes redondeados, opcional */
+}
+
+
+/* botones de eliminar productos*/
+.btn-eliminar {
+    background-color: #c0392b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+.btn-eliminar:hover {
+    background-color: #e74c3c;
+}

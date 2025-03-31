@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="navbar">
+            <div class="container-icon">
+                <a href="{{ url_for('productos') }}">
+                    <ion-icon name="arrow-back-circle-outline"></ion-icon>
+                </a>
+            </div>
+            <h1>{{ producto.descripcion }}</h1>
+        </div>
+    </nav>
+    <div class="contenedor">
+        <div class="detalle-producto">
+            <img id="imagen-producto"
+                src="{{ producto.imagen if producto.imagen else url_for('static', filename='images/default.png') }}" 
+                alt="{{ producto.descripcion }}" 
+                class="producto-img"
+                onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">
+
+
+            <div class="info-producto">
+                <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                <p><strong>Precio Unitario:</strong> {{ producto.valor_unitario|int }} COP</p>
+                <p><strong>Unidad de Medida:</strong> {{ producto.unidad_medida }}</p>
+                <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock|int }}</p>
+                <p><strong>Categoría:</strong> {{ producto.categoria_id }}</p>
+
+            </div>
+        </div>
+        <div class="acciones">
+            <a href="{{ url_for('editar_producto', id=producto.id) }}" class="btn btn-editar">Editar</a>
+            <a href="{{ url_for('productos') }}" class="btn btn-volver1">Volver</a>
+        </div>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

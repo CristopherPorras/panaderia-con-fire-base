@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Login Page - Delicias Al Horno{% endblock %}
+
+{% block content %}
+<div class="left-content">
+    <img src="{{ url_for('static', filename='IMAGES/logotipo.jpg') }}" class="large-image" alt="Logo Delicias Al Horno">
+</div>
+<div class="container-form">
+    <form class="sign-in" method="POST" action="{{ url_for('login') }}">
+        <h2>Iniciar Sesión</h2>
+        <div class="container-input">
+            <ion-icon name="person-outline"></ion-icon>
+            <input type="email" name="email" placeholder="Correo Electrónico" required>
+        </div>
+        <div class="container-input">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <input type="password" name="password" placeholder="Contraseña" required>
+        </div>
+        <button type="submit" class="image-button">
+            <img src="{{ url_for('static', filename='IMAGES/login.jpg') }}" alt="Botón de imagen">
+        </button>
+    </form>
+</div>
+{% endblock %}

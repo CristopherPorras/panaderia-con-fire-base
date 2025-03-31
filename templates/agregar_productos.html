@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Agregar Productos - Factura {{ factura.numero }}{% endblock %}
+
+{% block content %}
+<div class="ttsecundario">
+    <h1>Agregar Productos - Factura {{ factura.numero }}</h1>
+</div>
+
+<form action="{{ url_for('agregar_productos', factura_id=factura.id) }}" method="POST">
+    <div class="form-group">
+        <label for="producto_id">Producto:</label>
+        <select id="producto_id" name="producto_id" class="form-control" required>
+            {% for producto in productos %}
+            <option value="{{ producto.id }}">{{ producto.descripcion }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" class="form-control" step="0.01" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
+</form>
+
+<table class="factura-tabla mt-4">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detalle in detalles %}
+        <tr>
+            <td>{{ detalle.producto.descripcion }}</td>
+            <td>{{ detalle.cantidad }}</td>
+            <td>{{ detalle.precio_unitario }}</td>
+            <td>{{ detalle.total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

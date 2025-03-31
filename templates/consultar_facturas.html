@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Facturas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="navbar">
+            <div class="container-icon">
+                <a href="{{ url_for('inicio') }}">
+                    <ion-icon name="arrow-back-circle-outline"></ion-icon>
+                </a>
+            </div>
+            <h1>Consultar Facturas</h1>
+        </div>
+    </nav>
+
+    <div class="ttsecundario">
+        <h1>Facturas</h1>
+    </div>
+
+    <!-- Buscador por texto -->
+    <div class="busqueda-container">
+        <form method="GET" action="{{ url_for('consultar_facturas') }}">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Buscar factura o cliente" 
+                    class="form-input"
+                    value="{{ request.args.get('query', '') }}">
+                <button type="submit" class="search-btn">
+                    <ion-icon name="search-outline"></ion-icon>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Filtro por fecha -->
+    <div class="busqueda-container">
+        <form method="GET" action="{{ url_for('consultar_facturas') }}">
+            <div class="input-group">
+                <input 
+                    type="date" 
+                    name="fecha" 
+                    class="form-input"
+                    value="{{ request.args.get('fecha', '') }}">
+                <button type="submit" class="filter-btn">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de facturas -->
+    <div class="container-factura">
+        {% if facturas|length > 0 %}
+            {% for factura in facturas %}
+                <div class="factura-info">
+                    <div class="factura-titulos">
+                        <span>Fecha</span>
+                        <span>N° Factura</span>
+                        <span>Cliente</span>
+                    </div>
+                    <div class="factura-datos">
+                        <span>{{ factura.fecha.strftime('%d/%m/%Y') }}</span>
+                        <span>{{ factura.numero }}</span>
+                        <span>{{ factura.cliente.nombre }}</span>
+                    </div>
+                </div>
+
+                <!-- Detalles de factura -->
+                <div class="contenedor-tabla">
+                    <table class="factura-tabla">
+                        <thead>
+                            <tr>
+                                <th>Código De Artículo</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in factura.detalles %}
+                                <tr>
+                                    <td>{{ detalle.producto.id }}</td>
+                                    <td>{{ detalle.producto.descripcion }}</td>
+                                    <td>{{ detalle.cantidad }}</td>
+                                    <td>{{ "%.2f"|format(detalle.precio_unitario) }}</td>
+                                    <td>{{ "%.2f"|format(detalle.total) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">Importe Total:</td>
+                                <td>{{ "%.2f"|format(factura.total) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="ttsecundario">
+                <p>No se encontraron facturas para los criterios seleccionados.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

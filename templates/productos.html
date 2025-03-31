@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Delicias Al Horno</title>
+
+    <!-- Archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav>
+        <div class="navbar">
+            <div class="container-icon">
+                <a href="{{ url_for('inicio') }}">
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                </a>
+            </div>
+            <h1>Delicias Al Horno</h1>
+        </div>
+    </nav>
+
+    <!-- Título secundario -->
+    <div class="ttsecundario">
+        <h1>Productos</h1>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="busqueda-container">
+        <form method="GET" action="{{ url_for('productos') }}">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Buscar productos..." 
+                    class="form-input"
+                    value="{{ request.args.get('query', '') }}">
+                <button type="submit" class="search-btn">
+                    <ion-icon name="search-outline"></ion-icon> Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Filtro de categoría -->
+    <div class="categoria-container">
+        <form method="GET" action="{{ url_for('productos') }}">
+            <div class="input-group">
+                <select name="categoria" class="form-select">
+                    <option value="" {% if not request.args.get('categoria') %} selected {% endif %}>
+                        Todas las categorías
+                    </option>
+                    {% for categoria in categorias %}
+                        <option 
+                            value="{{ categoria.id }}" 
+                            {% if categoria.id == (request.args.get('categoria') | int) %} selected {% endif %}>
+                            {{ categoria.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="filter-btn">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Contenedor de productos -->
+    <div class="productos-container">
+        {% if productos|length > 0 %}
+            {% for producto in productos %}
+            <div class="producto-card">
+                <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="producto-link">
+                    <img 
+                        src="{{ producto.imagen if producto.imagen else url_for('static', filename='imagenes/default.png') }}" 
+                        alt="{{ producto.descripcion }}" 
+                        class="producto-img"
+                        onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">
+                </a>
+                <p class="producto-nombre">{{ producto.descripcion }}</p>
+                <div class="botones">
+                    <a href="{{ url_for('editar_producto', id=producto.id) }}" class="btn-editar">Editar</a>
+                    <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="btn-ver">Detalles</a>
+                    <form method="POST" action="{{ url_for('eliminar_producto', id=producto.id) }}" style="display:inline;">
+                        <button type="submit" class="btn-eliminar">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center mt-5">
+                <p class="no-productos">No hay productos disponibles en esta categoría o no se encontraron resultados para tu búsqueda.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Scripts de Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
