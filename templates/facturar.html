@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facturación</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+
 <body>
     <nav>
         <div class="navbar">
@@ -17,6 +19,7 @@
             <h1>Facturación</h1>
         </div>
     </nav>
+    
     <div class="contenedor">
         <h2 class="titulo">Nueva Factura</h2>
         <form id="facturaForm" method="POST">
@@ -36,101 +39,109 @@
             </div>
 
             <div class="form-group">
-                <label for="buscar_producto">Buscar Producto</label>
-                <input type="text" id="buscar_producto" placeholder="Escriba para buscar productos" autocomplete="off">
-                <ul id="resultados" class="dropdown"></ul>
+                <label for="productos">Seleccionar Producto</label>
+                <select id="productos" name="productos">
+                    <option value="" disabled selected>Seleccione un producto</option>
+                </select>
+                <button type="button" id="agregar_producto">Agregar</button>
             </div>
-
-            <div id="productos_seleccionados">
-                <!-- Aquí se agregarán dinámicamente los productos seleccionados -->
-            </div>
-
+            
+            <div id="productos_seleccionados"></div>
+            
             <div class="form-group">
                 <label for="total">Total:</label>
                 <input type="text" id="total" name="total" value="0" readonly>
             </div>
-
+            
             <button type="submit" class="btn-guardar">Guardar Factura</button>
-            <a href="{{ url_for('inicio') }}" class="btn btn-cancelar">Cancelar</a>
+            <a href="/inicio" class="btn btn-cancelar">Cancelar</a>
         </form>
     </div>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const buscarProductoInput = document.getElementById("buscar_producto");
-        const resultados = document.getElementById("resultados");
-        const productosSeleccionados = document.getElementById("productos_seleccionados");
-        const totalInput = document.getElementById("total");
+        document.addEventListener("DOMContentLoaded", () => {
+            const productoSelect = document.getElementById("productos");
+            const agregarProductoBtn = document.getElementById("agregar_producto");
+            const productosSeleccionados = document.getElementById("productos_seleccionados");
+            const totalInput = document.getElementById("total");
 
-        let productos = [];
-
-        // Buscar productos dinámicamente
-        buscarProductoInput.addEventListener("input", () => {
-            const query = buscarProductoInput.value.trim();
-            if (query.length > 2) {
-                fetch(`/buscar_productos?query=${query}`)
+            function cargarProductos() {
+                fetch('/buscar_productos?query=')
                     .then(response => response.json())
                     .then(data => {
-                        productos = data;
-                        resultados.innerHTML = "";
-                        productos.forEach(producto => {
-                            const li = document.createElement("li");
-                            li.textContent = `${producto.descripcion} - ${producto.valor_unitario} COP`;
-                            li.dataset.id = producto.id;
-                            li.dataset.valorUnitario = producto.valor_unitario;
+                        console.log("Productos obtenidos:", data); // ✅ Debug en consola
 
-                            li.addEventListener("click", () => {
-                                buscarProductoInput.value = producto.descripcion;
-                                agregarProducto(producto.descripcion, producto.id, producto.valor_unitario);
-                                buscarProductoInput.value = "";
-                                resultados.innerHTML = "";
-                            });
+                        // Resetear opciones
+                        productoSelect.innerHTML = '<option value="" selected disabled>Seleccionar Producto</option>';
 
-                            resultados.appendChild(li);
+                        if (data.length === 0) {
+                            console.warn("No se encontraron productos en Firebase.");
+                        }
+
+                        // Llenar el select con los productos
+                        data.forEach(producto => {
+                            let option = document.createElement("option");
+                            option.value = producto.id;
+                            option.dataset.valor = producto.valor_unitario;
+                            option.textContent = `${producto.descripcion} - ${producto.valor_unitario} COP`;
+                            productoSelect.appendChild(option);
                         });
-                    });
-            } else {
-                resultados.innerHTML = "";
+                    })
+                    .catch(error => console.error("Error al obtener productos:", error));
             }
-        });
 
-        // Agregar producto seleccionado a la lista
-        function agregarProducto(descripcion, id, valorUnitario) {
-            const div = document.createElement("div");
-            div.classList.add("producto-seleccionado");
-            div.innerHTML = `
-                <span>${descripcion}</span>
-                <input type="number" name="cantidades[]" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
-                <button type="button" class="eliminar">Eliminar</button>
-            `;
-            div.querySelector(".eliminar").addEventListener("click", () => {
-                div.remove();
-                calcularTotal();
+            // Agregar producto seleccionado a la lista
+            agregarProductoBtn.addEventListener("click", () => {
+                const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+                if (!selectedOption.value) return;
+
+                const productoId = selectedOption.value;
+                const descripcion = selectedOption.textContent.split(" - ")[0];
+                const valorUnitario = parseFloat(selectedOption.dataset.valor);
+
+                agregarProducto(descripcion, productoId, valorUnitario);
             });
 
-            productosSeleccionados.appendChild(div);
-            calcularTotal();
-        }
+            function agregarProducto(descripcion, id, valorUnitario) {
+                const div = document.createElement("div");
+                div.classList.add("producto-seleccionado");
+                div.innerHTML = `
+                    <span>${descripcion}</span>
+                    <input type="number" name="cantidades[]" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
+                    <button type="button" class="eliminar">Eliminar</button>
+                `;
 
-        // Calcular total en tiempo real
-        productosSeleccionados.addEventListener("input", (event) => {
-            if (event.target.tagName === "INPUT" && event.target.type === "number") {
+                div.querySelector(".eliminar").addEventListener("click", () => {
+                    div.remove();
+                    calcularTotal();
+                });
+
+                productosSeleccionados.appendChild(div);
                 calcularTotal();
             }
-        });
 
-        function calcularTotal() {
-            let total = 0;
-            productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
-                const cantidad = parseInt(input.value, 10) || 0;
-                const valorUnitario = parseFloat(input.dataset.valorUnitario);
-                total += cantidad * valorUnitario;
+            function calcularTotal() {
+                let total = 0;
+                productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
+                    const cantidad = parseInt(input.value, 10) || 0;
+                    const valorUnitario = parseFloat(input.dataset.valorUnitario);
+                    total += cantidad * valorUnitario;
+                });
+                totalInput.value = total.toFixed(2);
+            }
+
+            productosSeleccionados.addEventListener("input", (event) => {
+                if (event.target.tagName === "INPUT" && event.target.type === "number") {
+                    calcularTotal();
+                }
             });
-            totalInput.value = total.toFixed(2);
-        }
-    });
+
+            cargarProductos();
+        });
     </script>
+
 </body>
+
 </html>

@@ -1,7 +1,10 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, db
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-from models.productos_python import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from models import facturacion
+from models.facturacion import registrar_factura
+from models.productos import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
+from models.clientes import registrar_cliente, obtener_clientes
 from werkzeug.utils import secure_filename
 import os
 
@@ -49,9 +52,20 @@ def logout():
     return redirect(url_for('login'))
 
 # Otras rutas
-@app.route('/facturar')
-def facturar():
-    return render_template('facturar.html')
+
+@app.route('/facturar', methods=['GET', 'POST'])
+def facturacion_page():
+    """Muestra la página de facturación y guarda la factura si se envía el formulario."""
+
+    if request.method == 'POST':
+        numero_factura = facturacion.guardar_factura(request.form)  # Llamamos a la función en facturacion.py
+        return redirect(url_for('facturacion_page'))
+
+    numero_factura = facturacion.obtener_numero_factura()  # Obtener el número de factura
+    clientes_ref = db.collection("clientes").stream()
+    clientes = [{"id": cliente.id, "nombre": cliente.to_dict().get("nombre")} for cliente in clientes_ref]
+
+    return render_template('facturar.html', numero_factura=numero_factura, clientes=clientes)
 
 @app.route('/consultar_facturas')
 def consultar_facturas():
@@ -60,6 +74,19 @@ def consultar_facturas():
 @app.route('/productos', methods=['GET'])
 def productos():
     return fun_productos()
+
+@app.route("/facturar", methods=["POST"])
+def guardar_factura():
+    facturacion.guardar_factura(request.form)
+    return redirect(url_for("facturar.html"))
+
+
+@app.route('/buscar_productos', methods=['GET'])
+def buscar_productos():
+    """Retorna los productos filtrados según la búsqueda."""
+    query = request.args.get('query', '')
+    productos = facturacion.buscar_productos(query)
+    return jsonify(productos)
 
 
 @app.route('/registrar_producto', methods=['GET', 'POST'])
@@ -116,9 +143,9 @@ def eliminar_producto(id):
     
     return redirect(url_for('productos'))
 
-@app.route('/registrar_cliente')
-def registrar_cliente():
-    return render_template('registrar_cliente.html')
+@app.route('/registrar_cliente', methods=['GET', 'POST'])
+def registrar_cliente_route():
+    return registrar_cliente()
 
 # Creación de categorías al iniciar la app
 if __name__ == '__main__':
