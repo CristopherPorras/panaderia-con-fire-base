@@ -75,21 +75,22 @@
                     <table class="factura-tabla">
                         <thead>
                             <tr>
-                                <th>Código De Artículo</th>
+                         <th>Código De Artículo</th>
                                 <th>Descripción</th>
-                                <th>Cantidad</th>
+           <th>Cantidad</th>
                                 <th>Precio Unitario</th>
-                                <th>Total</th>
+                       <th>Total</th>
                             </tr>
                         </thead>
-                        <tbody>
+          <tbody>
                             {% for detalle in factura.detalles %}
                                 <tr>
-                                    <td>{{ detalle.producto.id }}</td>
+                      <td>{{ detalle.producto.id }}</td>
                                     <td>{{ detalle.producto.descripcion }}</td>
-                                    <td>{{ detalle.cantidad }}</td>
-                                    <td>{{ "%.2f"|format(detalle.precio_unitario) }}</td>
-                                    <td>{{ "%.2f"|format(detalle.total) }}</td>
+                      <td>{{ detalle.precio_unitario | int }}</td>
+<td>{{ detalle.total | int }}</td>
+
+
                                 </tr>
                             {% endfor %}
                         </tbody>
