@@ -1,8 +1,22 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+        <!-- Barra de navegación -->
+        <nav>
+            <div class="navbar">
+                <h1>Delicias Al Horno</h1>
+            </div>
+        </nav>
 
-{% block title %}Login Page - Delicias Al Horno{% endblock %}
+<div class="container">
 
-{% block content %}
 <div class="left-content">
     <img src="{{ url_for('static', filename='IMAGES/logotipo.jpg') }}" class="large-image" alt="Logo Delicias Al Horno">
 </div>
@@ -29,4 +43,6 @@
         </button>
     </form>
 </div>
-{% endblock %}
+</div>
+</body>
+</html>

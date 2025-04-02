@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Favicon en formato PNG -->
-
     <link rel="icon" href="{{ url_for('static', filename='favicon_v2.ico') }}" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +8,7 @@
     
     <!-- Vinculación del archivo CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
     <nav>
@@ -20,13 +19,17 @@
                 </a>
             </div>
             <h1>Delicias Al Horno</h1>
+            
+            <!-- Botón de Volver en la esquina superior derecha -->
+            <a href="{{ url_for('inicio') }}" class="btn-volver">
+                <ion-icon name="arrow-back-circle-outline"></ion-icon> Volver
+            </a>
         </div>
     </nav>
 
     <!-- Contenedor principal donde se insertará el contenido específico de cada página -->
-    <div class="container">
         {% block content %}{% endblock %}
-    </div>
+
 
     <!-- Scripts de Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

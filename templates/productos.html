@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos - Delicias Al Horno</title>
+{% extends "base.html" %}
 
-    <!-- Archivo CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <!-- Barra de navegación -->
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>Delicias Al Horno</h1>
-        </div>
-    </nav>
+{% block title %}Login Page - Delicias Al Horno{% endblock %}
+
+{% block content %}
 
     <!-- Título secundario -->
     <div class="ttsecundario">
@@ -96,5 +79,5 @@
     <!-- Scripts de Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+
+{% endblock %}
