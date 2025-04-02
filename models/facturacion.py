@@ -1,66 +1,78 @@
-from firebase_admin import firestore
+import firebase_admin
+from firebase_admin import credentials, firestore
+from datetime import datetime
 from models.productos import db
 
-
-def registrar_factura(datos_factura):
-    """Registra una nueva factura en Firestore."""
-    try:
-        facturas_ref = db.collection('facturas')
-        nueva_factura = facturas_ref.document()  # Crea un nuevo documento con ID automático
-        nueva_factura.set(datos_factura)  # Guarda la factura en Firestore
-        return "Factura registrada correctamente."
-    except Exception as e:
-        return f"Error al registrar la factura: {str(e)}"
-
-# Inicializa la conexión a Firestore (asegúrate de que Firebase ya esté inicializado en app.py)
 db = firestore.client()
 
-def obtener_numero_factura():
-    """Obtiene el último número de factura y lo incrementa."""
-    config_ref = db.collection("config").document("facturas")
-    config_doc = config_ref.get()
-    
-    if config_doc.exists:
-        numero_factura = config_doc.to_dict().get("ultimo_numero", 0) + 1
-    else:
-        numero_factura = 1
-        config_ref.set({"ultimo_numero": 0})
+def guardar_factura(form_data):
+    detalles = []
+    for producto_id, cantidad in zip(form_data.getlist('producto_id'), form_data.getlist('cantidad')):
+        detalles.append({
+            'producto_id': producto_id,
+            'cantidad': int(cantidad)
+        })
 
-    return numero_factura
-
-def guardar_factura(data):
-    """Guarda la factura en Firestore y actualiza el número de factura."""
-    numero_factura = obtener_numero_factura()
-
-    factura = {
-        "numero_factura": numero_factura,
-        "cliente_id": data.get('cliente_id'),
-        "total": float(data.get('total', 0)),
+    factura_data = {
+        'numero_factura': form_data.get('numero_factura'),
+        'fecha': datetime.now(),
+        'cliente_id': form_data.get('cliente_id'),
+        'detalles': detalles,
+        'total': float(form_data.get('total'))
     }
 
-    facturas_ref = db.collection("facturas")
-    facturas_ref.document(str(numero_factura)).set(factura)
+    db.collection('facturas').add(factura_data)
 
-    # Actualizar el último número de factura en Firestore
-    config_ref = db.collection("config").document("facturas")
-    config_ref.set({"ultimo_numero": numero_factura}, merge=True)
-
-    return numero_factura  # Devolver el número generado
+def obtener_numero_factura():
+    facturas = db.collection('facturas').order_by('fecha', direction=firestore.Query.DESCENDING).limit(1).stream()
+    ultima = next(facturas, None)
+    if ultima:
+        num = ultima.to_dict().get("numero_factura", "0")
+        return str(int(num) + 1)
+    else:
+        return "1"
 
 def buscar_productos(query):
-    """Filtra productos por descripción en Firestore."""
-    productos_ref = db.collection("productos")
+    productos_ref = db.collection('productos')
     productos_docs = productos_ref.stream()
-
-    productos_filtrados = []
+    resultados = []
     for doc in productos_docs:
-        producto = doc.to_dict()
-        if query.lower() in producto.get("descripcion", "").lower():
-            productos_filtrados.append({
-                "id": doc.id,
-                "descripcion": producto.get("descripcion", ""),
-                "valor_unitario": producto.get("valor_unitario", 0)
+        data = doc.to_dict()
+        if query.lower() in data.get("nombre", "").lower():
+            resultados.append({"id": doc.id, **data})
+    return resultados
+
+def obtener_facturas_filtradas(query='', fecha=''):
+    facturas_ref = db.collection('facturas')
+    facturas_docs = facturas_ref.stream()
+
+    resultados = []
+
+    for doc in facturas_docs:
+        data = doc.to_dict()
+        cliente_id = data.get("cliente_id")
+        cliente_ref = db.collection('clientes').document(cliente_id).get()
+        cliente_data = cliente_ref.to_dict() if cliente_ref.exists else {"nombre": "Desconocido"}
+
+        factura_fecha = data.get("fecha")
+        if factura_fecha:
+            try:
+                factura_fecha = factura_fecha.date()
+            except:
+                factura_fecha = datetime.strptime(factura_fecha, "%Y-%m-%d").date()
+        else:
+            factura_fecha = None
+
+        cumple_busqueda = query.lower() in str(doc.id).lower() or query.lower() in cliente_data.get("nombre", "").lower()
+        cumple_fecha = not fecha or (factura_fecha and factura_fecha.strftime("%Y-%m-%d") == fecha)
+
+        if cumple_busqueda and cumple_fecha:
+            resultados.append({
+                "numero": data.get("numero_factura"),
+                "fecha": factura_fecha or datetime.now().date(),
+                "cliente": {"nombre": cliente_data.get("nombre", "Desconocido")},
+                "detalles": data.get("detalles", []),
+                "total": data.get("total", 0)
             })
 
-    return productos_filtrados  # Devuelve los productos filtrados
-
+    return resultados

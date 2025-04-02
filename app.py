@@ -1,8 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, db
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from models import facturacion
-from models.facturacion import registrar_factura
+from models import facturacion  
 from models.productos import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
 from models.clientes import registrar_cliente, obtener_clientes
 from models import vendedores  # <-- NUEVO IMPORT
@@ -14,6 +13,7 @@ import os
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
 app.secret_key = 'mi_clave_secreta'  # Cambia esto por una clave más segura
 
+
 # Guardar imagenes
 app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
@@ -21,7 +21,6 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 # Rutas de la aplicación
 @app.route('/inicio')
 def inicio():
-    """Ruta para la página principal después de iniciar sesión"""
     if 'user' not in session:
         flash("Por favor, inicia sesión.", "error")
         return redirect(url_for('login'))
@@ -29,12 +28,10 @@ def inicio():
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    """Ruta para la página de inicio de sesión"""
     if request.method == 'POST':
         usuario = request.form['usuario'].strip()
         password = request.form['password'].strip()
 
-        # Buscar el vendedor por su nombre de usuario en Firestore
         vendedores_ref = db.collection('vendedores')
         query = vendedores_ref.where('usuario', '==', usuario).stream()
         vendedor = next(query, None)
@@ -56,7 +53,6 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Cierra la sesión del usuario actual"""
     session.pop('user', None)
     flash("Sesión cerrada exitosamente.", "success")
     return redirect(url_for('login'))
@@ -75,7 +71,10 @@ def facturacion_page():
 
 @app.route('/consultar_facturas')
 def consultar_facturas():
-    return render_template('consultar_facturas.html')
+    query = request.args.get('query', '')
+    fecha = request.args.get('fecha', '')
+    facturas = facturacion.obtener_facturas_filtradas(query=query, fecha=fecha)
+    return render_template('consultar_facturas.html', facturas=facturas)
 
 @app.route('/productos', methods=['GET'])
 def productos():
@@ -142,11 +141,9 @@ def eliminar_producto(id):
 def registrar_cliente_route():
     return registrar_cliente()
 
-# NUEVA RUTA REGISTRO DE VENDEDOR
 @app.route('/registrar-vendedor', methods=['GET', 'POST'])
 def registrar_vendedor_route():
     return vendedores.registrar_vendedor()
 
-# Ejecutar la app
 if __name__ == '__main__':
     app.run(debug=True)

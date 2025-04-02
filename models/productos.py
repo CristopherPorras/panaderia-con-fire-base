@@ -1,6 +1,6 @@
 import firebase_admin
 from flask import url_for, flash, redirect
-from firebase_admin import credentials, firestore, db
+from firebase_admin import firestore, db, credentials
 from flask import Flask,render_template, request
 from werkzeug.utils import secure_filename
 import os
@@ -12,6 +12,8 @@ firebase_admin.initialize_app(cred, {
     'projectId': 'base-de-datos-panaderia-f4398',  
     'storageBucket': 'base-de-datos-panaderia-f4398.firebasestorage.app',  
 })
+
+
 
 # Función para verificar las extensiones permitidas
 def allowed_file(filename, allowed_extensions):
