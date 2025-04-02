@@ -6,17 +6,24 @@
 <div class="left-content">
     <img src="{{ url_for('static', filename='IMAGES/logotipo.jpg') }}" class="large-image" alt="Logo Delicias Al Horno">
 </div>
+
 <div class="container-form">
     <form class="sign-in" method="POST" action="{{ url_for('login') }}">
         <h2>Iniciar Sesión</h2>
+
+        <!-- Campo de Usuario -->
         <div class="container-input">
             <ion-icon name="person-outline"></ion-icon>
-            <input type="email" name="email" placeholder="Correo Electrónico" required>
+            <input type="text" name="usuario" placeholder="Usuario" required>
         </div>
+
+        <!-- Campo de Contraseña -->
         <div class="container-input">
             <ion-icon name="lock-closed-outline"></ion-icon>
             <input type="password" name="password" placeholder="Contraseña" required>
         </div>
+
+        <!-- Botón de Ingreso con Imagen -->
         <button type="submit" class="image-button">
             <img src="{{ url_for('static', filename='IMAGES/login.jpg') }}" alt="Botón de imagen">
         </button>

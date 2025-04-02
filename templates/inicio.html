@@ -12,8 +12,8 @@
     <nav>
         <div class="navbar">
             <div class="container-icon">
-                <a href="{{ url_for('logout') }}">Cerrar sesión</a>
-                    <ion-icon name="close-circle-outline"></ion-icon>
+                <a href="{{ url_for('logout') }}">
+                    <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
                 </a>
             </div>
             <h1>Delicias Al Horno</h1>
@@ -52,6 +52,11 @@
             <span>Registrar Cliente</span>
             <small class="tecla">L</small>
         </a>
+        <a href="{{ url_for('registrar_vendedor_route') }}" class="casilla" title="Presiona V">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <span>Registrar Vendedor</span>
+            <small class="tecla">V</small>
+        </a>
     </div>
 
     <!-- Script de acceso rápido con teclas directas -->
@@ -75,6 +80,12 @@
                     break;
                 case 'l':
                     window.location.href = "{{ url_for('registrar_cliente_route') }}";
+                    break;
+                case 'v':
+                    window.location.href = "{{ url_for('registrar_vendedor_route') }}";
+                    break;
+                case 'escape':
+                    window.location.href = "{{ url_for('login') }}";
                     break;
             }
         });
