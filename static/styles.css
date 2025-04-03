@@ -1332,3 +1332,23 @@ input:focus, select:focus {
 .btn-eliminar:hover {
     background-color: #e74c3c;
 }
+
+
+/* Botón "Agregar" en Facturación */
+.btn-agregar {
+    background-color: #7ba68c; /* Verde pastel como el login */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-agregar:hover {
+    background-color: #69b383;
+    transform: scale(1.03);
+}
