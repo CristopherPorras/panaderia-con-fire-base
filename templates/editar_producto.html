@@ -1,24 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Producto</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>Editar Producto</h1>
-        </div>
-    </nav>
+{% extends "base.html" %}
+
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+
+<div class="ttsecundario">
+    <h1>Editar Producto</h1>
+</div>
+
     <div class="contenedor">
-        <h2 class="titulo">Editar Producto</h2>
         <p>ID del producto: {{ producto.id }}</p>
         <form method="POST" action="{{ url_for('editar_producto', id=producto.id) }}" enctype="multipart/form-data">
             <div class="form-group">
@@ -28,10 +18,6 @@
             <div class="form-group">
                 <label for="valor_unitario">Precio Unitario (COP):</label>
                 <input type="number" id="valor_unitario" name="valor_unitario" step="100" value="{{ producto.valor_unitario|int }}" required>
-            </div>
-            <div class="form-group">
-                <label for="unidad_medida">Unidad de Medida:</label>
-                <input type="text" id="unidad_medida" name="unidad_medida" value="{{ producto.unidad_medida }}" required>
             </div>
             <div class="form-group">
                 <label for="cantidad_stock">Cantidad en Stock (Solo números enteros):</label>
@@ -68,5 +54,5 @@
     </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+   
+    {% endblock %}

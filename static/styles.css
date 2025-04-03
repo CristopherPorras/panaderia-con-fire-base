@@ -20,6 +20,117 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* CSS PARA EL LOGIN */
+
+/* Fondo general */
+.login-body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #fbe3d7, #ffe4cc);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor principal */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Tarjeta blanca con bordes suaves */
+.login-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Avatar/logo superior */
+.login-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Título */
+.login-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Campos del formulario */
+.login-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.login-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.login-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.login-group input:focus {
+    border-color: #7ba68c;
+}
+
+/* Botón principal */
+.login-btn {
+    background-color: #7ba68c;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+    background-color: #66a179;
+    transform: scale(1.02);
+}
+
+.login-btn:active {
+    transform: scale(0.97);
+}
+
+
+
 /* ------------------------------
    Navbar
 ------------------------------ */
@@ -95,7 +206,7 @@ body {
     /* Animaciones suaves al pasar el mouse: tamaño, color y sombra */
     
     cursor: pointer; /* Muestra una mano al pasar el mouse, indicando que es interactivo */
-    min-height: 400px; /* Altura mínima de la casilla (para que sea alta en pantalla) */
+    min-height: 300px; /* Altura mínima de la casilla (para que sea alta en pantalla) */
     min-width: 200px; /* Ancho mínimo de la casilla */
     font-weight: bold; /* Texto en negrita */
     letter-spacing: 0.5px; /* Espaciado entre letras para mejorar la legibilidad */

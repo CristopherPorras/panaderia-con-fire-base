@@ -11,9 +11,9 @@
     <!-- Barra de navegación -->
     <nav>
         <div class="navbar">
-                <a href="{{ url_for('logout') }}" class="btn-volver">
-                    <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
-                </a>
+            <a href="{{ url_for('logout') }}" class="btn-volver">
+                <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
+            </a>
             <h1>Delicias Al Horno</h1>
         </div>
     </nav>
@@ -59,35 +59,47 @@
 
     <!-- Script de acceso rápido con teclas directas -->
     <script>
-        document.addEventListener('keydown', function(e) {
-            // Ignora si el usuario está escribiendo en un campo de texto
-            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-
-            switch (e.key.toLowerCase()) {
+        window.addEventListener('keydown', function(e) {
+            const tag = document.activeElement.tagName;
+    
+            // Solo continuar si no estás escribiendo en un campo
+            if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    
+            const key = e.key.toLowerCase();
+    
+            switch (key) {
                 case 'f':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('guardar_factura') }}";
                     break;
                 case 'q':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('consultar_facturas') }}";
                     break;
                 case 'p':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('productos') }}";
                     break;
                 case 'r':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('registrar_producto') }}";
                     break;
                 case 'l':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('registrar_cliente_route') }}";
                     break;
                 case 'v':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('registrar_vendedor_route') }}";
                     break;
                 case 'escape':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('login') }}";
                     break;
             }
-        });
+        }, true); // ← captura activada
     </script>
+    
 
     <!-- Librería de íconos -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

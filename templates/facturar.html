@@ -1,25 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturación</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
+{% block title %}Facturacion{% endblock %}
 
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="arrow-back-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>Facturación</h1>
-        </div>
-    </nav>
-    
+{% block content %}
+
+<div class="ttsecundario">
+    <h1>Facturar</h1>
+</div>
+
     <div class="contenedor">
         <h2 class="titulo">Nueva Factura</h2>
         <form id="facturaForm" method="POST">
@@ -141,7 +129,4 @@
             cargarProductos();
         });
     </script>
-
-</body>
-
-</html>
+{% endblock %}

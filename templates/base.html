@@ -8,7 +8,6 @@
     
     <!-- Vinculación del archivo CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
 </head>
 <body>
     <nav>
@@ -19,7 +18,7 @@
                 </a>
             </div>
             <h1>Delicias Al Horno</h1>
-            
+
             <!-- Botón de Volver en la esquina superior derecha -->
             <a href="{{ url_for('inicio') }}" class="btn-volver">
                 <ion-icon name="arrow-back-circle-outline"></ion-icon> Volver
@@ -27,14 +26,28 @@
         </div>
     </nav>
 
-    <!-- Contenedor principal donde se insertará el contenido específico de cada página -->
-        {% block content %}{% endblock %}
+    <!-- Contenido específico de cada página -->
+    {% block content %}{% endblock %}
 
-
-    <!-- Scripts de Ionicons -->
+    <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
 
+    <!-- Script global: ESC para ir al inicio -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            // Solo ejecuta si NO hay elementos de entrada enfocados
+            const focused = document.activeElement;
+            const isInput = focused && ['INPUT', 'TEXTAREA', 'SELECT'].includes(focused.tagName);
+    
+            if (!isInput && e.key === 'Escape') {
+                e.preventDefault();  // Detiene cualquier otra acción nativa del navegador
+                window.location.href = "{{ url_for('inicio') }}";
+            }
+        });
+    </script>
+    
+    <!-- Permitir scripts específicos por página -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>
