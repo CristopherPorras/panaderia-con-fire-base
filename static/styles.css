@@ -261,13 +261,70 @@ body {
 /* ------------------------------
    Sección de Facturación
 ------------------------------ */
-
-.contenedor-general-facturar {
-    width: 90%;
-    margin: 0 auto;
-    overflow: hidden;
-    box-sizing: border-box;
+/* Contenedor de la tabla */
+.container-factura {
+    width: 80%; /* Ajusta el ancho al 80% de la pantalla */
+    margin: 20px auto; /* Centra la tabla */
+    overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
 }
+
+/* Tabla */
+.factura-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezados de tabla */
+.factura-tabla th {
+    background: #2980b9;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+/* Filas de la tabla */
+.factura-tabla td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Alternancia de colores en las filas */
+.factura-tabla tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Íconos */
+.factura-tabla td a,
+.factura-tabla td button {
+    margin: 0 8px; /* Añade espacio entre los íconos */
+    font-size: 1.2em;
+    vertical-align: middle;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+/* Color de icono de eliminar */
+.factura-tabla td button ion-icon {
+    color: red;
+}
+
+/* Asegura que los íconos sean visibles y accesibles */
+ion-icon {
+    font-size: 20px;
+    transition: transform 0.2s ease-in-out;
+}
+
+ion-icon:hover {
+    transform: scale(1.2);
+}
+
+
 
 /* Título secundario */
 .ttsecundario {
@@ -371,91 +428,6 @@ body {
 
 
 /* ------------------------------
-   Sección de Totales y Tabla de Facturación
------------------------------- */
-.totales,
-.pinfobarra,
-.ptotalbarra {
-    width: 98%;
-    max-width: 1200px;
-    margin: 0 auto;
-    box-sizing: border-box;
-}
-
-.totales {
-    background: black;
-}
-
-.titulos-barra,
-.infobarra,
-.totalbarra {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-}
-
-.titulos2,
-.infobarra2,
-.tbarra {
-    flex: 1;
-    text-align: center;
-}
-
-.titulos-barra h2 {
-    color: white;
-    margin: 0;
-}
-
-.infobarra h2,
-.totalbarra h2 {
-    color: black;
-    margin: 0;
-}
-
-.pinfobarra {
-    background: white;
-}
-
-.ptotalbarra {
-    background: #a7ddbd;
-}
-
-.factura-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-    background-color: #f7f1ed;
-}
-
-.factura-tabla thead th {
-    background-color: black;
-    color: white;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.factura-tabla tbody tr:nth-child(odd) {
-    background-color: #f2f2f2;
-}
-
-.factura-tabla tbody tr:nth-child(even) {
-    background-color: #d1d1d1;
-}
-
-.factura-tabla tfoot td {
-    background-color: #d6e5d6;
-    font-weight: bold;
-    text-align: right;
-    padding: 10px;
-}
-
-.factura-tabla td {
-    padding: 10px;
-    font-size: 16px;
-}
-
-/* ------------------------------
    Botones de Acción
 ------------------------------ */
 .btn-borrar {
@@ -551,39 +523,7 @@ body {
     flex: 1;
 }
 
-.container-factura {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffdfcd; /* Fondo similar al mostrado en la imagen */
-    padding: 20px;
-    border-radius: 15px; /* Bordes redondeados */
-}
 
-.factura-info {
-    background-color: #d1d1d1; /* Fondo gris claro */
-    border-radius: 25px; /* Bordes redondeados */
-    padding: 20px;
-    text-align: center;
-    width: 100%; /* Ancho completo */
-    max-width: 600px; /* Ancho máximo */
-}
-
-.factura-titulos {
-    display: flex;
-    justify-content: space-around;
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 18px; /* Tamaño del texto */
-    color: white; /* Color del texto */
-}
-
-.factura-datos {
-    display: flex;
-    justify-content: space-around;
-    font-size: 20px; /* Tamaño del texto */
-    color: #333; /* Color del texto */
-}
 
 /*  barra de seleccion */
 

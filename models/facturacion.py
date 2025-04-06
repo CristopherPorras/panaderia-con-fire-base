@@ -21,7 +21,9 @@ def guardar_factura(form_data):
         'total': float(form_data.get('total'))
     }
 
-    db.collection('facturas').add(factura_data)
+    doc_ref = db.collection('facturas').add(factura_data)
+    factura_id = doc_ref[1].id
+    print("Factura guardada con ID:", factura_id)
 
 def obtener_numero_factura():
     facturas = db.collection('facturas').order_by('fecha', direction=firestore.Query.DESCENDING).limit(1).stream()
@@ -68,11 +70,15 @@ def obtener_facturas_filtradas(query='', fecha=''):
 
         if cumple_busqueda and cumple_fecha:
             resultados.append({
+                "id": doc.id,
                 "numero": data.get("numero_factura"),
                 "fecha": factura_fecha or datetime.now().date(),
                 "cliente": {"nombre": cliente_data.get("nombre", "Desconocido")},
                 "detalles": data.get("detalles", []),
-                "total": data.get("total", 0)
+                "total": data.get("total", 0),
             })
 
     return resultados
+
+def eliminar_factura_por_id(factura_id):
+    db.collection('facturas').document(factura_id).delete()

@@ -137,6 +137,15 @@ def eliminar_producto(id):
         flash(f"Error al eliminar el producto: {e}", "error")
     return redirect(url_for('productos'))
 
+@app.route('/eliminar_factura/<factura_id>', methods=['POST'])
+def eliminar_factura(factura_id):
+    try:
+        facturacion.eliminar_factura_por_id(factura_id)
+        flash('Factura eliminada correctamente.', 'success')
+    except Exception as e:
+        flash(f'Error al eliminar factura: {str(e)}', 'danger')
+    return redirect(url_for('consultar_facturas'))
+
 @app.route('/registrar_cliente', methods=['GET', 'POST'])
 def registrar_cliente_route():
     return registrar_cliente()
