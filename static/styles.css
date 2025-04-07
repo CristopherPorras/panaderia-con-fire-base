@@ -20,6 +20,117 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* CSS PARA EL LOGIN */
+
+/* Fondo general */
+.login-body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #fbe3d7, #ffe4cc);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor principal */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Tarjeta blanca con bordes suaves */
+.login-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Avatar/logo superior */
+.login-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Título */
+.login-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Campos del formulario */
+.login-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.login-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.login-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.login-group input:focus {
+    border-color: #7ba68c;
+}
+
+/* Botón principal */
+.login-btn {
+    background-color: #7ba68c;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+    background-color: #66a179;
+    transform: scale(1.02);
+}
+
+.login-btn:active {
+    transform: scale(0.97);
+}
+
+
+
 /* ------------------------------
    Navbar
 ------------------------------ */
@@ -95,7 +206,7 @@ body {
     /* Animaciones suaves al pasar el mouse: tamaño, color y sombra */
     
     cursor: pointer; /* Muestra una mano al pasar el mouse, indicando que es interactivo */
-    min-height: 400px; /* Altura mínima de la casilla (para que sea alta en pantalla) */
+    min-height: 300px; /* Altura mínima de la casilla (para que sea alta en pantalla) */
     min-width: 200px; /* Ancho mínimo de la casilla */
     font-weight: bold; /* Texto en negrita */
     letter-spacing: 0.5px; /* Espaciado entre letras para mejorar la legibilidad */
@@ -630,6 +741,18 @@ ion-icon:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Contenedor exclusivo para tablas de clientes/vendedores */
+.contenedor-amplio {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+}
+
+
 /* Título */
 .titulo {
     text-align: center;
@@ -1160,4 +1283,46 @@ input:focus, select:focus {
 
 .btn-eliminar:hover {
     background-color: #e74c3c;
+}
+
+
+/* Botón "Agregar" en Facturación */
+.btn-agregar {
+    background-color: #7ba68c; /* Verde pastel como el login */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-agregar:hover {
+    background-color: #69b383;
+    transform: scale(1.03);
+}
+
+
+/* Evita que los botones se apilen uno sobre otro */
+.factura-tabla td.acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+/* Asegura que los formularios dentro no cambien de bloque */
+.factura-tabla td.acciones form,
+.factura-tabla td.acciones a {
+    display: inline;
+    margin: 0;
+}
+
+/* Previene desbordamiento horizontal */
+.contenedor {
+    overflow-x: auto;
 }

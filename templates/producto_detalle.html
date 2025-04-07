@@ -1,22 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Producto</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('productos') }}">
-                    <ion-icon name="arrow-back-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>{{ producto.descripcion }}</h1>
-        </div>
-    </nav>
+{% extends "base.html" %}
+
+{% block title %}{{ producto.descripcion }}{% endblock %}
+
+{% block content %}
+
+<div class="ttsecundario">
+    <h1>{{ producto.descripcion }}</h1>
+</div>
     <div class="contenedor">
         <div class="detalle-producto">
             <img id="imagen-producto"
@@ -42,5 +32,5 @@
     </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+
+    {% endblock %}

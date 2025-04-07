@@ -11,9 +11,9 @@
     <!-- Barra de navegación -->
     <nav>
         <div class="navbar">
-                <a href="{{ url_for('logout') }}" class="btn-volver">
-                    <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
-                </a>
+            <a href="{{ url_for('logout') }}" class="btn-volver">
+                <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
+            </a>
             <h1>Delicias Al Horno</h1>
         </div>
     </nav>
@@ -21,7 +21,7 @@
     <!-- Título principal -->
     <div class="ttsecundario">
         <h1>Bienvenido</h1>
-    </div> 
+    </div>
 
     <!-- Casillas principales con teclas asignadas -->
     <div class="contenedor-principal">
@@ -55,34 +55,58 @@
             <span>Registrar Vendedor</span>
             <small class="tecla">V</small>
         </a>
+        <a href="{{ url_for('clientes') }}" class="casilla" title="Presiona C">
+            <ion-icon name="people-outline"></ion-icon>
+            <span>Ver Clientes</span>
+            <small class="tecla">C</small>
+        </a>
+        <a href="{{ url_for('vendedores_lista') }}" class="casilla" title="Presiona Z">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Ver Vendedores</span>
+            <small class="tecla">Z</small>
+        </a>
     </div>
 
     <!-- Script de acceso rápido con teclas directas -->
     <script>
         document.addEventListener('keydown', function(e) {
-            // Ignora si el usuario está escribiendo en un campo de texto
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
             switch (e.key.toLowerCase()) {
                 case 'f':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('guardar_factura') }}";
                     break;
                 case 'q':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('consultar_facturas') }}";
                     break;
                 case 'p':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('productos') }}";
                     break;
                 case 'r':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('registrar_producto') }}";
                     break;
                 case 'l':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('registrar_cliente_route') }}";
                     break;
                 case 'v':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('registrar_vendedor_route') }}";
                     break;
+                case 'c':
+                    e.preventDefault();
+                    window.location.href = "{{ url_for('clientes') }}";
+                    break;
+                case 'z':
+                    e.preventDefault();
+                    window.location.href = "{{ url_for('vendedores_lista') }}";
+                    break;
                 case 'escape':
+                    e.preventDefault();
                     window.location.href = "{{ url_for('login') }}";
                     break;
             }

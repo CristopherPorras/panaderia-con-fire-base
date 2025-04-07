@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+<div class="ttsecundario">
+    <h1>Clientes</h1>
+</div>
+
+<div class="contenedor-amplio">
+    {% if clientes %}
+    <table class="factura-tabla">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.documento }}</td>
+                <td>{{ cliente.email }}</td>
+                <td>{{ cliente.telefono }}</td>
+                <td>{{ cliente.direccion }}</td>
+                <td class="acciones">
+                    <a href="{{ url_for('editar_cliente', id=cliente.id) }}" class="btn-editar">Editar</a>
+                    <form method="POST" action="{{ url_for('eliminar_cliente', id=cliente.id) }}" onsubmit="return confirmarEliminacion()">
+                        <button type="submit" class="btn-eliminar">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center mt-5">
+        <p class="no-productos">No hay clientes registrados.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function confirmarEliminacion() {
+    return confirm("¿Estás seguro de que deseas eliminar este cliente?");
+}
+</script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}

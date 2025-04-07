@@ -1,24 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Cliente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="close-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>Registrar Cliente</h1>
-        </div>
-    </nav>
+{% extends "base.html" %}
+
+{% block title %}Registrar Cliente{% endblock %}
+
+{% block content %}
+
+<div class="ttsecundario">
+    <h1>Registrar Cliente</h1>
+</div>
+
     <div class="contenedor">  
-        <h2 class="titulo">Registrar Cliente</h2>
         <form method="POST">
             <div class="form-group">
                 <label for="nombre">Nombre</label>
@@ -48,5 +38,5 @@
     </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+
+    {% endblock %}

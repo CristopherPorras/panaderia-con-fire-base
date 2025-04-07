@@ -1,28 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultar Facturas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
+{% block title %}Consultar Facturas{% endblock %}
 
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="arrow-back-circle-outline"></ion-icon>
-                </a>
-            </div>
-            <h1>Consultar Facturas</h1>
-        </div>
-    </nav>
+{% block content %}
 
-    <div class="ttsecundario">
-        <h1>Facturas</h1>
-    </div>
+<div class="ttsecundario">
+    <h1>Consultar Facturas</h1>
+</div>
 
     <!-- Buscador por texto -->
     <div class="busqueda-container">
@@ -97,11 +81,7 @@
         {% endif %}
     </div>
 
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
-
-</body>
-
-</html>
+    {% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Vendedores{% endblock %}
+
+{% block content %}
+<div class="ttsecundario">
+    <h1>Vendedores</h1>
+</div>
+
+<div class="contenedor-amplio">
+    {% if vendedores %}
+    <table class="factura-tabla">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vendedor in vendedores %}
+            <tr>
+                <td>{{ vendedor.nombre }}</td>
+                <td>{{ vendedor.documento }}</td>
+                <td>{{ vendedor.usuario }}</td>
+                <td>{{ vendedor.email }}</td>
+                <td>{{ vendedor.telefono }}</td>
+                <td>{{ vendedor.direccion }}</td>
+                <td class="acciones">
+                    <a href="{{ url_for('editar_vendedor', id=vendedor.id) }}" class="btn-editar">Editar</a>
+                    <form method="POST" action="{{ url_for('eliminar_vendedor', id=vendedor.id) }}" onsubmit="return confirmarEliminacion()">
+                        <button type="submit" class="btn-eliminar">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center mt-5">
+        <p class="no-productos">No hay vendedores registrados.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function confirmarEliminacion() {
+    return confirm("¿Estás seguro de que deseas eliminar este vendedor?");
+}
+</script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}
