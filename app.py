@@ -104,6 +104,42 @@ def consultar_facturas():
 
     return render_template('consultar_facturas.html', facturas=facturas)
 
+@app.route('/factura/<factura_id>')
+def detalle_factura(factura_id):
+    factura_ref = db.collection('facturas').document(factura_id).get()
+
+    if factura_ref.exists:
+        factura = factura_ref.to_dict()
+        cliente = db.collection('clientes').document(factura['cliente_id']).get().to_dict()
+
+        # Traer detalles del producto
+        detalles = []
+        for item in factura.get('detalles', []):  # ← Cambiado de factura_data a factura
+            producto_id = item.get('producto_id')
+            producto_doc = db.collection('productos').document(producto_id).get()
+            producto_data = producto_doc.to_dict() if producto_doc.exists else {}
+
+            detalles.append({
+                'nombre': producto_data.get('descripcion', 'Desconocido'),
+                'cantidad': item.get('cantidad', 0),
+                'precio_unitario': producto_data.get('valor_unitario', 0),
+                'subtotal': item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
+            })
+
+        return render_template('facturas_detalles.html', factura=factura, cliente=cliente, detalles=detalles)
+    else:
+        return "Factura no encontrada", 404
+
+@app.route('/eliminar_factura/<factura_id>', methods=['POST'])
+def eliminar_factura(factura_id):
+    try:
+        facturacion.eliminar_factura_por_id(factura_id)
+        flash('Factura eliminada correctamente.', 'success')
+    except Exception as e:
+        flash(f'Error al eliminar factura: {str(e)}', 'danger')
+    return redirect(url_for('consultar_facturas'))
+
+
 
 # ==== PRODUCTOS ====
 @app.route('/productos', methods=['GET'])
@@ -160,6 +196,13 @@ def eliminar_producto(id):
     except Exception as e:
         flash(f"Error al eliminar el producto: {e}", "error")
     return redirect(url_for('productos'))
+
+
+@app.route('/buscar_productos', methods=['GET'])
+def buscar_productos():
+    query = request.args.get('query', '')
+    productos = facturacion.buscar_productos(query)
+    return jsonify(productos)
 
 # ==== CLIENTES ====
 @app.route('/registrar_cliente', methods=['GET', 'POST'])
