@@ -801,6 +801,18 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Contenedor exclusivo para tablas de clientes/vendedores */
+.contenedor-amplio {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+}
+
+
 /* Título */
 .titulo {
     text-align: center;
@@ -1351,4 +1363,26 @@ input:focus, select:focus {
 .btn-agregar:hover {
     background-color: #69b383;
     transform: scale(1.03);
+}
+
+
+/* Evita que los botones se apilen uno sobre otro */
+.factura-tabla td.acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+/* Asegura que los formularios dentro no cambien de bloque */
+.factura-tabla td.acciones form,
+.factura-tabla td.acciones a {
+    display: inline;
+    margin: 0;
+}
+
+/* Previene desbordamiento horizontal */
+.contenedor {
+    overflow-x: auto;
 }

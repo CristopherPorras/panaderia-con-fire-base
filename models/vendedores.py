@@ -39,3 +39,9 @@ def registrar_vendedor():
         return redirect(url_for('inicio'))
 
     return render_template('registrar_vendedor.html')
+
+
+def obtener_vendedores():
+    vendedores_ref = db.collection('vendedores').stream()
+    vendedores = [{"id": doc.id, **doc.to_dict()} for doc in vendedores_ref]
+    return vendedores

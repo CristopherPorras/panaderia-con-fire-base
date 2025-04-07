@@ -1,19 +1,19 @@
 # ==== IMPORTACIONES ====
 import os
 import firebase_admin
-from firebase_admin import credentials, firestore, db
+from firebase_admin import credentials, firestore
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from models import facturacion
 from models.productos import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
 from models.clientes import registrar_cliente, obtener_clientes
 from models import vendedores
 from werkzeug.utils import secure_filename
-from werkzeug.security import check_password_hash  # Para verificar contraseñas cifradas
-from functools import wraps  # Para crear el decorador
+from werkzeug.security import check_password_hash
+from functools import wraps
 
 # ==== INICIALIZACIÓN DE FLASK ====
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
-app.secret_key = 'mi_clave_secreta'  # Esta clave es esencial para las sesiones
+app.secret_key = 'mi_clave_secreta'
 
 # ==== CONFIGURACIÓN DE SUBIDAS ====
 app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
@@ -29,7 +29,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ==== RUTA DE INICIO PROTEGIDA ====
+# ==== RUTA DE INICIO ====
 @app.route('/inicio')
 @login_required
 def inicio():
@@ -42,7 +42,6 @@ def login():
         usuario = request.form['usuario'].strip()
         password = request.form['password'].strip()
 
-        # Buscar usuario en Firestore
         vendedores_ref = db.collection('vendedores')
         query = vendedores_ref.where('usuario', '==', usuario).stream()
         vendedor = next(query, None)
@@ -50,19 +49,17 @@ def login():
         if vendedor:
             datos = vendedor.to_dict()
             if check_password_hash(datos.get('contrasena', ''), password):
-                session['user'] = datos['usuario']  # Guardar sesión
+                session['user'] = datos['usuario']
                 flash("Inicio de sesión exitoso.", "success")
                 return redirect(url_for('inicio'))
             else:
                 flash("Contraseña incorrecta.", "error")
         else:
             flash("Usuario no encontrado.", "error")
-
         return redirect(url_for('login'))
 
     return render_template('index.html')
 
-# ==== CERRAR SESIÓN ====
 @app.route('/logout')
 def logout():
     session.pop('user', None)
@@ -96,7 +93,17 @@ def consultar_facturas():
     query = request.args.get('query', '')
     fecha = request.args.get('fecha', '')
     facturas = facturacion.obtener_facturas_filtradas(query=query, fecha=fecha)
+
+    # Prevención de error: aseguramos que cada detalle tenga 'producto' y 'total'
+    for factura in facturas:
+        for detalle in factura.get('detalles', []):
+            if 'producto' not in detalle:
+                detalle['producto'] = {'id': 'N/A', 'nombre': 'Producto desconocido'}
+            if 'total' not in detalle:
+                detalle['total'] = 0
+
     return render_template('consultar_facturas.html', facturas=facturas)
+
 
 # ==== PRODUCTOS ====
 @app.route('/productos', methods=['GET'])
@@ -160,11 +167,116 @@ def eliminar_producto(id):
 def registrar_cliente_route():
     return registrar_cliente()
 
-# ==== REGISTRO DE VENDEDORES ====
+@app.route('/clientes')
+@login_required
+def clientes():
+    clientes_lista = obtener_clientes()
+    return render_template('clientes.html', clientes=clientes_lista)
+
+@app.route('/editar_cliente/<id>', methods=['GET', 'POST'])
+@login_required
+def editar_cliente(id):
+    cliente_ref = db.collection('clientes').document(id)
+    if request.method == 'POST':
+        datos_actualizados = {
+            'nombre': request.form['nombre'],
+            'documento': request.form['documento'],
+            'email': request.form['email'],
+            'telefono': request.form['telefono'],
+            'direccion': request.form['direccion']
+        }
+        cliente_ref.update(datos_actualizados)
+        flash("Cliente actualizado con éxito", "success")
+        return redirect(url_for('clientes'))
+
+    cliente_doc = cliente_ref.get()
+    if cliente_doc.exists:
+        cliente = cliente_doc.to_dict()
+        cliente['id'] = cliente_doc.id
+        return render_template('editar_cliente.html', cliente=cliente)
+    else:
+        flash("Cliente no encontrado", "error")
+        return redirect(url_for('clientes'))
+
+@app.route('/eliminar_cliente/<id>', methods=['POST'])
+@login_required
+def eliminar_cliente(id):
+    try:
+        cliente_ref = db.collection('clientes').document(id)
+        cliente_ref.delete()
+        flash("Cliente eliminado exitosamente", "success")
+    except Exception as e:
+        flash(f"Error al eliminar el cliente: {e}", "error")
+    return redirect(url_for('clientes'))
+
+# ==== VENDEDORES ====
 @app.route('/registrar-vendedor', methods=['GET', 'POST'])
 @login_required
 def registrar_vendedor_route():
     return vendedores.registrar_vendedor()
+
+@app.route('/vendedores')
+@login_required
+def vendedores_lista():
+    from models.vendedores import obtener_vendedores
+    lista = obtener_vendedores()
+    # ✅ Filtramos el usuario especial
+    lista = [v for v in lista if v.get('usuario') != 'admin-root']
+    return render_template('vendedores.html', vendedores=lista)
+
+
+@app.route('/editar_vendedor/<id>', methods=['GET', 'POST'])
+@login_required
+def editar_vendedor(id):
+    vendedor_ref = db.collection('vendedores').document(id)
+    vendedor_doc = vendedor_ref.get()
+
+    if vendedor_doc.exists:
+        vendedor = vendedor_doc.to_dict()
+
+        # 🚫 Si se intenta acceder al usuario protegido admin-root, redirige con mensaje
+        if vendedor.get('usuario') == 'admin-root':
+            flash("No se permite modificar este usuario especial.", "error")
+            return redirect(url_for('vendedores_lista'))
+
+        if request.method == 'POST':
+            datos_actualizados = {
+                'nombre': request.form['nombre'],
+                'usuario': request.form['usuario'],
+                'email': request.form['email'],
+                'telefono': request.form['telefono']
+            }
+            vendedor_ref.update(datos_actualizados)
+            flash("Vendedor actualizado con éxito", "success")
+            return redirect(url_for('vendedores_lista'))
+
+        vendedor['id'] = vendedor_doc.id
+        return render_template('editar_vendedor.html', vendedor=vendedor)
+
+    flash("Vendedor no encontrado", "error")
+    return redirect(url_for('vendedores_lista'))
+
+
+@app.route('/eliminar_vendedor/<id>', methods=['POST'])
+@login_required
+def eliminar_vendedor(id):
+    vendedor_doc = db.collection('vendedores').document(id).get()
+
+    if vendedor_doc.exists:
+        vendedor = vendedor_doc.to_dict()
+
+        # 🚫 Bloquear eliminación de admin-root o del usuario logueado
+        if vendedor.get('usuario') == 'admin-root' or vendedor.get('usuario') == session.get('user'):
+            flash("No puedes eliminar este usuario especial.", "error")
+            return redirect(url_for('vendedores_lista'))
+
+        db.collection('vendedores').document(id).delete()
+        flash("Vendedor eliminado exitosamente", "success")
+    else:
+        flash("Vendedor no encontrado.", "error")
+
+    return redirect(url_for('vendedores_lista'))
+
 
 # ==== INICIAR SERVIDOR ====
 if __name__ == '__main__':
