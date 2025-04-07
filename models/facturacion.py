@@ -5,25 +5,46 @@ from models.productos import db
 
 db = firestore.client()
 
+from datetime import datetime
+from firebase_admin import firestore
+
 def guardar_factura(form_data):
+    # Obtener el número de factura más alto y sumarle 1
+    facturas_ref = db.collection('facturas').order_by('numero_factura', direction=firestore.Query.DESCENDING).limit(1).stream()
+    numero_factura = 1
+    for factura in facturas_ref:
+        numero_factura = factura.to_dict().get('numero_factura', 0) + 1
+        break  # Solo necesitamos la primera
+
+    total = 0
     detalles = []
     for producto_id, cantidad in zip(form_data.getlist('producto_id'), form_data.getlist('cantidad')):
-        detalles.append({
-            'producto_id': producto_id,
-            'cantidad': int(cantidad)
-        })
+        producto_ref = db.collection('productos').document(producto_id).get()
+        if producto_ref.exists:
+            producto_data = producto_ref.to_dict()
+            cantidad_int = int(cantidad)
+            precio_unitario = float(producto_data.get('valor_unitario', 0))
+            subtotal = cantidad_int * precio_unitario
+            total += subtotal
+
+            detalles.append({
+                'producto_id': producto_id,
+                'nombre': producto_data.get('descripcion', 'Desconocido'),
+                'precio_unitario': int(precio_unitario),
+                'cantidad': cantidad_int,
+                'subtotal': subtotal
+            })
 
     factura_data = {
-        'numero_factura': form_data.get('numero_factura'),
-        'fecha': datetime.now(),
-        'cliente_id': form_data.get('cliente_id'),
-        'detalles': detalles,
-        'total': float(form_data.get('total'))
+        'numero_factura': numero_factura,
+        'cliente_id': form_data['cliente_id'],  # Asegúrate de que el campo <input name="nombre"> esté en el formulario
+        'fecha': datetime.now().strftime('%Y-%m-%d'),
+        'total': int(total),
+        'detalles': detalles
     }
 
-    doc_ref = db.collection('facturas').add(factura_data)
-    factura_id = doc_ref[1].id
-    print("Factura guardada con ID:", factura_id)
+    db.collection('facturas').add(factura_data)
+
 
 def obtener_numero_factura():
     facturas = db.collection('facturas').order_by('fecha', direction=firestore.Query.DESCENDING).limit(1).stream()

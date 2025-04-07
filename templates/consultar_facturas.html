@@ -49,47 +49,53 @@
 
     <!-- Lista de facturas en formato compacto -->
     <!-- Lista de facturas en formato tabla -->
-<div class="container-factura">
-    {% if facturas|length > 0 %}
-    <table class="factura-tabla">
-        <thead>
-            <tr>
-                <th>Factura #</th>
-                <th>Cliente</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for factura in facturas|sort(attribute='numero', reverse=True) %}
-            <tr>
-                <td>{{ factura.numero }}</td>
-                <td>{{ factura.cliente.nombre }}</td>
-                <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
-                <td>
-                    <!-- Botón para ver detalles -->
-                    <a href="#" title="Ver detalles">
-                        <ion-icon name="eye-outline"></ion-icon>
-                    </a>
-                    <!-- Botón para eliminar factura -->
-                    <form method="POST" action="{{ url_for('eliminar_factura', factura_id=factura.id) }}" style="display:inline;">
-                        <button type="submit" title="Eliminar factura" onclick="return confirm('¿Seguro que deseas eliminar esta factura?');" style="background: none; border: none; cursor: pointer;">
-                            <ion-icon name="trash-outline" style="color: red;"></ion-icon>
-                        </button>
-                    </form>
-                    
-                                       
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <div class="ttsecundario">
-        <p>No se encontraron facturas para los criterios seleccionados.</p>
+    <div class="container-factura">
+        {% if facturas|length > 0 %}
+        <table class="factura-tabla">
+            <thead>
+                <tr>
+                    <th>Factura #</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for factura in facturas|sort(attribute='numero', reverse=True) %}
+                <tr>
+                    <td>{{ factura.numero }}</td>
+                    <td>{{ factura.cliente.nombre }}</td>
+                    <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
+                    <td>
+
+
+                        <!-- Botón para ver detalles -->
+                        <a href="{{ url_for('detalle_factura', factura_id=factura.id) }}" title="Ver detalles">
+                            <ion-icon name="eye-outline"></ion-icon>
+                        </a>
+
+                        <!-- Botón para eliminar factura -->
+                        <form method="POST" action="{{ url_for('eliminar_factura', factura_id=factura.id) }}"
+                            style="display:inline;">
+                            <button type="submit" title="Eliminar factura"
+                                onclick="return confirm('¿Seguro que deseas eliminar esta factura?');"
+                                style="background: none; border: none; cursor: pointer;">
+                                <ion-icon name="trash-outline" style="color: red;"></ion-icon>
+                            </button>
+                        </form>
+
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="ttsecundario">
+            <p>No se encontraron facturas para los criterios seleccionados.</p>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
 
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

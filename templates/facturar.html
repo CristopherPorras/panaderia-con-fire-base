@@ -19,7 +19,7 @@
             <h1>Facturación</h1>
         </div>
     </nav>
-    
+
     <div class="contenedor">
         <h2 class="titulo">Nueva Factura</h2>
         <form id="facturaForm" method="POST">
@@ -36,6 +36,7 @@
                     <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
                     {% endfor %}
                 </select>
+                
             </div>
 
             <div class="form-group">
@@ -45,14 +46,14 @@
                 </select>
                 <button type="button" id="agregar_producto">Agregar</button>
             </div>
-            
+
             <div id="productos_seleccionados"></div>
-            
+
             <div class="form-group">
                 <label for="total">Total:</label>
                 <input type="text" id="total" name="total" value="0" readonly>
             </div>
-            
+
             <button type="submit" class="btn-guardar">Guardar Factura</button>
             <a href="/inicio" class="btn btn-cancelar">Cancelar</a>
         </form>
@@ -109,9 +110,11 @@
                 div.classList.add("producto-seleccionado");
                 div.innerHTML = `
                     <span>${descripcion}</span>
-                    <input type="number" name="cantidades[]" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
+                    <input type="hidden" name="producto_id" value="${id}">
+                    <input type="number" name="cantidad" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
                     <button type="button" class="eliminar">Eliminar</button>
                 `;
+
 
                 div.querySelector(".eliminar").addEventListener("click", () => {
                     div.remove();

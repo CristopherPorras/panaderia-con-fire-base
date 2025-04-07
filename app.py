@@ -18,7 +18,7 @@ app.secret_key = 'mi_clave_secreta'  # Cambia esto por una clave más segura
 app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
-# Rutas de la aplicación
+# Rutas de la aplicación inicio
 @app.route('/inicio')
 def inicio():
     if 'user' not in session:
@@ -57,33 +57,22 @@ def logout():
     flash("Sesión cerrada exitosamente.", "success")
     return redirect(url_for('login'))
 
-@app.route('/facturar', methods=['GET', 'POST'])
-def facturacion_page():
-    if request.method == 'POST':
-        numero_factura = facturacion.guardar_factura(request.form)
-        return redirect(url_for('facturacion_page'))
+#Ruta de los clientes y vendedores
 
-    numero_factura = facturacion.obtener_numero_factura()
-    clientes_ref = db.collection("clientes").stream()
-    clientes = [{"id": cliente.id, "nombre": cliente.to_dict().get("nombre")} for cliente in clientes_ref]
+@app.route('/registrar_cliente', methods=['GET', 'POST'])
+def registrar_cliente_route():
+    return registrar_cliente()
 
-    return render_template('facturar.html', numero_factura=numero_factura, clientes=clientes)
+@app.route('/registrar-vendedor', methods=['GET', 'POST'])
+def registrar_vendedor_route():
+    return vendedores.registrar_vendedor()
 
-@app.route('/consultar_facturas')
-def consultar_facturas():
-    query = request.args.get('query', '')
-    fecha = request.args.get('fecha', '')
-    facturas = facturacion.obtener_facturas_filtradas(query=query, fecha=fecha)
-    return render_template('consultar_facturas.html', facturas=facturas)
+
+#Rutas de los productos
 
 @app.route('/productos', methods=['GET'])
 def productos():
     return fun_productos()
-
-@app.route("/facturar", methods=["POST"])
-def guardar_factura():
-    facturacion.guardar_factura(request.form)
-    return redirect(url_for("facturar.html"))
 
 @app.route('/buscar_productos', methods=['GET'])
 def buscar_productos():
@@ -137,6 +126,32 @@ def eliminar_producto(id):
         flash(f"Error al eliminar el producto: {e}", "error")
     return redirect(url_for('productos'))
 
+#Rutas de las facturas
+
+@app.route("/facturar", methods=["POST"])
+def guardar_factura():
+    facturacion.guardar_factura(request.form)
+    return redirect(url_for("guardar_factura"))
+
+@app.route('/facturar', methods=['GET', 'POST'])
+def facturacion_page():
+    if request.method == 'POST':
+        numero_factura = facturacion.guardar_factura(request.form)
+        return redirect(url_for('facturacion_page'))
+
+    numero_factura = facturacion.obtener_numero_factura()
+    clientes_ref = db.collection("clientes").stream()
+    clientes = [{"id": cliente.id, "nombre": cliente.to_dict().get("nombre")} for cliente in clientes_ref]
+
+    return render_template('facturar.html', numero_factura=numero_factura, clientes=clientes)
+
+@app.route('/consultar_facturas')
+def consultar_facturas():
+    query = request.args.get('query', '')
+    fecha = request.args.get('fecha', '')
+    facturas = facturacion.obtener_facturas_filtradas(query=query, fecha=fecha)
+    return render_template('consultar_facturas.html', facturas=facturas)
+
 @app.route('/eliminar_factura/<factura_id>', methods=['POST'])
 def eliminar_factura(factura_id):
     try:
@@ -146,13 +161,34 @@ def eliminar_factura(factura_id):
         flash(f'Error al eliminar factura: {str(e)}', 'danger')
     return redirect(url_for('consultar_facturas'))
 
-@app.route('/registrar_cliente', methods=['GET', 'POST'])
-def registrar_cliente_route():
-    return registrar_cliente()
 
-@app.route('/registrar-vendedor', methods=['GET', 'POST'])
-def registrar_vendedor_route():
-    return vendedores.registrar_vendedor()
+@app.route('/factura/<factura_id>')
+def detalle_factura(factura_id):
+    factura_ref = db.collection('facturas').document(factura_id).get()
+
+    if factura_ref.exists:
+        factura = factura_ref.to_dict()
+        cliente = db.collection('clientes').document(factura['cliente_id']).get().to_dict()
+
+        # Traer detalles del producto
+        detalles = []
+        for item in factura.get('detalles', []):  # ← Cambiado de factura_data a factura
+            producto_id = item.get('producto_id')
+            producto_doc = db.collection('productos').document(producto_id).get()
+            producto_data = producto_doc.to_dict() if producto_doc.exists else {}
+
+            detalles.append({
+                'nombre': producto_data.get('descripcion', 'Desconocido'),
+                'cantidad': item.get('cantidad', 0),
+                'precio_unitario': producto_data.get('valor_unitario', 0),
+                'subtotal': item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
+            })
+
+        return render_template('facturas_detalles.html', factura=factura, cliente=cliente, detalles=detalles)
+    else:
+        return "Factura no encontrada", 404
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
