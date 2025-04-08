@@ -103,3 +103,39 @@ def obtener_facturas_filtradas(query='', fecha=''):
 
 def eliminar_factura_por_id(factura_id):
     db.collection('facturas').document(factura_id).delete()
+
+
+from .productos import db
+
+def obtener_factura_por_id(factura_id):
+    doc = db.collection('facturas').document(factura_id).get()
+    if doc.exists:
+        return doc.to_dict()
+    return None
+
+def obtener_cliente_por_factura(factura):
+    cliente_id = factura.get("cliente_id")
+    if not cliente_id:
+        return {}
+    doc = db.collection('clientes').document(cliente_id).get()
+    return doc.to_dict() if doc.exists else {}
+
+def obtener_detalles_por_factura(factura_id):
+    factura = obtener_factura_por_id(factura_id)
+    if not factura:
+        return []
+
+    detalles = []
+    for item in factura.get('detalles', []):
+        producto_id = item.get('producto_id')
+        producto_doc = db.collection('productos').document(producto_id).get()
+        producto_data = producto_doc.to_dict() if producto_doc.exists else {}
+
+        detalles.append({
+            'nombre': producto_data.get('descripcion', 'Desconocido'),
+            'cantidad': item.get('cantidad', 0),
+            'precio_unitario': producto_data.get('valor_unitario', 0),
+            'subtotal': item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
+        })
+
+    return detalles

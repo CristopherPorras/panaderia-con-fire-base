@@ -1,135 +1,129 @@
 {% extends "base.html" %}
 
-{% block title %}Facturacion{% endblock %}
+{% block title %}Facturación{% endblock %}
 
 {% block content %}
-
 <div class="ttsecundario">
     <h1>Facturar</h1>
 </div>
-    <div class="contenedor">
-        <h2 class="titulo">Nueva Factura</h2>
-        <form id="facturaForm" method="POST">
-            <div class="form-group">
-                <label for="numero_factura">Número de Factura</label>
-                <input type="text" id="numero_factura" name="numero_factura" value="{{ numero_factura }}" readonly>
-            </div>
 
-            <div class="form-group">
-                <label for="cliente">Cliente</label>
-                <select id="cliente" name="cliente_id" required>
-                    <option value="" selected disabled>Seleccionar Cliente</option>
-                    {% for cliente in clientes %}
-                    <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
-                    {% endfor %}
-                </select>
-                
-            </div>
+<div class="contenedor">
+    <h2 class="titulo">Nueva Factura</h2>
+    <form id="facturaForm" method="POST">
+        <div class="form-group">
+            <label for="numero_factura">Número de Factura</label>
+            <input type="text" id="numero_factura" name="numero_factura" value="{{ numero_factura }}" readonly>
+        </div>
 
-            <div class="form-group">
-                <label for="productos">Seleccionar Producto</label>
-                <select id="productos" name="productos">
-                    <option value="" disabled selected>Seleccione un producto</option>
-                </select>
-                <button type="button" id="agregar_producto" class="btn-agregar">Agregar</button>
-            </div>
+        <div class="form-group">
+            <label for="cliente">Cliente</label>
+            <select id="cliente" name="cliente_id" required>
+                <option value="" selected disabled>Seleccionar Cliente</option>
+                {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-            <div id="productos_seleccionados"></div>
+        <div class="form-group">
+            <label for="productos">Seleccionar Producto</label>
+            <select id="productos" name="productos">
+                <option value="" disabled selected>Seleccione un producto</option>
+            </select>
+            <button type="button" id="agregar_producto" class="btn-agregar">Agregar</button>
+        </div>
 
-            <div class="form-group">
-                <label for="total">Total:</label>
-                <input type="text" id="total" name="total" value="0" readonly>
-            </div>
+        <div id="productos_seleccionados"></div>
 
-            <button type="submit" class="btn-guardar">Guardar Factura</button>
-            <a href="/inicio" class="btn btn-cancelar">Cancelar</a>
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="total">Total:</label>
+            <input type="text" id="total" value="0" readonly> <!-- visible y formateado -->
+            <input type="hidden" id="total_sin_formato" name="total" value="0"> <!-- se envía al backend -->
+        </div>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const productoSelect = document.getElementById("productos");
-            const agregarProductoBtn = document.getElementById("agregar_producto");
-            const productosSeleccionados = document.getElementById("productos_seleccionados");
-            const totalInput = document.getElementById("total");
+        <button type="submit" class="btn-guardar">Guardar Factura</button>
+        <a href="/inicio" class="btn btn-cancelar">Cancelar</a>
+    </form>
+</div>
 
-            function cargarProductos() {
-                fetch('/buscar_productos?query=')
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Productos obtenidos:", data); // ✅ Debug en consola
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const productoSelect = document.getElementById("productos");
+        const agregarProductoBtn = document.getElementById("agregar_producto");
+        const productosSeleccionados = document.getElementById("productos_seleccionados");
+        const totalVisible = document.getElementById("total");
+        const totalOculto = document.getElementById("total_sin_formato");
 
-                        // Resetear opciones
-                        productoSelect.innerHTML = '<option value="" selected disabled>Seleccionar Producto</option>';
+        function cargarProductos() {
+            fetch('/buscar_productos?query=')
+                .then(response => response.json())
+                .then(data => {
+                    productoSelect.innerHTML = '<option value="" selected disabled>Seleccionar Producto</option>';
+                    data.forEach(producto => {
+                        let option = document.createElement("option");
+                        option.value = producto.id;
+                        option.dataset.valor = producto.valor_unitario;
+                        option.textContent = `${producto.descripcion} - ${producto.valor_unitario} COP`;
+                        productoSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error al obtener productos:", error));
+        }
 
-                        if (data.length === 0) {
-                            console.warn("No se encontraron productos en Firebase.");
-                        }
+        agregarProductoBtn.addEventListener("click", () => {
+            const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+            if (!selectedOption.value) return;
 
-                        // Llenar el select con los productos
-                        data.forEach(producto => {
-                            let option = document.createElement("option");
-                            option.value = producto.id;
-                            option.dataset.valor = producto.valor_unitario;
-                            option.textContent = `${producto.descripcion} - ${producto.valor_unitario} COP`;
-                            productoSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error("Error al obtener productos:", error));
-            }
+            const productoId = selectedOption.value;
+            const descripcion = selectedOption.textContent.split(" - ")[0];
+            const valorUnitario = parseFloat(selectedOption.dataset.valor);
 
-            // Agregar producto seleccionado a la lista
-            agregarProductoBtn.addEventListener("click", () => {
-                const selectedOption = productoSelect.options[productoSelect.selectedIndex];
-                if (!selectedOption.value) return;
+            agregarProducto(descripcion, productoId, valorUnitario);
+        });
 
-                const productoId = selectedOption.value;
-                const descripcion = selectedOption.textContent.split(" - ")[0];
-                const valorUnitario = parseFloat(selectedOption.dataset.valor);
+        function agregarProducto(descripcion, id, valorUnitario) {
+            const div = document.createElement("div");
+            div.classList.add("producto-seleccionado");
+            div.innerHTML = `
+                <span>${descripcion}</span>
+                <input type="hidden" name="producto_id" value="${id}">
+                <input type="number" name="cantidad" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
+                <button type="button" class="eliminar">Eliminar</button>
+            `;
 
-                agregarProducto(descripcion, productoId, valorUnitario);
+            div.querySelector(".eliminar").addEventListener("click", () => {
+                div.remove();
+                calcularTotal();
             });
 
-            function agregarProducto(descripcion, id, valorUnitario) {
-                const div = document.createElement("div");
-                div.classList.add("producto-seleccionado");
-                div.innerHTML = `
-                    <span>${descripcion}</span>
-                    <input type="hidden" name="producto_id" value="${id}">
-                    <input type="number" name="cantidad" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
-                    <button type="button" class="eliminar">Eliminar</button>
-                `;
+            productosSeleccionados.appendChild(div);
+            calcularTotal();
+        }
 
+        function calcularTotal() {
+            let total = 0;
+            productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
+                const cantidad = parseInt(input.value, 10) || 0;
+                const valorUnitario = parseFloat(input.dataset.valorUnitario);
+                total += cantidad * valorUnitario;
+            });
 
-                div.querySelector(".eliminar").addEventListener("click", () => {
-                    div.remove();
-                    calcularTotal();
-                });
+            // Mostrar en formato colombiano
+            totalVisible.value = new Intl.NumberFormat('es-CO').format(total) + " COP";
+            // Enviar valor limpio al backend
+            totalOculto.value = total.toFixed(2);
+        }
 
-                productosSeleccionados.appendChild(div);
+        productosSeleccionados.addEventListener("input", (event) => {
+            if (event.target.tagName === "INPUT" && event.target.type === "number") {
                 calcularTotal();
             }
-
-            function calcularTotal() {
-                let total = 0;
-                productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
-                    const cantidad = parseInt(input.value, 10) || 0;
-                    const valorUnitario = parseFloat(input.dataset.valorUnitario);
-                    total += cantidad * valorUnitario;
-                });
-                totalInput.value = total.toFixed(2);
-            }
-
-            productosSeleccionados.addEventListener("input", (event) => {
-                if (event.target.tagName === "INPUT" && event.target.type === "number") {
-                    calcularTotal();
-                }
-            });
-
-            cargarProductos();
         });
-    </script>
+
+        cargarProductos();
+    });
+</script>
 {% endblock %}
->>>>>>> 064c29bfe23187c14f1406ea7c51d1af1c182792
+

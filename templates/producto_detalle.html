@@ -13,12 +13,12 @@
                 src="{{ producto.imagen if producto.imagen else url_for('static', filename='images/default.png') }}" 
                 alt="{{ producto.descripcion }}" 
                 class="producto-img"
-                onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">
+                onerror="this.src='{{ url_for('static', filename='IMAGES/default.png') }}'">
 
 
             <div class="info-producto">
                 <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-                <p><strong>Precio Unitario:</strong> {{ producto.valor_unitario|int }} COP</p>
+                <p><strong>Precio Unitario:</strong> {{ "{:,.0f}".format(producto.valor_unitario).replace(",", ".") }} COP</p>
                 <p><strong>Unidad de Medida:</strong> {{ producto.unidad_medida }}</p>
                 <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock|int }}</p>
                 <p><strong>Categoría:</strong> {{ producto.categoria_id }}</p>

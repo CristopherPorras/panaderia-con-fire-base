@@ -10,6 +10,8 @@ from models import vendedores
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
 from functools import wraps
+import pdfkit
+from flask import make_response
 
 # ==== INICIALIZACIÓN DE FLASK ====
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
@@ -105,6 +107,7 @@ def consultar_facturas():
     return render_template('consultar_facturas.html', facturas=facturas)
 
 @app.route('/factura/<factura_id>')
+@login_required
 def detalle_factura(factura_id):
     factura_ref = db.collection('facturas').document(factura_id).get()
 
@@ -112,9 +115,8 @@ def detalle_factura(factura_id):
         factura = factura_ref.to_dict()
         cliente = db.collection('clientes').document(factura['cliente_id']).get().to_dict()
 
-        # Traer detalles del producto
         detalles = []
-        for item in factura.get('detalles', []):  # ← Cambiado de factura_data a factura
+        for item in factura.get('detalles', []):
             producto_id = item.get('producto_id')
             producto_doc = db.collection('productos').document(producto_id).get()
             producto_data = producto_doc.to_dict() if producto_doc.exists else {}
@@ -126,9 +128,17 @@ def detalle_factura(factura_id):
                 'subtotal': item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
             })
 
-        return render_template('facturas_detalles.html', factura=factura, cliente=cliente, detalles=detalles)
+        # 🔧 AGREGA ESTA VARIABLE A TU RENDER TEMPLATE
+        return render_template(
+            'facturas_detalles.html',
+            factura=factura,
+            cliente=cliente,
+            detalles=detalles,
+            factura_id=factura_id  # <- ESTA ES LA CLAVE
+        )
     else:
         return "Factura no encontrada", 404
+
 
 @app.route('/eliminar_factura/<factura_id>', methods=['POST'])
 def eliminar_factura(factura_id):
@@ -263,7 +273,7 @@ def registrar_vendedor_route():
 def vendedores_lista():
     from models.vendedores import obtener_vendedores
     lista = obtener_vendedores()
-    # ✅ Filtramos el usuario especial
+    #  Filtramos el usuario especial
     lista = [v for v in lista if v.get('usuario') != 'admin-root']
     return render_template('vendedores.html', vendedores=lista)
 
@@ -277,7 +287,7 @@ def editar_vendedor(id):
     if vendedor_doc.exists:
         vendedor = vendedor_doc.to_dict()
 
-        # 🚫 Si se intenta acceder al usuario protegido admin-root, redirige con mensaje
+        #  Si se intenta acceder al usuario protegido admin-root, redirige con mensaje
         if vendedor.get('usuario') == 'admin-root':
             flash("No se permite modificar este usuario especial.", "error")
             return redirect(url_for('vendedores_lista'))
@@ -308,7 +318,7 @@ def eliminar_vendedor(id):
     if vendedor_doc.exists:
         vendedor = vendedor_doc.to_dict()
 
-        # 🚫 Bloquear eliminación de admin-root o del usuario logueado
+        #  Bloquear eliminación de admin-root o del usuario logueado
         if vendedor.get('usuario') == 'admin-root' or vendedor.get('usuario') == session.get('user'):
             flash("No puedes eliminar este usuario especial.", "error")
             return redirect(url_for('vendedores_lista'))
@@ -321,6 +331,45 @@ def eliminar_vendedor(id):
     return redirect(url_for('vendedores_lista'))
 
 
+# Configuración con la ruta absoluta al ejecutable de wkhtmltopdf
+config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+
+@app.route('/descargar_factura/<id>')
+@login_required
+def descargar_factura(id):
+    factura = facturacion.obtener_factura_por_id(id)
+    cliente = facturacion.obtener_cliente_por_factura(factura)
+    detalles = facturacion.obtener_detalles_por_factura(id)
+
+    # Renderizamos solo con la información necesaria
+    html_renderizado = render_template(
+        'factura_pdf.html',
+        factura=factura,
+        cliente=cliente,
+        detalles=detalles
+    )
+
+    opciones = {
+        'encoding': 'UTF-8',
+        'page-size': 'A4',
+        'margin-top': '15mm',
+        'margin-right': '10mm',
+        'margin-bottom': '15mm',
+        'margin-left': '10mm',
+        'enable-local-file-access': ''
+    }
+
+    pdf = pdfkit.from_string(html_renderizado, False, options=opciones, configuration=config)
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'inline; filename=factura_{id}.pdf'
+
+    return response
+
+
+
 # ==== INICIAR SERVIDOR ====
 if __name__ == '__main__':
     app.run(debug=True)
+

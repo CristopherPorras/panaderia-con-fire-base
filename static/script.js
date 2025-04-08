@@ -31,11 +31,17 @@ function actualizarTotal() {
         const checkbox = opcion.querySelector('input[type="checkbox"]');
         const cantidadInput = opcion.querySelector('input[type="number"]');
         const label = opcion.querySelector('label');
-        const precio = parseFloat(label.textContent.split('-')[1].trim().replace('COP', ''));
+        const precio = parseFloat(label.textContent.split('-')[1].trim().replace('COP', '').replace(/\./g, ''));
 
         if (checkbox.checked && cantidadInput.value) {
             total += precio * parseFloat(cantidadInput.value);
         }
     });
-    document.getElementById('total_factura').value = total.toFixed(2) + " COP";
+
+    // ✅ Mostrar total formateado con puntos (COP)
+    const totalFormateado = new Intl.NumberFormat('es-CO').format(total);
+    document.getElementById('total_factura').value = totalFormateado + " COP";
+
+    // ✅ Enviar limpio al backend
+    document.getElementById('total_factura_sin_formato').value = total.toFixed(2);
 }
