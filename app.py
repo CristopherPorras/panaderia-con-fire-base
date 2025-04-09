@@ -4,6 +4,7 @@ import firebase_admin, requests
 from firebase_admin import credentials, firestore
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 from models import facturacion
+from models.facturacion import obtener_total_ventas_hoy
 from models.productos import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
 from models.clientes import registrar_cliente, obtener_clientes
 from models import vendedores
@@ -34,6 +35,15 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 PDFSHIFT_API_KEY = 'sk_9ceeaf21e44f5b9d8f1f395b8ea4fea2ecf26693'
 
+# ==== INYECTAR USUARIO EN TODAS LAS PLANTILLAS ====
+@app.context_processor
+def inject_user():
+    if 'user_id' in session:
+        vendedor_ref = db.collection('vendedores').document(session['user_id']).get()
+        if vendedor_ref.exists:
+            return dict(vendedor=vendedor_ref.to_dict())
+    return dict(vendedor={'nombre': 'Invitado'})
+
 # ==== DECORADOR PARA PROTEGER RUTAS ====
 def login_required(f):
     @wraps(f)
@@ -60,11 +70,17 @@ def login():
         vendedores_ref = db.collection('vendedores')
         query = vendedores_ref.where('usuario', '==', usuario).stream()
         vendedor = next(query, None)
+        print(" Usuario ingresado:", usuario)
+        print(" Vendedor encontrado:", vendedor)
+
+
 
         if vendedor:
             datos = vendedor.to_dict()
             if check_password_hash(datos.get('contrasena', ''), password):
                 session['user'] = datos['usuario']
+                session['nombre'] = datos.get('nombre', 'Sin nombre')
+                session['user_id'] = vendedor.id
                 flash("Inicio de sesión exitoso.", "success")
                 return redirect(url_for('inicio'))
             else:
@@ -102,14 +118,27 @@ def guardar_factura():
     return redirect(url_for("facturacion_page"))
 
 # ==== CONSULTA DE FACTURAS ====
+from datetime import datetime  # Asegurate que esté importado arriba
+
+# ==== CONSULTA DE FACTURAS ====
 @app.route('/consultar_facturas')
 @login_required
 def consultar_facturas():
     query = request.args.get('query', '')
     fecha = request.args.get('fecha', '')
+
+    #  Si no se ingresó una fecha, usamos la de hoy por defecto
+    if not fecha:
+        fecha = datetime.today().strftime('%Y-%m-%d')
+
+    #  Obtenemos las facturas filtradas por búsqueda y/o fecha
     facturas = facturacion.obtener_facturas_filtradas(query=query, fecha=fecha)
 
-    # Prevención de error: aseguramos que cada detalle tenga 'producto' y 'total'
+    #  Obtenemos el total de ventas para esa misma fecha
+    total_ventas_hoy = facturacion.obtener_total_ventas_hoy() if fecha == datetime.today().strftime('%Y-%m-%d') else \
+        sum(f.get('total', 0) for f in facturas)
+
+    #  Prevención de errores: aseguramos que cada detalle tenga 'producto' y 'total'
     for factura in facturas:
         for detalle in factura.get('detalles', []):
             if 'producto' not in detalle:
@@ -117,17 +146,27 @@ def consultar_facturas():
             if 'total' not in detalle:
                 detalle['total'] = 0
 
-    return render_template('consultar_facturas.html', facturas=facturas)
+    #  Enviamos todo a la plantilla para renderizar
+    return render_template('consultar_facturas.html',
+                           facturas=facturas,
+                           total_ventas_hoy=total_ventas_hoy,
+                           fecha=fecha)
+
+
 
 @app.route('/factura/<factura_id>')
 @login_required
 def detalle_factura(factura_id):
+    #  Obtenemos la factura desde Firestore
     factura_ref = db.collection('facturas').document(factura_id).get()
 
     if factura_ref.exists:
         factura = factura_ref.to_dict()
+
+        # 👤 Obtenemos datos del cliente
         cliente = db.collection('clientes').document(factura['cliente_id']).get().to_dict()
 
+        #  Obtenemos los productos facturados
         detalles = []
         for item in factura.get('detalles', []):
             producto_id = item.get('producto_id')
@@ -141,6 +180,22 @@ def detalle_factura(factura_id):
                 'subtotal': item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
             })
 
+        #  Obtenemos el vendedor si existe
+        vendedor = {}
+        if factura.get('vendedor_id'):
+            vendedor_doc = db.collection('vendedores').document(factura['vendedor_id']).get()
+            if vendedor_doc.exists:
+                vendedor = vendedor_doc.to_dict()
+
+        #  Enviamos todo al template
+        return render_template(
+            'facturas_detalles.html',
+            factura=factura,
+            cliente=cliente,
+            detalles=detalles,
+            vendedor=vendedor,          
+            factura_id=factura_id
+        )
         # 🔧 AGREGA ESTA VARIABLE A TU RENDER TEMPLATE
         return render_template(
             'facturas_detalles.html',
@@ -151,6 +206,7 @@ def detalle_factura(factura_id):
         )
     else:
         return "Factura no encontrada", 404
+
 
 
 @app.route('/eliminar_factura/<factura_id>', methods=['POST'])
@@ -385,4 +441,3 @@ def descargar_factura(id):
 # ==== INICIAR SERVIDOR ====
 if __name__ == '__main__':
     app.run(debug=True)
-

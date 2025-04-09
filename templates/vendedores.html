@@ -31,9 +31,9 @@
                 <td>{{ vendedor.telefono }}</td>
                 <td>{{ vendedor.direccion }}</td>
                 <td class="acciones">
-                    <a href="{{ url_for('editar_vendedor', id=vendedor.id) }}" class="btn-editar">Editar</a>
+                    <a href="{{ url_for('editar_vendedor', id=vendedor.id) }}" class="btn-editar-vc">Editar</a>
                     <form method="POST" action="{{ url_for('eliminar_vendedor', id=vendedor.id) }}" onsubmit="return confirmarEliminacion()">
-                        <button type="submit" class="btn-eliminar">Eliminar</button>
+                        <button type="submit" class="btn-eliminar-vc">Eliminar</button>
                     </form>
                 </td>
             </tr>

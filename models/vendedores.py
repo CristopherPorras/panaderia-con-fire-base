@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, flash
 from firebase_admin import firestore, credentials
 import firebase_admin
 from werkzeug.security import generate_password_hash  # Cifrado seguro
+from flask import session
 
 db = firestore.client()
 

@@ -8,80 +8,93 @@
     <h1>Consultar Facturas</h1>
 </div>
 
-    <!-- Buscador por texto -->
-    <div class="busqueda-container">
-        <form method="GET" action="{{ url_for('consultar_facturas') }}">
-            <div class="input-group">
-                <input type="text" name="query" placeholder="Buscar factura o cliente" class="form-input"
-                    value="{{ request.args.get('query', '') }}">
-                <button type="submit" class="search-btn">
-                    <ion-icon name="search-outline"></ion-icon>
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Filtro por fecha -->
-    <div class="busqueda-container">
-        <form method="GET" action="{{ url_for('consultar_facturas') }}">
-            <div class="input-group">
-                <input type="date" name="fecha" class="form-input" value="{{ request.args.get('fecha', '') }}">
-                <button type="submit" class="filter-btn">Filtrar</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Lista de facturas en formato compacto -->
-    <!-- Lista de facturas en formato tabla -->
-    <div class="container-factura">
-        {% if facturas|length > 0 %}
-        <table class="factura-tabla">
-            <thead>
-                <tr>
-                    <th>Factura #</th>
-                    <th>Cliente</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for factura in facturas|sort(attribute='numero', reverse=True) %}
-                <tr>
-                    <td>{{ factura.numero }}</td>
-                    <td>{{ factura.cliente.nombre }}</td>
-                    <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
-                    <td>
-
-
-                        <!-- Botón para ver detalles -->
-                        <a href="{{ url_for('detalle_factura', factura_id=factura.id) }}" title="Ver detalles">
-                            <ion-icon name="eye-outline"></ion-icon>
-                        </a>
-
-                        <!-- Botón para eliminar factura -->
-                        <form method="POST" action="{{ url_for('eliminar_factura', factura_id=factura.id) }}"
-                            style="display:inline;">
-                            <button type="submit" title="Eliminar factura"
-                                onclick="return confirm('¿Seguro que deseas eliminar esta factura?');"
-                                style="background: none; border: none; cursor: pointer;">
-                                <ion-icon name="trash-outline" style="color: red;"></ion-icon>
-                            </button>
-                        </form>
-
-
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="ttsecundario">
-            <p>No se encontraron facturas para los criterios seleccionados.</p>
+<!-- Buscador por texto -->
+<div class="busqueda-container">
+    <form method="GET" action="{{ url_for('consultar_facturas') }}">
+        <div class="input-group">
+            <input type="text" name="query" placeholder="Buscar factura o cliente" class="form-input"
+                value="{{ request.args.get('query', '') }}">
+            <button type="submit" class="search-btn">
+                <ion-icon name="search-outline"></ion-icon>
+            </button>
         </div>
-        {% endif %}
+    </form>
+</div>
+
+<!-- Filtro por fecha -->
+<div class="busqueda-container">
+    <form method="GET" action="{{ url_for('consultar_facturas') }}">
+        <div class="input-group">
+            <input type="date" name="fecha" class="form-input" value="{{ request.args.get('fecha', '') }}">
+            <button type="submit" class="filter-btn">Filtrar</button>
+        </div>
+    </form>
+</div>
+
+<!-- 🧾 Resumen del día: fecha + total -->
+<div class="resumen-total">
+    <ion-icon name="calendar-outline" class="icono-resumen"></ion-icon>
+    <p>Mostrando facturas del día: <strong>{{ fecha }}</strong></p>
+    <h3>Total de ventas:</h3>
+    <p class="valor-ventas"><strong>${{ "{:,.0f}".format(total_ventas_hoy) }}</strong></p>
+</div>
+
+<!-- Lista de facturas -->
+<div class="container-factura">
+    {% if facturas|length > 0 %}
+    <table class="factura-tabla">
+        <thead>
+            <tr>
+                <th>Factura #</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Vendedor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for factura in facturas|sort(attribute='numero', reverse=True) %}
+            <tr>
+                <td>{{ factura.numero }}</td>
+                <td>{{ factura.cliente.nombre }}</td>
+                <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
+                <td>
+                    {% if factura.vendedor is defined and factura.vendedor.nombre %}
+                        <ion-icon name="person-circle-outline" style="vertical-align: middle; color: #4a4a4a;"></ion-icon>
+                        {{ factura.vendedor.nombre }}
+                    {% else %}
+                        <span style="color: #999;">Desconocido</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Ver detalles -->
+                    <a href="{{ url_for('detalle_factura', factura_id=factura.id) }}" title="Ver detalles">
+                        <ion-icon name="eye-outline"></ion-icon>
+                    </a>
+
+                    <!-- Eliminar factura -->
+                    <form method="POST" action="{{ url_for('eliminar_factura', factura_id=factura.id) }}"
+                        style="display:inline;">
+                        <button type="submit" title="Eliminar factura"
+                            onclick="return confirm('¿Seguro que deseas eliminar esta factura?');"
+                            style="background: none; border: none; cursor: pointer;">
+                            <ion-icon name="trash-outline" style="color: red;"></ion-icon>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="ttsecundario">
+        <p>No se encontraron facturas para los criterios seleccionados.</p>
     </div>
+    {% endif %}
+</div>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    {% endblock %}
+{% endblock %}

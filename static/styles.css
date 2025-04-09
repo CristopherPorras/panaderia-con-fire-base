@@ -131,20 +131,63 @@ body {
 
 
 
-/* ------------------------------
-   Navbar
------------------------------- */
-/* Barra de navegación */
+/* === NAVBAR PERSONALIZADO CON USUARIO A LA DERECHA === */
 .navbar {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
-    align-items: center; /* Alinea verticalmente el contenido */
-    background: black;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: black;
     color: white;
-    padding: 10px;
-    border: 15px solid black;
+    padding: 15px 20px;
     font-size: 35px;
-    position: relative; /* Para que el icono no afecte el centrado del texto */
+    border: 15px solid black;
+    text-align: center;
+}
+
+/* Botón Volver a la izquierda */
+.nav-volver {
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    gap: 6px;
+    background-color: #f44336;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-volver:hover {
+    background-color: #d32f2f;
+    transform: translateY(-50%) scale(1.05); /* Hace que crezca ligeramente */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Sombra suave */
+}
+
+
+/* Usuario logueado a la derecha */
+.nav-usuario {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    color: white;
+    font-weight: bold;
+    gap: 10px;
+}
+
+.nav-usuario ion-icon {
+    font-size: 24px;
+    color: #a1eaa1; /* Verde pastel suave */
 }
 
 /* Icono en la barra de navegación */
@@ -719,7 +762,7 @@ ion-icon:hover {
     gap: 10px;
 }
 
-.btn-editar, .btn-eliminar
+.btn-editar, .btn-eliminar,
 .btn-ver {
     background-color: #7ba68c;
     color: white;
@@ -1425,4 +1468,92 @@ input:focus, select:focus {
     box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
 
+/* ===  Corrección absoluta: fuerza visibilidad y estilo de botones VC === */
 
+.btn-editar-vc,
+.btn-eliminar-vc {
+    background-color: #7ba68c !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 16px !important;
+    font-size: 15px !important;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-decoration: none !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-editar-vc:hover {
+    background-color: #5f9274 !important;
+}
+
+.btn-eliminar-vc {
+    background-color: #c94b4b !important;
+}
+
+.btn-eliminar-vc:hover {
+    background-color: #a93838 !important;
+}
+
+
+
+
+.resumen-total {
+    background-color: #f0f9f4;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px auto;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    color: #2f5c45;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+}
+
+.valor-ventas {
+    font-size: 32px;
+    color: #3d8b5a;
+    margin-top: 10px;
+    font-weight: 900;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.icono-resumen {
+    font-size: 28px;
+    color: #2f5c45;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+
+.eliminar {
+    background-color: #c94b4b !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 16px !important;
+    font-size: 15px !important;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-decoration: none !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.eliminar:hover {
+    background-color: #a93838 !important;
+}
