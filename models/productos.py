@@ -4,14 +4,8 @@ from firebase_admin import firestore, db, credentials
 from flask import Flask,render_template, request
 from werkzeug.utils import secure_filename
 import os
+from models import db
 
-# Configuración de Firebase
-cred = credentials.Certificate(os.path.join('instance/delicias.json'))
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://base-de-datos-panaderia-f4398-default-rtdb.firebaseio.com/',
-    'projectId': 'base-de-datos-panaderia-f4398',  
-    'storageBucket': 'base-de-datos-panaderia-f4398.firebasestorage.app',  
-})
 
 
 

@@ -12,6 +12,15 @@
     <h1>Factura de {{ cliente.nombre }}</h1>
     <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
 
+    <!-- 👤 Mostramos el nombre del vendedor -->
+    <p><strong>Vendedor:</strong> 
+        {% if vendedor.nombre %}
+            {{ vendedor.nombre }}
+        {% else %}
+            <span style="color: #999;">Desconocido</span>
+        {% endif %}
+    </p>
+
     <table class="tabla">
         <thead>
             <tr>
@@ -55,3 +64,4 @@
 </script>
 
 {% endblock %}
+

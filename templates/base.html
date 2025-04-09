@@ -5,56 +5,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Delicias Al Horno{% endblock %}</title>
-    
+
     <!-- Vinculación del archivo CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+
+    <!--  Barra superior personalizada -->
     <nav>
         <div class="navbar">
-            <div class="container-icon">
-                <a href="{{ url_for('inicio') }}">
-                    <ion-icon name="arrow-back-outline"></ion-icon>
-                </a>
-            </div>
+
+            <!--  Botón de volver -->
+            <a href="{{ url_for('inicio') }}" class="nav-volver">
+                <ion-icon name="arrow-back-outline"></ion-icon> Volver
+            </a>
+
+            <!--  Título centrado -->
             <h1>Delicias Al Horno</h1>
 
-            <!-- Botón de Volver en la esquina superior derecha -->
-            <a href="{{ url_for('inicio') }}" class="btn-volver">
-                <ion-icon name="arrow-back-circle-outline"></ion-icon> Volver
-            </a>
+            <!--  Usuario logueado -->
+            {% if vendedor.nombre %}
+            <div class="nav-usuario">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                {{ vendedor.nombre }}
+            </div>
+            {% endif %}
         </div>
     </nav>
 
-    <!-- Contenido específico de cada página -->
+    <!--  Contenido de cada página -->
     {% block content %}{% endblock %}
 
-    <!-- Ionicons -->
+    <!-- Ionicons para iconos -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <!-- Script global: ESC para ir al inicio -->
+    <!-- ESC para volver al inicio -->
     <script>
         document.addEventListener('keydown', function(e) {
-            // Solo ejecuta si NO hay elementos de entrada enfocados
             const focused = document.activeElement;
             const isInput = focused && ['INPUT', 'TEXTAREA', 'SELECT'].includes(focused.tagName);
-    
             if (!isInput && e.key === 'Escape') {
-                e.preventDefault();  // Detiene cualquier otra acción nativa del navegador
+                e.preventDefault();
                 window.location.href = "{{ url_for('inicio') }}";
             }
         });
     </script>
-    
+
+    <!-- Función global para confirmar eliminación -->
     <script>
         function confirmarEliminacion() {
             return confirm("¿Estás seguro de que deseas eliminar este registro?");
         }
     </script>
-        
 
-    <!-- Permitir scripts específicos por página -->
+    <!--  Scripts adicionales por página -->
     {% block scripts %}{% endblock %}
 </body>
 </html>

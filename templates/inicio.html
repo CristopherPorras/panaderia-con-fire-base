@@ -8,13 +8,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- Barra de navegación -->
+
+    <!-- 🔲 Barra de navegación -->
     <nav>
         <div class="navbar">
-            <a href="{{ url_for('logout') }}" class="btn-volver">
+
+            <!-- 🔴 Botón de cerrar sesión a la izquierda -->
+            <a href="{{ url_for('logout') }}" class="nav-volver">
                 <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
             </a>
+
+            <!-- 🏷️ Título centrado -->
             <h1>Delicias Al Horno</h1>
+
+            <!-- 👤 Usuario logueado a la derecha -->
+            {% if vendedor.nombre %}
+            <div class="nav-usuario">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                {{ vendedor.nombre }}
+            </div>
+            {% endif %}
+
         </div>
     </nav>
 
@@ -67,48 +81,21 @@
         </a>
     </div>
 
-    <!-- Script de acceso rápido con teclas directas -->
+    <!-- Teclas de acceso rápido -->
     <script>
         document.addEventListener('keydown', function(e) {
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
             switch (e.key.toLowerCase()) {
-                case 'f':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('guardar_factura') }}";
-                    break;
-                case 'q':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('consultar_facturas') }}";
-                    break;
-                case 'p':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('productos') }}";
-                    break;
-                case 'r':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('registrar_producto') }}";
-                    break;
-                case 'l':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('registrar_cliente_route') }}";
-                    break;
-                case 'v':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('registrar_vendedor_route') }}";
-                    break;
-                case 'c':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('clientes') }}";
-                    break;
-                case 'z':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('vendedores_lista') }}";
-                    break;
-                case 'escape':
-                    e.preventDefault();
-                    window.location.href = "{{ url_for('login') }}";
-                    break;
+                case 'f': window.location.href = "{{ url_for('guardar_factura') }}"; break;
+                case 'q': window.location.href = "{{ url_for('consultar_facturas') }}"; break;
+                case 'p': window.location.href = "{{ url_for('productos') }}"; break;
+                case 'r': window.location.href = "{{ url_for('registrar_producto') }}"; break;
+                case 'l': window.location.href = "{{ url_for('registrar_cliente_route') }}"; break;
+                case 'v': window.location.href = "{{ url_for('registrar_vendedor_route') }}"; break;
+                case 'c': window.location.href = "{{ url_for('clientes') }}"; break;
+                case 'z': window.location.href = "{{ url_for('vendedores_lista') }}"; break;
+                case 'escape': window.location.href = "{{ url_for('login') }}"; break;
             }
         });
     </script>
