@@ -1326,3 +1326,103 @@ input:focus, select:focus {
 .contenedor {
     overflow-x: auto;
 }
+
+
+
+#factura-detalle {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+#factura-detalle h1 {
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+}
+
+#factura-detalle p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: #555;
+}
+
+#factura-detalle .tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#factura-detalle .tabla th,
+#factura-detalle .tabla td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    font-size: 14px;
+}
+
+#factura-detalle .tabla th {
+    background-color: #f4f4f4;
+    color: #222;
+}
+
+#factura-detalle .tabla tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+#factura-detalle .total {
+    text-align: right;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #222;
+}
+
+#factura-detalle .acciones {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#factura-detalle .descargar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#factura-detalle .descargar:hover {
+    background-color: #45a049;
+}
+
+#factura-detalle .volver {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff; /* Azul principal del sistema */
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.25s ease, transform 0.15s ease;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.25);
+}
+
+#factura-detalle .volver:hover {
+    background-color: #0056b3; /* Azul más intenso al pasar el mouse */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+

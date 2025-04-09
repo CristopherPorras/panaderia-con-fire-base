@@ -1,107 +1,57 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Factura de {{ cliente.nombre }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        .contenedor2 {
-            background-image: url("{{ url_for('static', filename='IMAGES/fondo_factura.png') }}");
-            background-repeat: no-repeat;
-            background-position: center;
-        }
+{% extends "base.html" %}
 
-        .contenedor {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.85); /* Fondo blanco con transparencia */
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-        }
+{% block title %}Consultar Facturas{% endblock %}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+{% block content %}
 
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
+<div class="ttsecundario">
+    <h1>Detalles de Factura</h1>
+</div>
 
-        th {
-            background-color: #f4f4f4;
-        }
+<div id="factura-detalle">
+    <h1>Factura de {{ cliente.nombre }}</h1>
+    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
 
-        h1 {
-            margin-bottom: 10px;
-            text-align: center;
-        }
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in detalles %}
+            <tr>
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>{{ "{:,.0f}".format(item.precio_unitario).replace(",", ".") }} COP</td>
+                <td>{{ "{:,.0f}".format(item.subtotal).replace(",", ".") }} COP</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        .descargar {
-            text-align: right;
-            margin-top: 20px;
-        }
-
-        .btn-descargar {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .btn-volver {
-            margin-top: 20px;
-            display: inline-block;
-            text-decoration: none;
-            color: #007bff;
-        }
-    </style>
-</head>
-<body>
-    <div class="contenedor2">
-    <div class="contenedor">
-        <h1>Factura de {{ cliente.nombre }}</h1>
-        <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
-        <p><strong>Cliente ID:</strong> {{ factura.cliente_id }}</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in detalles %}
-                <tr>
-                    <td>{{ item.nombre }}</td>
-                    <td>{{ item.cantidad }}</td>
-                    <td>{{ item.precio_unitario | int }} COP</td>
-                    <td>{{ item.subtotal | int }} COP</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <div style="text-align: right; margin-top: 20px; margin-bottom: 10px;">
-            <h4>Total a pagar: <strong>{{ factura.total | int }} COP</strong></h4>
-        </div>
-
-        <div class="descargar">
-            <button class="btn-descargar" disabled>Descargar factura</button>
-        </div>
-
-        <a href="{{ url_for('inicio') }}" class="btn-volver">← Volver al inicio</a>
+    <div class="total">
+        <h4>Total a pagar: <strong>{{ "{:,.0f}".format(factura.total).replace(",", ".") }} COP</strong></h4>
     </div>
+
+    <div class="acciones">
+        <a href="{{ url_for('descargar_factura', id=factura_id) }}" class="descargar" target="_blank">
+            📄 Descargar factura en PDF
+        </a>
+        
+        <a href="{{ url_for('consultar_facturas') }}" class="volver">← Volver a consultas</a>
     </div>
-</body>
-</html>
+</div>
+
+<script>
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            window.location.href = "{{ url_for('consultar_facturas') }}";
+        }
+    });
+</script>
+
+{% endblock %}

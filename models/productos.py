@@ -1,4 +1,4 @@
-import firebase_admin
+import firebase_admin,json
 from flask import url_for, flash, redirect
 from firebase_admin import firestore, db, credentials
 from flask import Flask,render_template, request
@@ -6,7 +6,13 @@ from werkzeug.utils import secure_filename
 import os
 
 # Configuración de Firebase
-cred = credentials.Certificate(os.path.join('instance/delicias.json'))
+cred_path = '/etc/secrets/delicias.json'
+
+if not os.path.exists(cred_path):
+    cred_path = os.path.join(os.getcwd(), 'instance/delicias.json')
+
+# Configuración de Firebase
+cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://base-de-datos-panaderia-f4398-default-rtdb.firebaseio.com/',
     'projectId': 'base-de-datos-panaderia-f4398',  

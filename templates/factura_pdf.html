@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura PDF</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 30px;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #e08e43;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 70px;
+        }
+
+        .info-panaderia h2 {
+            margin: 0;
+            color: #d35400;
+        }
+
+        .info-panaderia p {
+            margin: 2px 0;
+            font-size: 14px;
+        }
+
+        h1 {
+            color: #d35400;
+        }
+
+        .factura-info {
+            margin-bottom: 20px;
+        }
+
+        .factura-info p {
+            margin: 4px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f39c12;
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="info-panaderia">
+        <h2>Panadería Delicias al Horno</h2>
+        <p>📍 Dirección: Calle 123, Ciudad</p>
+        <p>📞 Tel: 300 8223024</p>
+        <p>📧 Email: contacto@deliciasalhorno.com</p>
+    </div>
+</header>
+
+<h1>Factura</h1>
+
+<div class="factura-info">
+    <p><strong>Número de Factura:</strong> {{ factura.numero }}</p>
+    <p><strong>Cliente:</strong> {{ cliente.nombre }}</p>
+    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in detalles %}
+        <tr>
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ "{:,.0f}".format(item.precio_unitario).replace(",", ".") }} COP</td>
+            <td>{{ "{:,.0f}".format(item.subtotal).replace(",", ".") }} COP</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="total">
+    <p><strong>Total a pagar:</strong> {{ "{:,.0f}".format(factura.total).replace(",", ".") }} COP</p>
+</div>
+
+<div class="footer">
+    Gracias por su compra ♥ - ¡Vuelva pronto!
+</div>
+
+</body>
+</html>

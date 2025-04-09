@@ -1,8 +1,8 @@
 # ==== IMPORTACIONES ====
-import os
-import firebase_admin
+import os, json
+import firebase_admin, requests
 from firebase_admin import credentials, firestore
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 from models import facturacion
 from models.productos import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
 from models.clientes import registrar_cliente, obtener_clientes
@@ -11,6 +11,19 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
 from functools import wraps
 
+pdfshift_path = '/etc/secrets/pdfshift.json'
+
+if not os.path.exists(pdfshift_path):
+    pdfshift_path = os.path.join(os.getcwd(), 'instance/pdfshift.json')
+
+try:
+    with open(pdfshift_path) as f:
+        pdfshift_config = json.load(f)
+        PDFSHIFT_API_KEY = pdfshift_config.get("api_key")
+except FileNotFoundError:
+    raise RuntimeError("No se encontró la API key de PDFShift.")
+
+
 # ==== INICIALIZACIÓN DE FLASK ====
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
 app.secret_key = 'mi_clave_secreta'
@@ -18,6 +31,8 @@ app.secret_key = 'mi_clave_secreta'
 # ==== CONFIGURACIÓN DE SUBIDAS ====
 app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
+PDFSHIFT_API_KEY = 'sk_9ceeaf21e44f5b9d8f1f395b8ea4fea2ecf26693'
 
 # ==== DECORADOR PARA PROTEGER RUTAS ====
 def login_required(f):
@@ -105,6 +120,7 @@ def consultar_facturas():
     return render_template('consultar_facturas.html', facturas=facturas)
 
 @app.route('/factura/<factura_id>')
+@login_required
 def detalle_factura(factura_id):
     factura_ref = db.collection('facturas').document(factura_id).get()
 
@@ -112,9 +128,8 @@ def detalle_factura(factura_id):
         factura = factura_ref.to_dict()
         cliente = db.collection('clientes').document(factura['cliente_id']).get().to_dict()
 
-        # Traer detalles del producto
         detalles = []
-        for item in factura.get('detalles', []):  # ← Cambiado de factura_data a factura
+        for item in factura.get('detalles', []):
             producto_id = item.get('producto_id')
             producto_doc = db.collection('productos').document(producto_id).get()
             producto_data = producto_doc.to_dict() if producto_doc.exists else {}
@@ -126,9 +141,17 @@ def detalle_factura(factura_id):
                 'subtotal': item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
             })
 
-        return render_template('facturas_detalles.html', factura=factura, cliente=cliente, detalles=detalles)
+        # 🔧 AGREGA ESTA VARIABLE A TU RENDER TEMPLATE
+        return render_template(
+            'facturas_detalles.html',
+            factura=factura,
+            cliente=cliente,
+            detalles=detalles,
+            factura_id=factura_id  # <- ESTA ES LA CLAVE
+        )
     else:
         return "Factura no encontrada", 404
+
 
 @app.route('/eliminar_factura/<factura_id>', methods=['POST'])
 def eliminar_factura(factura_id):
@@ -263,7 +286,7 @@ def registrar_vendedor_route():
 def vendedores_lista():
     from models.vendedores import obtener_vendedores
     lista = obtener_vendedores()
-    # ✅ Filtramos el usuario especial
+    #  Filtramos el usuario especial
     lista = [v for v in lista if v.get('usuario') != 'admin-root']
     return render_template('vendedores.html', vendedores=lista)
 
@@ -277,7 +300,7 @@ def editar_vendedor(id):
     if vendedor_doc.exists:
         vendedor = vendedor_doc.to_dict()
 
-        # 🚫 Si se intenta acceder al usuario protegido admin-root, redirige con mensaje
+        #  Si se intenta acceder al usuario protegido admin-root, redirige con mensaje
         if vendedor.get('usuario') == 'admin-root':
             flash("No se permite modificar este usuario especial.", "error")
             return redirect(url_for('vendedores_lista'))
@@ -308,7 +331,7 @@ def eliminar_vendedor(id):
     if vendedor_doc.exists:
         vendedor = vendedor_doc.to_dict()
 
-        # 🚫 Bloquear eliminación de admin-root o del usuario logueado
+        #  Bloquear eliminación de admin-root o del usuario logueado
         if vendedor.get('usuario') == 'admin-root' or vendedor.get('usuario') == session.get('user'):
             flash("No puedes eliminar este usuario especial.", "error")
             return redirect(url_for('vendedores_lista'))
@@ -321,6 +344,45 @@ def eliminar_vendedor(id):
     return redirect(url_for('vendedores_lista'))
 
 
+@app.route('/descargar_factura/<id>')
+@login_required
+def descargar_factura(id):
+    factura = facturacion.obtener_factura_por_id(id)
+    cliente = facturacion.obtener_cliente_por_factura(factura)
+    detalles = facturacion.obtener_detalles_por_factura(id)
+
+    # Renderiza el HTML como string
+    html_renderizado = render_template(
+        'factura_pdf.html',
+        factura=factura,
+        cliente=cliente,
+        detalles=detalles
+    )
+
+    try:
+        response = requests.post(
+            'https://api.pdfshift.io/v3/convert/pdf',
+            auth=('api', PDFSHIFT_API_KEY),
+            json={
+                "source": html_renderizado,
+                "landscape": False,
+                "use_print": False
+            }
+        )
+
+        response.raise_for_status()
+        pdf = response.content
+
+        flask_response = make_response(pdf)
+        flask_response.headers['Content-Type'] = 'application/pdf'
+        flask_response.headers['Content-Disposition'] = f'inline; filename=factura_{id}.pdf'
+
+        return flask_response
+
+    except Exception as e:
+        return f"Error generando PDF: {e}", 500
+    
 # ==== INICIAR SERVIDOR ====
 if __name__ == '__main__':
     app.run(debug=True)
+
