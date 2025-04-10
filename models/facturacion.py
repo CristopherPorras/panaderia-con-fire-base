@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
 from flask import session
-from models import db
+from models.productos import db
 
 # === FUNCIÓN: Guardar una factura ===
 def guardar_factura(form_data):

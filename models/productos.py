@@ -4,10 +4,19 @@ from firebase_admin import firestore, db, credentials
 from flask import Flask,render_template, request
 from werkzeug.utils import secure_filename
 import os
-from models import db
 
+cred_path = '/etc/secrets/delicias.json'
 
+if not os.path.exists(cred_path):
+    cred_path = os.path.join(os.getcwd(), 'instance/delicias.json')
 
+# Configuración de Firebase
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://base-de-datos-panaderia-f4398-default-rtdb.firebaseio.com/',
+    'projectId': 'base-de-datos-panaderia-f4398',  
+    'storageBucket': 'base-de-datos-panaderia-f4398.firebasestorage.app',  
+})
 
 # Función para verificar las extensiones permitidas
 def allowed_file(filename, allowed_extensions):

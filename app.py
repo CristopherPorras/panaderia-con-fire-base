@@ -4,7 +4,6 @@ import firebase_admin, requests
 from firebase_admin import credentials, firestore
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 from models import facturacion
-from models.facturacion import obtener_total_ventas_hoy
 from models.productos import db, fun_productos, fun_regis_productos, fun_producto_detalle, fun_editar_producto
 from models.clientes import registrar_cliente, obtener_clientes
 from models import vendedores
@@ -187,15 +186,6 @@ def detalle_factura(factura_id):
             if vendedor_doc.exists:
                 vendedor = vendedor_doc.to_dict()
 
-        #  Enviamos todo al template
-        return render_template(
-            'facturas_detalles.html',
-            factura=factura,
-            cliente=cliente,
-            detalles=detalles,
-            vendedor=vendedor,          
-            factura_id=factura_id
-        )
         # 🔧 AGREGA ESTA VARIABLE A TU RENDER TEMPLATE
         return render_template(
             'facturas_detalles.html',
