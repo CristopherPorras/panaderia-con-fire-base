@@ -4,33 +4,51 @@
 
 {% block content %}
 
+<!-- Título secundario con el nombre del producto -->
 <div class="ttsecundario">
     <h1>{{ producto.descripcion }}</h1>
 </div>
-    <div class="contenedor">
-        <div class="detalle-producto">
-            <img id="imagen-producto"
-                src="{{ producto.imagen if producto.imagen else url_for('static', filename='images/default.png') }}" 
-                alt="{{ producto.descripcion }}" 
-                class="producto-img"
-                onerror="this.src='{{ url_for('static', filename='IMAGES/default.png') }}'">
 
+<div class="contenedor">
+    <div class="detalle-producto">
+        <!-- Imagen del producto o imagen por defecto -->
+        <img id="imagen-producto"
+             src="{{ producto.imagen if producto.imagen else url_for('static', filename='images/default.png') }}"
+             alt="{{ producto.descripcion }}"
+             class="producto-img"
+             onerror="this.src='{{ url_for('static', filename='images/default.png') }}'">
 
-            <div class="info-producto">
-                <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-                <p><strong>Precio Unitario:</strong> {{ "{:,.0f}".format(producto.valor_unitario).replace(",", ".") }} COP</p>
-                <p><strong>Unidad de Medida:</strong> {{ producto.unidad_medida }}</p>
-                <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock|int }}</p>
-                <p><strong>Categoría:</strong> {{ producto.categoria_id }}</p>
-
-            </div>
-        </div>
-        <div class="acciones">
-            <a href="{{ url_for('editar_producto', id=producto.id) }}" class="btn btn-editar">Editar</a>
-            <a href="{{ url_for('productos') }}" class="btn btn-volver1">Volver</a>
+        <!-- Información detallada del producto -->
+        <div class="info-producto">
+            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+            <p><strong>Precio Unitario:</strong> {{ "{:,.0f}".format(producto.valor_unitario).replace(",", ".") }} COP</p>
+            <p><strong>Unidad de Medida:</strong> {{ producto.unidad_medida }}</p>
+            <p><strong>Cantidad en Stock:</strong> {{ producto.cantidad_stock|int }}</p>
+            <p><strong>Categoría:</strong> {{ producto.categoria_id }}</p>
         </div>
     </div>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    {% endblock %}
+    <div class="acciones">
+        <!-- Botón para editar: uso del endpoint completo 'productos.editar_producto' -->
+        <a href="{{ url_for('productos.editar_producto', id=producto.id) }}"
+           class="btn btn-editar">
+            Editar
+        </a>
+
+        <!-- Botón para volver: uso del endpoint completo 'productos.productos' -->
+        <a href="{{ url_for('productos.productos') }}"
+           class="btn btn-volver1">
+            Volver
+        </a>
+    </div>
+</div>
+
+<!-- Scripts de Ionicons (iconos) -->
+<script type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
+</script>
+<script nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
+</script>
+
+{% endblock %}

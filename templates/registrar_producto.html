@@ -1,47 +1,87 @@
 {% extends "base.html" %}
 
-{% block title %}Login Page - Delicias Al Horno{% endblock %}
+{% block title %}Registrar Producto - Delicias Al Horno{% endblock %}
 
 {% block content %}
 
+<!-- Título secundario -->
 <div class="ttsecundario">
     <h1>Registrar producto</h1>
 </div>
-    <div class="contenedor">
-        <h2 class="titulo">Registrar Nuevo Producto</h2>
-        <form method="POST" action="{{ url_for('registrar_producto') }}" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="descripcion">Descripción:</label>
-                <input type="text" id="descripcion" name="descripcion" required>
-            </div>
-            <div class="form-group">
-                <label for="valor_unitario">Precio Unitario (COP):</label>
-                <input type="number" id="valor_unitario" name="valor_unitario" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label for="cantidad_stock">Cantidad en Stock:</label>
-                <input type="number" id="cantidad_stock" name="cantidad_stock" step="1" required>
-            </div>
-            <div class="form-group">
-                <label for="productos">Selecciona un producto:</label>
-                    <select id="categoria_id" name="categoria_id" required>
-                    <option value="" disabled selected>Elija un producto</option>
-                    <option value="Pan">Pan</option>
-                    <option value="Reposteria">Reposteria</option>
-                    <option value="La otra que no me acuerdo">La otra que no me acuerdo</option>
-                    </select>
-            </div>
-            <div class="form-group">
-                <label for="imagen">Subir Imagen:</label>
-                <input type="file" id="imagen" name="imagen" class="btn-archivo">
-            </div>
-            <div class="btn-group">
-                <button type="submit" class="btn-guardar">Registrar</button>
-                <a href="{{ url_for('productos') }}" class="btn btn-cancelar">Cancelar</a>
-            </div>
-        </form>
-    </div>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<div class="contenedor">
+    <h2 class="titulo">Registrar Nuevo Producto</h2>
+    <!-- Formulario de registro: usamos el endpoint completo del blueprint 'productos.registrar_producto' -->
+    <form method="POST"
+          action="{{ url_for('productos.registrar_producto') }}"
+          enctype="multipart/form-data"
+    >
+        <!-- Campo: descripción -->
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <input type="text"
+                   id="descripcion"
+                   name="descripcion"
+                   required>
+        </div>
+
+        <!-- Campo: precio unitario -->
+        <div class="form-group">
+            <label for="valor_unitario">Precio Unitario (COP):</label>
+            <input type="number"
+                   id="valor_unitario"
+                   name="valor_unitario"
+                   step="0.01"
+                   required>
+        </div>
+
+        <!-- Campo: cantidad en stock -->
+        <div class="form-group">
+            <label for="cantidad_stock">Cantidad en Stock:</label>
+            <input type="number"
+                   id="cantidad_stock"
+                   name="cantidad_stock"
+                   step="1"
+                   required>
+        </div>
+
+        <!-- Selector de categoría -->
+        <div class="form-group">
+            <label for="categoria_id">Categoría:</label>
+            <select id="categoria_id"
+                    name="categoria_id"
+                    required>
+                <option value="" disabled selected>Elija una categoría</option>
+                <option value="Pan">Pan</option>
+                <option value="Reposteria">Repostería</option>
+                <option value="La otra que no me acuerdo">La otra que no me acuerdo</option>
+            </select>
+        </div>
+
+        <!-- Campo: subir imagen -->
+        <div class="form-group">
+            <label for="imagen">Subir Imagen:</label>
+            <input type="file"
+                   id="imagen"
+                   name="imagen"
+                   class="btn-archivo"
+                   accept="image/*">
+        </div>
+
+        <!-- Botones: registrar o cancelar -->
+        <div class="btn-group">
+            <button type="submit" class="btn-guardar">Registrar</button>
+            <!-- Cancelar: redirige al listado, usamos 'productos.productos' -->
+            <a href="{{ url_for('productos.productos') }}"
+               class="btn btn-cancelar">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Scripts de Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 {% endblock %}

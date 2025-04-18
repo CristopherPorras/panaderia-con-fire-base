@@ -1,41 +1,63 @@
+<!-- Mi archivo de plantilla para la página de login -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Metadatos básicos -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
+    <!-- Enlace a mi hoja de estilos (static/styles.css) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="login-body">
 
+    <!-- Contenedor principal del login -->
     <div class="login-container">
 
+        <!-- Tarjeta de login -->
         <div class="login-card">
 
-            <!-- Logo estilo avatar -->
+            <!-- Logo de la panadería (avatar) -->
             <div class="login-avatar">
-                <img src="{{ url_for('static', filename='IMAGES/logo.png') }}" alt="Logo Delicias Al Horno">
+                <!-- Ruta a mi logo dentro de static/images/logo.png -->
+                <img src="{{ url_for('static', filename='images/logo.png') }}"
+                     alt="Logo Delicias Al Horno">
             </div>
 
+            <!-- Título de bienvenida -->
             <h2 class="login-title">Bienvenido de nuevo</h2>
 
-            <form method="POST" action="{{ url_for('login') }}">
+            <!-- Formulario de inicio de sesión -->
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <!-- Grupo de usuario -->
                 <div class="login-group">
                     <label for="usuario">Usuario</label>
-                    <input type="text" name="usuario" id="usuario" placeholder="Ingrese su usuario" required>
+                    <input type="text"
+                           name="usuario"
+                           id="usuario"
+                           placeholder="Ingrese su usuario"
+                           required>
                 </div>
 
+                <!-- Grupo de contraseña -->
                 <div class="login-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" name="password" id="password" placeholder="Ingrese su contraseña" required>
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           placeholder="Ingrese su contraseña"
+                           required>
                 </div>
 
-                <button type="submit" class="login-btn">Acceder</button>
+                <!-- Botón de enviar -->
+                <button type="submit" class="login-btn">
+                    Acceder
+                </button>
             </form>
+
         </div>
 
     </div>
 
 </body>
 </html>
-

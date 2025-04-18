@@ -11,7 +11,7 @@
 
     <!-- Barra de búsqueda -->
     <div class="busqueda-container">
-        <form method="GET" action="{{ url_for('productos') }}">
+        <form method="GET" action="{{ url_for('productos.productos') }}">
             <div class="input-group">
                 <input 
                     type="text" 
@@ -28,7 +28,7 @@
 
     <!-- Filtro de categoría -->
     <div class="categoria-container">
-        <form method="GET" action="{{ url_for('productos') }}">
+        <form method="GET" action="{{ url_for('productos.productos') }}">
             <div class="input-group">
                 <select name="categoria" class="form-select">
                     <option value="" {% if not request.args.get('categoria') %} selected {% endif %}>
@@ -52,7 +52,7 @@
         {% if productos|length > 0 %}
             {% for producto in productos %}
             <div class="producto-card">
-                <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="producto-link">
+                <a href="{{ url_for('productos.producto_detalle', id=producto.id) }}" class="producto-link">
                     <img 
                         src="{{ producto.imagen if producto.imagen else url_for('static', filename='imagenes/default.png') }}" 
                         alt="{{ producto.descripcion }}" 
@@ -61,9 +61,9 @@
                 </a>
                 <p class="producto-nombre">{{ producto.descripcion }}</p>
                 <div class="botones">
-                    <a href="{{ url_for('editar_producto', id=producto.id) }}" class="btn-editar">Editar</a>
-                    <a href="{{ url_for('producto_detalle', id=producto.id) }}" class="btn-ver">Detalles</a>
-                    <form method="POST" action="{{ url_for('eliminar_producto', id=producto.id) }}" style="display:inline;">
+                    <a href="{{ url_for('productos.editar_producto', id=producto.id) }}" class="btn-editar">Editar</a>
+                    <a href="{{ url_for('productos.producto_detalle', id=producto.id) }}" class="btn-ver">Detalles</a>
+                    <form method="POST" action="{{ url_for('productos.eliminar_producto', id=producto.id) }}" style="display:inline;">
                         <button type="submit" class="btn-eliminar">Eliminar</button>
                     </form>
                 </div>

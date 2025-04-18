@@ -1,27 +1,36 @@
+<!-- Mi plantilla inicio.html corregida para usar los endpoints completos -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Metadatos -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="icon" href="{{ url_for('static', filename='favicon_v2.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Favicon -->
+    <link rel="icon"
+          href="{{ url_for('static', filename='favicon_v2.ico') }}"
+          type="image/x-icon">
+    <!-- Hoja de estilos -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
-    <!-- 🔲 Barra de navegación -->
+    <!-- 🔲 Barra de navegación superior -->
     <nav>
         <div class="navbar">
 
-            <!-- 🔴 Botón de cerrar sesión a la izquierda -->
-            <a href="{{ url_for('logout') }}" class="nav-volver">
-                <ion-icon name="close-circle-outline"></ion-icon> Cerrar sesión
+            <!-- 🔴 Botón de cerrar sesión (ahora usa auth.logout) -->
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-volver">
+                <ion-icon name="close-circle-outline"></ion-icon>
+                Cerrar sesión
             </a>
 
-            <!-- 🏷️ Título centrado -->
+            <!-- 🏷️ Título de la app centrado -->
             <h1>Delicias Al Horno</h1>
 
-            <!-- 👤 Usuario logueado a la derecha -->
+            <!-- 👤 Nombre del vendedor logueado -->
             {% if vendedor.nombre %}
             <div class="nav-usuario">
                 <ion-icon name="person-circle-outline"></ion-icon>
@@ -32,49 +41,80 @@
         </div>
     </nav>
 
-    <!-- Título principal -->
+    <!-- Título de bienvenida -->
     <div class="ttsecundario">
         <h1>Bienvenido</h1>
     </div>
 
-    <!-- Casillas principales con teclas asignadas -->
+    <!-- Casillas principales con atajos de teclado -->
     <div class="contenedor-principal">
-        <a href="{{ url_for('guardar_factura') }}" class="casilla" title="Presiona F">
+        <!-- Facturar: usa facturacion.facturacion_page -->
+        <a href="{{ url_for('facturacion.facturacion_page') }}"
+           class="casilla"
+           title="Presiona F">
             <ion-icon name="document-text-outline"></ion-icon>
             <span>Facturar</span>
             <small class="tecla">F</small>
         </a>
-        <a href="{{ url_for('consultar_facturas') }}" class="casilla" title="Presiona Q">
+
+        <!-- Consultar Facturas: ahora usa facturacion.consultar_facturas -->
+        <a href="{{ url_for('facturacion.consultar_facturas') }}"
+           class="casilla"
+           title="Presiona Q">
             <ion-icon name="file-tray-full-outline"></ion-icon>
             <span>Consultar Facturas</span>
             <small class="tecla">Q</small>
         </a>
-        <a href="{{ url_for('productos') }}" class="casilla" title="Presiona P">
+
+        <!-- Productos -->
+        <a href="{{ url_for('productos.productos') }}"
+           class="casilla"
+           title="Presiona P">
             <ion-icon name="basket-outline"></ion-icon>
             <span>Productos</span>
             <small class="tecla">P</small>
         </a>
-        <a href="{{ url_for('registrar_producto') }}" class="casilla" title="Presiona R">
+
+        <!-- Registrar Producto -->
+        <a href="{{ url_for('productos.registrar_producto') }}"
+           class="casilla"
+           title="Presiona R">
             <ion-icon name="add-circle-outline"></ion-icon>
             <span>Registrar Producto</span>
             <small class="tecla">R</small>
         </a>
-        <a href="{{ url_for('registrar_cliente_route') }}" class="casilla" title="Presiona L">
+
+        <!-- Registrar Cliente -->
+        <a href="{{ url_for('clientes.registrar_cliente_route') }}"
+           class="casilla"
+           title="Presiona L">
             <ion-icon name="person-add-outline"></ion-icon>
             <span>Registrar Cliente</span>
             <small class="tecla">L</small>
         </a>
-        <a href="{{ url_for('registrar_vendedor_route') }}" class="casilla" title="Presiona V">
+
+        <!-- Registrar Vendedor -->
+        <a href="{{ url_for('vendedores.registrar_vendedor_route') }}"
+           class="casilla"
+           title="Presiona V">
             <ion-icon name="person-circle-outline"></ion-icon>
             <span>Registrar Vendedor</span>
             <small class="tecla">V</small>
         </a>
-        <a href="{{ url_for('clientes') }}" class="casilla" title="Presiona C">
+
+        <!-- Ver Clientes -->
+        <a href="{{ url_for('clientes.clientes') }}"
+           class="casilla"
+           title="Presiona C">
             <ion-icon name="people-outline"></ion-icon>
             <span>Ver Clientes</span>
             <small class="tecla">C</small>
         </a>
-        <a href="{{ url_for('vendedores_lista') }}" class="casilla" title="Presiona Z">
+
+        <!-- Ver Vendedores -->
+        <a href="{{ url_for('vendedores.vendedores_lista') }}"
+           class="casilla"
+           title="Presiona Z">
             <ion-icon name="person-outline"></ion-icon>
             <span>Ver Vendedores</span>
             <small class="tecla">Z</small>
@@ -84,24 +124,47 @@
     <!-- Teclas de acceso rápido -->
     <script>
         document.addEventListener('keydown', function(e) {
+            // Si el foco está en un input, no redirigir
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
             switch (e.key.toLowerCase()) {
-                case 'f': window.location.href = "{{ url_for('guardar_factura') }}"; break;
-                case 'q': window.location.href = "{{ url_for('consultar_facturas') }}"; break;
-                case 'p': window.location.href = "{{ url_for('productos') }}"; break;
-                case 'r': window.location.href = "{{ url_for('registrar_producto') }}"; break;
-                case 'l': window.location.href = "{{ url_for('registrar_cliente_route') }}"; break;
-                case 'v': window.location.href = "{{ url_for('registrar_vendedor_route') }}"; break;
-                case 'c': window.location.href = "{{ url_for('clientes') }}"; break;
-                case 'z': window.location.href = "{{ url_for('vendedores_lista') }}"; break;
-                case 'escape': window.location.href = "{{ url_for('login') }}"; break;
+                case 'f':
+                    window.location.href = "{{ url_for('facturacion.facturacion_page') }}";
+                    break;
+                case 'q':
+                    window.location.href = "{{ url_for('facturacion.consultar_facturas') }}";
+                    break;
+                case 'p':
+                    window.location.href = "{{ url_for('productos.productos') }}";
+                    break;
+                case 'r':
+                    window.location.href = "{{ url_for('productos.registrar_producto') }}";
+                    break;
+                case 'l':
+                    window.location.href = "{{ url_for('clientes.registrar_cliente_route') }}";
+                    break;
+                case 'v':
+                    window.location.href = "{{ url_for('vendedores.registrar_vendedor_route') }}";
+                    break;
+                case 'c':
+                    window.location.href = "{{ url_for('clientes.clientes') }}";
+                    break;
+                case 'z':
+                    window.location.href = "{{ url_for('vendedores.vendedores_lista') }}";
+                    break;
+                case 'escape':
+                    window.location.href = "{{ url_for('auth.login') }}";
+                    break;
             }
         });
     </script>
 
-    <!-- Librería de íconos -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Librería de íconos Ionicons -->
+    <script type="module"
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
+    </script>
+    <script nomodule
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
+    </script>
 </body>
 </html>

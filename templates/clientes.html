@@ -3,6 +3,7 @@
 {% block title %}Clientes{% endblock %}
 
 {% block content %}
+<!-- Título secundario -->
 <div class="ttsecundario">
     <h1>Clientes</h1>
 </div>
@@ -29,9 +30,19 @@
                 <td>{{ cliente.telefono }}</td>
                 <td>{{ cliente.direccion }}</td>
                 <td class="acciones">
-                    <a href="{{ url_for('editar_cliente', id=cliente.id) }}" class="btn-editar-vc">Editar</a>
-                    <form method="POST" action="{{ url_for('eliminar_cliente', id=cliente.id) }}" onsubmit="return confirmarEliminacion()">
-                        <button type="submit" class="btn-eliminar-vc">Eliminar</button>
+                    <!-- Enlace para editar: uso del endpoint completo 'clientes.editar_cliente' -->
+                    <a href="{{ url_for('clientes.editar_cliente', id=cliente.id) }}"
+                       class="btn-editar-vc">
+                        Editar
+                    </a>
+                    <!-- Formulario para eliminar: uso del endpoint completo 'clientes.eliminar_cliente' -->
+                    <form method="POST"
+                          action="{{ url_for('clientes.eliminar_cliente', id=cliente.id) }}"
+                          onsubmit="return confirmarEliminacion()"
+                          style="display:inline;">
+                        <button type="submit" class="btn-eliminar-vc">
+                            Eliminar
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -45,12 +56,18 @@
     {% endif %}
 </div>
 
+<!-- Función para confirmar eliminación -->
 <script>
 function confirmarEliminacion() {
     return confirm("¿Estás seguro de que deseas eliminar este cliente?");
 }
 </script>
 
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<!-- Ionicons para iconos -->
+<script type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
+</script>
+<script nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
+</script>
 {% endblock %}

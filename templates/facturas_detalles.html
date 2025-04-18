@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Consultar Facturas{% endblock %}
+{% block title %}Detalles de Factura{% endblock %}
 
 {% block content %}
 
@@ -47,21 +47,27 @@
     </div>
 
     <div class="acciones">
-        <a href="{{ url_for('descargar_factura', id=factura_id) }}" class="descargar" target="_blank">
+        <!-- Descargar PDF: endpoint completo 'facturacion.descargar_factura' -->
+        <a href="{{ url_for('facturacion.descargar_factura', id=factura_id) }}"
+           class="descargar"
+           target="_blank">
             📄 Descargar factura en PDF
         </a>
         
-        <a href="{{ url_for('consultar_facturas') }}" class="volver">← Volver a consultas</a>
+        <!-- Volver a consultas: endpoint completo 'facturacion.consultar_facturas' -->
+        <a href="{{ url_for('facturacion.consultar_facturas') }}"
+           class="volver">
+            ← Volver a consultas
+        </a>
     </div>
 </div>
 
 <script>
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
-            window.location.href = "{{ url_for('consultar_facturas') }}";
+            window.location.href = "{{ url_for('facturacion.consultar_facturas') }}";
         }
     });
 </script>
 
 {% endblock %}
-
