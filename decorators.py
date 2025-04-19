@@ -1,11 +1,9 @@
+# decorators.py
+
 from flask import session, flash, redirect, url_for
 from functools import wraps
 
 def login_required(f):
-    """
-    Verifica que haya un usuario en sesión.
-    Si no, redirige al login con mensaje de error.
-    """
     @wraps(f)
     def decorated(*args, **kwargs):
         if 'user' not in session:
@@ -13,3 +11,15 @@ def login_required(f):
             return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return decorated
+
+def role_required(*allowed_roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            rol = session.get('rol')
+            if rol not in allowed_roles:
+                flash("No tienes permiso para acceder a esta página.", "error")
+                return redirect(url_for('inicio'))
+            return f(*args, **kwargs)
+        return decorated
+    return decorator

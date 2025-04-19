@@ -1,14 +1,8 @@
-# models/vendedores.py
-
 from flask import render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash
 from extensions import db  # Cliente Firestore inicializado en extensions.py
 
 def registrar_vendedor():
-    """
-    Maneja el formulario de registro de un nuevo vendedor.
-    Valida campos, comprueba duplicados y guarda la contraseña cifrada.
-    """
     if request.method == 'POST':
         nombre     = request.form.get('nombre', '').strip()
         documento  = request.form.get('documento', '').strip()
@@ -16,8 +10,10 @@ def registrar_vendedor():
         contrasena = request.form.get('contrasena', '').strip()
         telefono   = request.form.get('telefono', '').strip()
         direccion  = request.form.get('direccion', '').strip()
+        # Nuevo campo rol con valor por defecto 'vendedor'
+        rol        = request.form.get('rol', 'vendedor').strip()
 
-        # Todos los campos son obligatorios
+        # Todos los campos son obligatorios (salvo rol, que tiene default)
         if not all([nombre, documento, usuario, contrasena, telefono, direccion]):
             flash("Todos los campos son obligatorios.", "error")
             return redirect(url_for('vendedores.registrar_vendedor_route'))
@@ -29,14 +25,15 @@ def registrar_vendedor():
             flash("Ese nombre de usuario ya está registrado.", "error")
             return redirect(url_for('vendedores.registrar_vendedor_route'))
 
-        # Guardar el nuevo vendedor con contraseña cifrada
+        # Guardar el nuevo vendedor con contraseña cifrada y rol
         vendedores_ref.add({
-            "nombre":    nombre,
-            "documento": documento,
-            "usuario":   usuario,
+            "nombre":     nombre,
+            "documento":  documento,
+            "usuario":    usuario,
             "contrasena": generate_password_hash(contrasena),
-            "telefono":  telefono,
-            "direccion": direccion
+            "telefono":   telefono,
+            "direccion":  direccion,
+            "rol":        rol
         })
 
         flash("Vendedor registrado exitosamente.", "success")
@@ -48,9 +45,5 @@ def registrar_vendedor():
 
 
 def obtener_vendedores():
-    """
-    Recupera todos los vendedores desde Firestore y devuelve
-    una lista de diccionarios con su ID.
-    """
     vendedores_ref = db.collection('vendedores').stream()
     return [{"id": doc.id, **doc.to_dict()} for doc in vendedores_ref]

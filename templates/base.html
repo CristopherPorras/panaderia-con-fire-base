@@ -11,19 +11,23 @@
 </head>
 <body>
 
-    <!--  Barra superior personalizada -->
+    <!-- Barra superior personalizada -->
     <nav>
         <div class="navbar">
 
-            <!--  Botón de volver -->
-            <a href="{{ url_for('auth.inicio') }}" class="nav-volver">
+            <!-- Botón de volver según rol -->
+            <a href="{% if vendedor.rol == 'admin' %}
+                        {{ url_for('auth.inicio_admin') }}
+                     {% else %}
+                        {{ url_for('auth.inicio_vendedor') }}
+                     {% endif %}" class="nav-volver">
                 <ion-icon name="arrow-back-outline"></ion-icon> Volver
             </a>
 
-            <!--  Título centrado -->
+            <!-- Título centrado -->
             <h1>Delicias Al Horno</h1>
 
-            <!--  Usuario logueado -->
+            <!-- Usuario logueado -->
             {% if vendedor.nombre %}
             <div class="nav-usuario">
                 <ion-icon name="person-circle-outline"></ion-icon>
@@ -33,33 +37,34 @@
         </div>
     </nav>
 
-    <!--  Contenido de cada página -->
+    <!-- Contenido de cada página -->
     {% block content %}{% endblock %}
 
     <!-- Ionicons para iconos -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <!-- ESC para volver al inicio -->
+    <!-- ESC para volver al inicio dinámicamente -->
     <script>
         document.addEventListener('keydown', function(e) {
             const focused = document.activeElement;
             const isInput = focused && ['INPUT', 'TEXTAREA', 'SELECT'].includes(focused.tagName);
             if (!isInput && e.key === 'Escape') {
                 e.preventDefault();
-                window.location.href = "{{ url_for('auth.inicio') }}";
+                const destino = "{{ url_for('auth.inicio_admin') if vendedor.rol == 'admin' else url_for('auth.inicio_vendedor') }}";
+                window.location.href = destino;
             }
         });
     </script>
 
-    <!-- Función global para confirmar eliminación -->
+    <!-- Confirmación de eliminación -->
     <script>
         function confirmarEliminacion() {
             return confirm("¿Estás seguro de que deseas eliminar este registro?");
         }
     </script>
 
-    <!--  Scripts adicionales por página -->
+    <!-- Scripts adicionales por página -->
     {% block scripts %}{% endblock %}
 </body>
 </html>

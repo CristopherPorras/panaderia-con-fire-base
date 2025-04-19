@@ -10,7 +10,9 @@
 
 <div id="factura-detalle">
     <h1>Factura de {{ cliente.nombre }}</h1>
-    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+
+    <!-- 📅 Fecha y hora -->
+    <p><strong>Fecha y hora:</strong> {{ factura.fecha }}</p>
 
     <!-- 👤 Mostramos el nombre del vendedor -->
     <p><strong>Vendedor:</strong> 
@@ -21,6 +23,14 @@
         {% endif %}
     </p>
 
+    <!-- 💳 Información del método de pago -->
+    <p><strong>Método de pago:</strong> {{ factura.metodo_pago|capitalize }}</p>
+    {% if factura.metodo_pago == 'efectivo' %}
+        <p><strong>Recibido:</strong> {{ "{:,.0f}".format(factura.efectivo_recibido).replace(",", ".") }} COP</p>
+        <p><strong>Cambio entregado:</strong> {{ "{:,.0f}".format(factura.efectivo_recibido - factura.total).replace(",", ".") }} COP</p>
+    {% endif %}
+
+    <!-- 🧾 Detalle de productos -->
     <table class="tabla">
         <thead>
             <tr>
@@ -46,15 +56,16 @@
         <h4>Total a pagar: <strong>{{ "{:,.0f}".format(factura.total).replace(",", ".") }} COP</strong></h4>
     </div>
 
+    <!-- 🔘 Acciones -->
     <div class="acciones">
-        <!-- Descargar PDF: endpoint completo 'facturacion.descargar_factura' -->
+        <!-- Descargar PDF -->
         <a href="{{ url_for('facturacion.descargar_factura', id=factura_id) }}"
            class="descargar"
            target="_blank">
             📄 Descargar factura en PDF
         </a>
         
-        <!-- Volver a consultas: endpoint completo 'facturacion.consultar_facturas' -->
+        <!-- Volver a consultas -->
         <a href="{{ url_for('facturacion.consultar_facturas') }}"
            class="volver">
             ← Volver a consultas
@@ -62,6 +73,7 @@
     </div>
 </div>
 
+<!-- ESC para volver -->
 <script>
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {

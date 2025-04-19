@@ -3,69 +3,48 @@
 {% block title %}Editar Vendedor{% endblock %}
 
 {% block content %}
-    <!-- Título secundario -->
     <div class="ttsecundario">
         <h1>Editar Vendedor</h1>
     </div>
 
     <div class="contenedor">
-        <!-- Formulario: ahora usa el endpoint completo del blueprint 'vendedores.editar_vendedor' -->
         <form method="POST" action="{{ url_for('vendedores.editar_vendedor', id=vendedor.id) }}">
-            <!-- Campo: Nombre -->
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text"
-                       id="nombre"
-                       name="nombre"
-                       value="{{ vendedor.nombre }}"
-                       required>
+                <input type="text" id="nombre" name="nombre" value="{{ vendedor.nombre }}" required>
             </div>
 
-            <!-- Campo: Documento -->
             <div class="form-group">
                 <label for="documento">Documento:</label>
-                <input type="text"
-                       id="documento"
-                       name="documento"
-                       value="{{ vendedor.documento }}"
-                       required>
+                <input type="text" id="documento" name="documento" value="{{ vendedor.documento }}" required>
             </div>
 
-            <!-- Campo: Usuario -->
             <div class="form-group">
                 <label for="usuario">Usuario:</label>
-                <input type="text"
-                       id="usuario"
-                       name="usuario"
-                       value="{{ vendedor.usuario }}"
-                       required>
+                <input type="text" id="usuario" name="usuario" value="{{ vendedor.usuario }}" required>
             </div>
 
-            <!-- Campo: Email -->
             <div class="form-group">
                 <label for="email">Correo Electrónico:</label>
-                <input type="email"
-                       id="email"
-                       name="email"
-                       value="{{ vendedor.email }}"
-                       required>
+                <input type="email" id="email" name="email" value="{{ vendedor.email }}" required>
             </div>
 
-            <!-- Campo: Teléfono -->
             <div class="form-group">
                 <label for="telefono">Teléfono:</label>
-                <input type="text"
-                       id="telefono"
-                       name="telefono"
-                       value="{{ vendedor.telefono }}"
-                       required>
+                <input type="text" id="telefono" name="telefono" value="{{ vendedor.telefono }}" required>
             </div>
 
-            <!-- Botones de acción -->
+            <!-- Campo: Rol -->
+            <div class="form-group">
+                <label for="rol">Rol:</label>
+                <select id="rol" name="rol" required>
+                    <option value="vendedor" {% if vendedor.rol == 'vendedor' %}selected{% endif %}>Vendedor</option>
+                    <option value="admin" {% if vendedor.rol == 'admin' %}selected{% endif %}>Administrador</option>
+                </select>
+            </div>
+
             <div class="btn-group">
-                <!-- Guardar cambios -->
                 <button type="submit" class="btn-guardar">Guardar Cambios</button>
-                <!-- Cancelar: vuelve al listado de vendedores usando 'vendedores.vendedores_lista' -->
                 <a href="{{ url_for('vendedores.vendedores_lista') }}" class="btn btn-cancelar">
                     Cancelar
                 </a>

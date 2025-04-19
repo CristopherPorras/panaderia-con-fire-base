@@ -48,12 +48,21 @@
             <input type="text" id="direccion" name="direccion" required>
         </div>
 
+        <!-- Nuevo campo: rol -->
+        <div class="form-group">
+            <label for="rol">Rol</label>
+            <select id="rol" name="rol" required>
+                <option value="vendedor" selected>Vendedor</option>
+                <option value="admin">Administrador</option>
+            </select>
+        </div>
+
         <!-- Botones de acción -->
         <div class="btn-group">
             <!-- Guardar vendedor -->
             <button type="submit" class="btn-guardar">Registrar Vendedor</button>
             <!-- Cancelar: volvemos al inicio de sesión (endpoint auth.inicio) -->
-            <a href="{{ url_for('auth.inicio') }}" class="btn btn-cancelar">
+            <a href="{{ url_for('auth.inicio_admin') }}" class="btn btn-cancelar">
                 Cancelar
             </a>
         </div>

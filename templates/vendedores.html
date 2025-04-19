@@ -1,9 +1,9 @@
+
 {% extends "base.html" %}
 
-{% block title %}Vendedores{% endblock %}
+{% block title %}Lista de Vendedores{% endblock %}
 
 {% block content %}
-<!-- Título secundario -->
 <div class="ttsecundario">
     <h1>Vendedores</h1>
 </div>
@@ -18,34 +18,29 @@
                 <th>Usuario</th>
                 <th>Email</th>
                 <th>Teléfono</th>
-                <th>Dirección</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for vendedor in vendedores %}
+            {% for vendedor_item in vendedores %}
             <tr>
-                <td>{{ vendedor.nombre }}</td>
-                <td>{{ vendedor.documento }}</td>
-                <td>{{ vendedor.usuario }}</td>
-                <td>{{ vendedor.email }}</td>
-                <td>{{ vendedor.telefono }}</td>
-                <td>{{ vendedor.direccion }}</td>
+                <td>{{ vendedor_item.nombre }}</td>
+                <td>{{ vendedor_item.documento }}</td>
+                <td>{{ vendedor_item.usuario }}</td>
+                <td>{{ vendedor_item.email }}</td>
+                <td>{{ vendedor_item.telefono }}</td>
                 <td class="acciones">
-                    <!-- Enlace para editar: usa endpoint completo 'vendedores.editar_vendedor' -->
-                    <a href="{{ url_for('vendedores.editar_vendedor', id=vendedor.id) }}"
-                       class="btn-editar-vc">
-                        Editar
-                    </a>
-                    <!-- Formulario para eliminar: usa endpoint completo 'vendedores.eliminar_vendedor' -->
+                {% if vendedor.rol == 'admin' %}
+                    <a href="{{ url_for('vendedores.editar_vendedor', id=vendedor_item.id) }}" class="btn-editar-vc">Editar</a>
                     <form method="POST"
-                          action="{{ url_for('vendedores.eliminar_vendedor', id=vendedor.id) }}"
+                          action="{{ url_for('vendedores.eliminar_vendedor', id=vendedor_item.id) }}"
                           onsubmit="return confirmarEliminacion()"
                           style="display:inline;">
-                        <button type="submit" class="btn-eliminar-vc">
-                            Eliminar
-                        </button>
+                        <button type="submit" class="btn-eliminar-vc">Eliminar</button>
                     </form>
+                {% else %}
+                    <span class="text-muted">Sin permisos</span>
+                {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -58,18 +53,10 @@
     {% endif %}
 </div>
 
-<!-- Función para confirmar eliminación -->
 <script>
 function confirmarEliminacion() {
     return confirm("¿Estás seguro de que deseas eliminar este vendedor?");
 }
 </script>
 
-<!-- Ionicons para iconos -->
-<script type="module"
-        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
-</script>
-<script nomodule
-        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
-</script>
 {% endblock %}

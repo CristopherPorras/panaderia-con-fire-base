@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from extensions import db
 from decorators import login_required
+from controllers.utils import rol_requerido
 from models.clientes import registrar_cliente, obtener_clientes
 from extensions import db, PDFSHIFT_API_KEY 
 
@@ -8,6 +9,7 @@ clientes_bp = Blueprint('clientes', __name__)
 
 @clientes_bp.route('/registrar_cliente', methods=['GET','POST'])
 @login_required
+@rol_requerido('admin')  #  Solo admin puede registrar
 def registrar_cliente_route():
     return registrar_cliente()
 
@@ -19,6 +21,7 @@ def clientes():
 
 @clientes_bp.route('/editar_cliente/<id>', methods=['GET','POST'])
 @login_required
+@rol_requerido('admin')  #  Solo admin puede editar
 def editar_cliente(id):
     ref = db.collection('clientes').document(id)
     if request.method=='POST':
@@ -41,6 +44,7 @@ def editar_cliente(id):
 
 @clientes_bp.route('/eliminar_cliente/<id>', methods=['POST'])
 @login_required
+@rol_requerido('admin')  #  Solo admin puede eliminar
 def eliminar_cliente(id):
     try:
         db.collection('clientes').document(id).delete()

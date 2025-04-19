@@ -7,12 +7,6 @@ PDFSHIFT_API_KEY = None
 db = None
 
 def init_extensions(cred_filename='delicias.json'):
-    """
-    Inicializa PDFShift y Firebase una sola vez.
-    Al terminar, deja:
-      - PDFSHIFT_API_KEY con la clave cargada.
-      - db con el cliente Firestore.
-    """
     global PDFSHIFT_API_KEY, db
 
     # --- PDFShift ---
@@ -29,7 +23,7 @@ def init_extensions(cred_filename='delicias.json'):
     cred_path = os.path.join(os.getcwd(), 'instance', cred_filename)
     if not os.path.exists(cred_path):
         raise RuntimeError(f"No se encontró credenciales de Firebase en {cred_path}")
-    cred = credentials.Certificate(cred_path)  # noqa: F821
+    cred = credentials.Certificate(cred_path) 
     if not firebase_admin._apps:
         firebase_admin.initialize_app(cred)
     db = firestore.client()

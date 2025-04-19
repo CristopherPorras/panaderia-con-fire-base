@@ -1,219 +1,163 @@
 from datetime import datetime
 from flask import session
 from google.cloud.firestore import Query
-from extensions import db  # Usamos el cliente Firestore inicializado en extensions.py
+from extensions import db
+
+# === FUNCIÓN: Obtener el próximo número de factura ===
+def obtener_numero_factura():
+    facturas_ref = (
+        db.collection('facturas')
+        .order_by('numero_factura', direction=Query.DESCENDING)
+        .limit(1)
+        .stream()
+    )
+    primera = next(facturas_ref, None)
+    return (primera.to_dict().get('numero_factura', 0) + 1) if primera else 1
 
 # === FUNCIÓN: Guardar una factura ===
 def guardar_factura(form_data):
-    """
-    Guarda una factura nueva en Firestore.
-    Calcula el próximo número de factura y el total según los detalles.
-    """
-    # Obtenemos la factura con mayor número y le sumamos 1
-    facturas_ref = (
-        db.collection('facturas')
-          .order_by('numero_factura', direction=Query.DESCENDING)
-          .limit(1)
-          .stream()
-    )
-    numero_factura = 1
-    primera = next(facturas_ref, None)
-    if primera:
-        numero_factura = primera.to_dict().get('numero_factura', 0) + 1
+    numero_factura = obtener_numero_factura()
 
     total = 0
     detalles = []
 
-    # Recorremos cada producto seleccionado y calculamos subtotal
     productos_ids = form_data.getlist('producto_id')
-    cantidades    = form_data.getlist('cantidad')
+    cantidades = form_data.getlist('cantidad')
     for producto_id, cantidad in zip(productos_ids, cantidades):
         producto_doc = db.collection('productos').document(producto_id).get()
         if not producto_doc.exists:
             continue
         data = producto_doc.to_dict()
-        cantidad_int     = int(cantidad)
-        precio_unitario  = float(data.get('valor_unitario', 0))
-        subtotal         = cantidad_int * precio_unitario
-        total           += subtotal
+        cantidad_int = int(cantidad)
+        precio_unitario = float(data.get('valor_unitario', 0))
+        subtotal = cantidad_int * precio_unitario
+        total += subtotal
 
         detalles.append({
-            'producto_id':    producto_id,
-            'nombre':         data.get('descripcion', 'Desconocido'),
+            'producto_id': producto_id,
+            'nombre': data.get('descripcion', 'Desconocido'),
             'precio_unitario': int(precio_unitario),
-            'cantidad':       cantidad_int,
-            'subtotal':       subtotal
+            'cantidad': cantidad_int,
+            'subtotal': subtotal
         })
 
-    # Mostramos el ID del vendedor en sesión para depuración
-    print("ID del vendedor en sesión:", session.get('user_id'))
+    metodo_pago = form_data.get('metodo_pago', 'efectivo')  # ← Asegura que se obtenga el valor
+    efectivo_recibido = float(form_data.get('efectivo_recibido') or 0)
 
-    # Creamos el diccionario de la factura
     factura_data = {
         'numero_factura': numero_factura,
-        'cliente_id':     form_data['cliente_id'],
-        'fecha':          datetime.now().strftime('%Y-%m-%d'),
-        'total':          int(total),
-        'detalles':       detalles,
-        'vendedor_id':    session.get('user_id', 'desconocido')
+        'cliente_id': form_data['cliente_id'],
+        'fecha': datetime.now(),  #  Se guarda como datetime real (timestamp)
+        'total': int(total),
+        'detalles': detalles,
+        'vendedor_id': session.get('user_id', 'desconocido'),
+        'metodo_pago': metodo_pago,
+        'efectivo_recibido': efectivo_recibido if metodo_pago == 'efectivo' else 0
     }
 
-    # Guardamos en Firestore
     db.collection('facturas').add(factura_data)
-    print("📦 Factura guardada con vendedor_id:", factura_data['vendedor_id'])
+    print("📦 Factura guardada con:", factura_data)
 
 
-# === FUNCIÓN: Obtener el próximo número de factura ===
-def obtener_numero_factura():
-    """
-    Retorna el siguiente número de factura como string.
-    """
-    facturas = (
-        db.collection('facturas')
-          .order_by('fecha', direction=Query.DESCENDING)
-          .limit(1)
-          .stream()
-    )
-    ultima = next(facturas, None)
-    if ultima:
-        num = ultima.to_dict().get('numero_factura', 0)
-        return str(int(num) + 1)
-    return "1"
+# === FUNCIÓN: Obtener total ventas del día ===
+def obtener_total_ventas_hoy():
+    hoy = datetime.now().strftime('%Y-%m-%d')
+    docs = db.collection('facturas').where('fecha', '>=', hoy).stream()
+    return sum(doc.to_dict().get('total', 0) for doc in docs)
 
+from datetime import datetime
+from extensions import db
 
-# === FUNCIÓN: Buscar productos por texto ===
-def buscar_productos(query):
-    """
-    Retorna lista de productos cuyo nombre contiene la query.
-    """
-    productos_docs = db.collection('productos').stream()
-    resultados = []
-    for doc in productos_docs:
-        data = doc.to_dict()
-        nombre = data.get('nombre', '').lower()
-        if query.lower() in nombre:
-            resultados.append({"id": doc.id, **data})
-    return resultados
-
-
-# === FUNCIÓN: Obtener facturas filtradas por texto o fecha ===
+# === FUNCIÓN: Obtener facturas con filtros ===
 def obtener_facturas_filtradas(query='', fecha=''):
-    """
-    Retorna facturas que coinciden con búsqueda en ID o nombre de cliente,
-    y/o con la fecha exacta.
-    """
-    facturas_docs = db.collection('facturas').stream()
-    resultados = []
+    facturas_ref = db.collection('facturas')
+    todas_facturas = facturas_ref.stream()
 
-    for doc in facturas_docs:
+    facturas_filtradas = []
+    fecha_consulta = datetime.strptime(fecha, '%Y-%m-%d').date() if fecha else datetime.today().date()
+
+    for doc in todas_facturas:
         data = doc.to_dict()
+        data['id'] = doc.id
+        data['numero'] = data.get('numero_factura', 0)
 
-        # Obtenemos datos del cliente
-        cliente_id   = data.get("cliente_id")
-        cliente_doc  = db.collection('clientes').document(cliente_id).get()
-        cliente_data = cliente_doc.to_dict() if cliente_doc.exists else {"nombre": "Desconocido"}
-
-        # Obtenemos datos del vendedor
-        vendedor_id   = data.get("vendedor_id")
-        vendedor_doc  = db.collection('vendedores').document(vendedor_id).get()
-        vendedor_data = vendedor_doc.to_dict() if vendedor_doc.exists else {"nombre": "Desconocido"}
-
-        # Parseamos la fecha
-        fecha_str = data.get("fecha")
-        if fecha_str:
+        # 🕒 Obtenemos la fecha y la convertimos a tipo date
+        fecha_guardada = data.get('fecha')
+        if isinstance(fecha_guardada, str):
             try:
-                fecha_obj = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+                fecha_factura = datetime.strptime(fecha_guardada, '%Y-%m-%d %H:%M:%S').date()
             except:
-                fecha_obj = datetime.today().date()
+                try:
+                    fecha_factura = datetime.strptime(fecha_guardada, '%Y-%m-%d').date()
+                except:
+                    continue
+        elif isinstance(fecha_guardada, datetime):
+            fecha_factura = fecha_guardada.date()
         else:
-            fecha_obj = None
+            continue
 
-        # Comprobamos filtros
-        texto_id     = query.lower() in str(doc.id).lower()
-        texto_nombre = query.lower() in cliente_data.get("nombre", "").lower()
-        cumple_busqueda = not query or (texto_id or texto_nombre)
-        cumple_fecha    = not fecha or (fecha_obj and fecha_obj.strftime("%Y-%m-%d") == fecha)
+        # Filtro por fecha exacta
+        if fecha_factura != fecha_consulta:
+            continue
 
-        if cumple_busqueda and cumple_fecha:
-            resultados.append({
-                "id":       doc.id,
-                "numero":   data.get("numero_factura"),
-                "fecha":    fecha_obj or datetime.today().date(),
-                "cliente":  {"nombre": cliente_data.get("nombre")},
-                "vendedor": {"nombre": vendedor_data.get("nombre")},
-                "detalles": data.get("detalles", []),
-                "total":    data.get("total", 0)
-            })
+        # Filtro por texto (nombre del cliente o número de factura)
+        cliente_doc = db.collection('clientes').document(data.get('cliente_id', '')).get()
+        cliente_nombre = cliente_doc.to_dict().get('nombre', '') if cliente_doc.exists else ''
+        if query and query.lower() not in cliente_nombre.lower() and query not in str(data['numero']):
+            continue
 
-    return resultados
+        data['cliente'] = {'nombre': cliente_nombre}
+        data['fecha'] = fecha_factura.strftime('%d/%m/%Y')
+
+        # Vendedor
+        vendedor_id = data.get('vendedor_id')
+        if vendedor_id:
+            vendedor_doc = db.collection('vendedores').document(vendedor_id).get()
+            if vendedor_doc.exists:
+                data['vendedor'] = vendedor_doc.to_dict()
+
+        facturas_filtradas.append(data)
+
+    # Ordenamos las facturas de mayor a menor por número
+    facturas_ordenadas = sorted(facturas_filtradas, key=lambda x: x['numero'], reverse=True)
+
+    return facturas_ordenadas
 
 
 # === FUNCIÓN: Eliminar factura por ID ===
 def eliminar_factura_por_id(factura_id):
-    """
-    Elimina la factura indicada de Firestore.
-    """
     db.collection('facturas').document(factura_id).delete()
 
-
-# === FUNCIÓN: Obtener una factura por ID ===
+# === FUNCIÓN: Obtener factura por ID ===
 def obtener_factura_por_id(factura_id):
-    """
-    Retorna el diccionario de la factura o None si no existe.
-    """
-    doc = db.collection('facturas').document(factura_id).get()
-    return doc.to_dict() if doc.exists else None
+    ref = db.collection('facturas').document(factura_id).get()
+    if ref.exists:
+        return ref.to_dict()
+    return {}
 
-
-# === FUNCIÓN: Obtener cliente a partir de una factura ===
+# === FUNCIÓN: Obtener cliente desde una factura ===
 def obtener_cliente_por_factura(factura):
-    """
-    Dado el diccionario de factura, retorna datos del cliente.
-    """
-    cliente_id = factura.get("cliente_id")
-    if not cliente_id:
-        return {}
-    doc = db.collection('clientes').document(cliente_id).get()
-    return doc.to_dict() if doc.exists else {}
+    cliente_id = factura.get('cliente_id')
+    if cliente_id:
+        doc = db.collection('clientes').document(cliente_id).get()
+        return doc.to_dict() if doc.exists else {'nombre': 'Desconocido'}
+    return {'nombre': 'Desconocido'}
 
-
-# === FUNCIÓN: Obtener detalles de una factura ===
+# === FUNCIÓN: Obtener detalles desde factura ===
 def obtener_detalles_por_factura(factura_id):
-    """
-    Retorna la lista de detalles con nombre, cantidad y subtotales.
-    """
-    factura = obtener_factura_por_id(factura_id)
-    if not factura:
+    ref = db.collection('facturas').document(factura_id).get()
+    if not ref.exists:
         return []
 
-    detalles = []
+    factura = ref.to_dict()
+    detalles_finales = []
     for item in factura.get('detalles', []):
-        producto_doc = db.collection('productos').document(item.get('producto_id')).get()
-        producto_data = producto_doc.to_dict() if producto_doc.exists else {}
-        detalles.append({
-            'nombre':          producto_data.get('descripcion', 'Desconocido'),
-            'cantidad':        item.get('cantidad', 0),
-            'precio_unitario': producto_data.get('valor_unitario', 0),
-            'subtotal':        item.get('cantidad', 0) * producto_data.get('valor_unitario', 0)
+        p = db.collection('productos').document(item.get('producto_id')).get()
+        pd = p.to_dict() if p.exists else {}
+        detalles_finales.append({
+            'nombre': pd.get('descripcion', 'Desconocido'),
+            'cantidad': item.get('cantidad', 0),
+            'precio_unitario': pd.get('valor_unitario', 0),
+            'subtotal': item.get('cantidad', 0) * pd.get('valor_unitario', 0)
         })
-    return detalles
-
-
-# === FUNCIÓN: Calcular el total de ventas del día ===
-def obtener_total_ventas_hoy():
-    """
-    Suma los totales de facturas cuya fecha es hoy.
-    """
-    hoy_str = datetime.today().strftime('%Y-%m-%d')
-    facturas_docs = db.collection('facturas').where('fecha', '==', hoy_str).stream()
-
-    total_ventas = 0
-    for factura in facturas_docs:
-        datos = factura.to_dict()
-        total  = datos.get('total', 0)
-        try:
-            total_ventas += float(total)
-        except ValueError:
-            continue
-
-    return total_ventas
+    return detalles_finales

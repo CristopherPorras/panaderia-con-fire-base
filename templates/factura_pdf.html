@@ -80,10 +80,9 @@
             padding-top: 10px;
         }
 
-        .vendedor {
+        .vendedor, .metodo-pago, .hora {
             font-size: 14px;
-            color: #33691e;
-            margin-top: 10px;
+            color: #555;
         }
     </style>
 </head>
@@ -103,7 +102,9 @@
 <div class="factura-info">
     <p><strong>Número de Factura:</strong> {{ factura.get('numero_factura', 'No disponible') }}</p>
     <p><strong>Cliente:</strong> {{ cliente.nombre }}</p>
-    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+    <p><strong>Fecha:</strong> {{ factura.fecha.split(" ")[0] }}</p>
+    <p class="hora"><strong>Hora:</strong> {{ factura.fecha.split(" ")[1] }}</p>
+    <p class="metodo-pago"><strong>Método de Pago:</strong> {{ factura.metodo_pago | capitalize }}</p>
     <p class="vendedor"><strong>Vendedor:</strong>
         {% if vendedor.nombre %}
             {{ vendedor.nombre }}

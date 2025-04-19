@@ -1,9 +1,7 @@
 {% extends "base.html" %}
-
 {% block title %}Consultar Facturas{% endblock %}
 
 {% block content %}
-
 <div class="ttsecundario">
     <h1>Consultar Facturas</h1>
 </div>
@@ -13,7 +11,7 @@
     <form method="GET" action="{{ url_for('facturacion.consultar_facturas') }}">
         <div class="input-group">
             <input type="text" name="query" placeholder="Buscar factura o cliente" class="form-input"
-                value="{{ request.args.get('query', '') }}">
+                   value="{{ request.args.get('query', '') }}">
             <button type="submit" class="search-btn">
                 <ion-icon name="search-outline"></ion-icon>
             </button>
@@ -31,7 +29,7 @@
     </form>
 </div>
 
-<!-- 🧾 Resumen del día: fecha + total -->
+<!-- 🧾 Resumen del día -->
 <div class="resumen-total">
     <ion-icon name="calendar-outline" class="icono-resumen"></ion-icon>
     <p>Mostrando facturas del día: <strong>{{ fecha }}</strong></p>
@@ -44,47 +42,55 @@
     {% if facturas|length > 0 %}
     <table class="factura-tabla">
         <thead>
-            <tr>
-                <th>Factura #</th>
-                <th>Cliente</th>
-                <th>Fecha</th>
-                <th>Vendedor</th>
-                <th>Acciones</th>
-            </tr>
+        <tr>
+            <th>Factura #</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Vendedor</th>
+            <th>Método de Pago</th>
+            <th>Acciones</th>
+        </tr>
         </thead>
         <tbody>
-            {% for factura in facturas|sort(attribute='numero', reverse=True) %}
-            <tr>
-                <td>{{ factura.numero }}</td>
-                <td>{{ factura.cliente.nombre }}</td>
-                <td>{{ factura.fecha.strftime('%d/%m/%Y') }}</td>
-                <td>
-                    {% if factura.vendedor is defined and factura.vendedor.nombre %}
-                        <ion-icon name="person-circle-outline" style="vertical-align: middle; color: #4a4a4a;"></ion-icon>
-                        {{ factura.vendedor.nombre }}
-                    {% else %}
-                        <span style="color: #999;">Desconocido</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <!-- Ver detalles: endpoint corregido -->
-                    <a href="{{ url_for('facturacion.detalle_factura', factura_id=factura.id) }}" title="Ver detalles">
-                        <ion-icon name="eye-outline"></ion-icon>
-                    </a>
-
-                    <!-- Eliminar factura: endpoint corregido -->
-                    <form method="POST" action="{{ url_for('facturacion.eliminar_factura', factura_id=factura.id) }}"
-                        style="display:inline;">
-                        <button type="submit" title="Eliminar factura"
+        {% for factura in facturas|sort(attribute='numero', reverse=True) %}
+        <tr>
+            <td>{{ factura.numero }}</td>
+            <td>{{ factura.cliente.nombre }}</td>
+            <td>
+                <strong>{{ factura.fecha[:10] }}</strong><br>
+                <span style="font-size: 0.85em; color: gray;">{{ factura.fecha[11:] }}</span>
+            </td>
+            <td>
+                {% if factura.vendedor is defined and factura.vendedor.nombre %}
+                    <ion-icon name="person-circle-outline" style="vertical-align: middle; color: #4a4a4a;"></ion-icon>
+                    {{ factura.vendedor.nombre }}
+                {% else %}
+                    <span style="color: #999;">Desconocido</span>
+                {% endif %}
+            </td>
+            <td>
+                <span style="font-weight: bold; color: #555;">
+                    {{ factura.metodo_pago | capitalize }}
+                </span>
+            </td>
+            <td>
+                <a href="{{ url_for('facturacion.detalle_factura', factura_id=factura.id) }}" title="Ver detalles">
+                    <ion-icon name="eye-outline"></ion-icon>
+                </a>
+                {% if vendedor.rol == 'admin' %}
+                <form method="POST" action="{{ url_for('facturacion.eliminar_factura', factura_id=factura.id) }}"
+                      style="display:inline;">
+                    <button type="submit" title="Eliminar factura"
                             onclick="return confirm('¿Seguro que deseas eliminar esta factura?');"
                             style="background: none; border: none; cursor: pointer;">
-                            <ion-icon name="trash-outline" style="color: red;"></ion-icon>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+                        <ion-icon name="trash-outline" style="color: red;"></ion-icon>
+                    </button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>    
     </table>
     {% else %}
     <div class="ttsecundario">

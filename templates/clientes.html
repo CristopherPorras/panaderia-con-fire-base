@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Clientes{% endblock %}
@@ -30,20 +31,18 @@
                 <td>{{ cliente.telefono }}</td>
                 <td>{{ cliente.direccion }}</td>
                 <td class="acciones">
-                    <!-- Enlace para editar: uso del endpoint completo 'clientes.editar_cliente' -->
+                {% if vendedor.rol == 'admin' %}
                     <a href="{{ url_for('clientes.editar_cliente', id=cliente.id) }}"
-                       class="btn-editar-vc">
-                        Editar
-                    </a>
-                    <!-- Formulario para eliminar: uso del endpoint completo 'clientes.eliminar_cliente' -->
+                       class="btn-editar-vc">Editar</a>
                     <form method="POST"
                           action="{{ url_for('clientes.eliminar_cliente', id=cliente.id) }}"
                           onsubmit="return confirmarEliminacion()"
                           style="display:inline;">
-                        <button type="submit" class="btn-eliminar-vc">
-                            Eliminar
-                        </button>
+                        <button type="submit" class="btn-eliminar-vc">Eliminar</button>
                     </form>
+                {% else %}
+                    <span class="text-muted">Solo lectura</span>
+                {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -56,18 +55,12 @@
     {% endif %}
 </div>
 
-<!-- Función para confirmar eliminación -->
 <script>
 function confirmarEliminacion() {
     return confirm("¿Estás seguro de que deseas eliminar este cliente?");
 }
 </script>
 
-<!-- Ionicons para iconos -->
-<script type="module"
-        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
-</script>
-<script nomodule
-        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
-</script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 {% endblock %}

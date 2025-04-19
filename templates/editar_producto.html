@@ -56,7 +56,7 @@
             >
         </div>
 
-        <!-- Selector de categoría -->
+        <!-- Selector dinámico de categoría -->
         <div class="form-group">
             <label for="categoria_id">Categoría:</label>
             <select 
@@ -65,11 +65,11 @@
                 required
             >
                 <option value="" disabled>Elija una categoría</option>
-                <option value="Pan" {% if producto.categoria_id == "Pan" %}selected{% endif %}>Pan</option>
-                <option value="Reposteria" {% if producto.categoria_id == "Reposteria" %}selected{% endif %}>Repostería</option>
-                <option value="La otra que no me acuerdo" {% if producto.categoria_id == "La otra que no me acuerdo" %}selected{% endif %}>
-                    La otra que no me acuerdo
+                {% for cat in categorias %}
+                <option value="{{ cat }}" {% if producto.categoria_id == cat %}selected{% endif %}>
+                    {{ cat }}
                 </option>
+                {% endfor %}
             </select>
         </div>
 
@@ -106,7 +106,7 @@
         <div class="btn-group">
             <!-- Guardar cambios -->
             <button type="submit" class="btn-guardar">Guardar Cambios</button>
-            <!-- Cancelar edición: usamos endpoint completo 'productos.productos' -->
+            <!-- Cancelar edición -->
             <a href="{{ url_for('productos.productos') }}" class="btn btn-cancelar">
                 Cancelar
             </a>

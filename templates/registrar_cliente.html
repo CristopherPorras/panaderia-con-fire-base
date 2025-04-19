@@ -41,7 +41,7 @@
         <div class="btn-group">
             <button type="submit" class="btn-guardar">Registrar Cliente</button>
             <!-- Cancelar: vuelve al inicio con el endpoint correcto 'auth.inicio' -->
-            <a href="{{ url_for('auth.inicio') }}" class="btn btn-cancelar">
+            <a href="{{ url_for('auth.inicio_admin') if vendedor.rol == 'admin' else url_for('auth.inicio_vendedor') }}" class="btn btn-cancelar">
                 Cancelar
             </a>
         </div>

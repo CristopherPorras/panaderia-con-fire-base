@@ -1,7 +1,6 @@
+
 {% extends "base.html" %}
-
 {% block title %}Facturación{% endblock %}
-
 {% block content %}
 <div class="ttsecundario">
     <h1>Facturar</h1>
@@ -25,105 +24,180 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="productos">Seleccionar Producto</label>
-            <select id="productos" name="productos">
-                <option value="" disabled selected>Seleccione un producto</option>
-            </select>
-            <button type="button" id="agregar_producto" class="btn-agregar">Agregar</button>
-        </div>
+<!-- Selector de productos agrupados por categoría -->
+<div class="form-group">
+    <label for="productos">Seleccionar Producto</label>
+    <select id="productos" name="productos">
+        <option value="" disabled selected>Seleccione un producto</option>
+        {% for categoria, productos_categoria in categorias.items() %}
+        <optgroup label="{{ categoria }}">
+            {% for producto in productos_categoria %}
+            <option value="{{ producto.id }}" data-valor="{{ producto.valor_unitario }}">
+                {{ producto.descripcion }} - {{ "{:,.0f}".format(producto.valor_unitario).replace(",", ".") }} COP
+            </option>
+            {% endfor %}
+        </optgroup>
+        {% endfor %}
+    </select>
+    <button type="button" id="agregar_producto" class="btn-agregar">Agregar</button>
+</div>
+
 
         <div id="productos_seleccionados"></div>
 
         <div class="form-group">
+            <label for="metodo_pago">Método de Pago</label>
+            <select id="metodo_pago" name="metodo_pago" required>
+                <option value="" disabled selected>Seleccione un método</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="efectivo-group" style="display: none;">
+            <label for="efectivo_recibido">Recibido del cliente (COP)</label>
+            <input type="number" id="efectivo_recibido" name="efectivo_recibido" min="0" placeholder="0">
+        </div>
+
+        <div class="form-group" id="cambio-group" style="display: none;">
+            <label for="cambio">Cambio:</label>
+            <input type="text" id="cambio" readonly value="0 COP">
+        </div>
+
+        <div class="form-group">
             <label for="total">Total:</label>
-            <input type="text" id="total" value="0" readonly> <!-- visible y formateado -->
-            <input type="hidden" id="total_sin_formato" name="total" value="0"> <!-- se envía al backend -->
+            <input type="text" id="total" value="0" readonly>
+            <input type="hidden" id="total_sin_formato" name="total" value="0">
         </div>
 
         <button type="submit" class="btn-guardar">Guardar Factura</button>
-        <a href="/inicio" class="btn btn-cancelar">Cancelar</a>
+        <a href="{{ url_for('auth.inicio_admin') }}" class="btn btn-cancelar">Cancelar</a>
+
     </form>
 </div>
 
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<!-- Select con búsqueda -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const productoSelect = document.getElementById("productos");
-        const agregarProductoBtn = document.getElementById("agregar_producto");
-        const productosSeleccionados = document.getElementById("productos_seleccionados");
-        const totalVisible = document.getElementById("total");
-        const totalOculto = document.getElementById("total_sin_formato");
+document.addEventListener("DOMContentLoaded", () => {
+    new TomSelect("#productos");
 
-        function cargarProductos() {
-            fetch('/buscar_productos?query=')
-                .then(response => response.json())
-                .then(data => {
-                    productoSelect.innerHTML = '<option value="" selected disabled>Seleccionar Producto</option>';
-                    data.forEach(producto => {
-                        let option = document.createElement("option");
-                        option.value = producto.id;
-                        option.dataset.valor = producto.valor_unitario;
-                        option.textContent = `${producto.descripcion} - ${producto.valor_unitario} COP`;
-                        productoSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error("Error al obtener productos:", error));
+    const productoSelect = document.getElementById("productos");
+    const agregarProductoBtn = document.getElementById("agregar_producto");
+    const productosSeleccionados = document.getElementById("productos_seleccionados");
+    const totalVisible = document.getElementById("total");
+    const totalOculto = document.getElementById("total_sin_formato");
+    const formulario = document.getElementById("facturaForm");
+
+    const metodoPago = document.getElementById("metodo_pago");
+    const efectivoGroup = document.getElementById("efectivo-group");
+    const cambioGroup = document.getElementById("cambio-group");
+    const efectivoRecibido = document.getElementById("efectivo_recibido");
+    const campoCambio = document.getElementById("cambio");
+
+    metodoPago.addEventListener("change", () => {
+        if (metodoPago.value === "efectivo") {
+            efectivoGroup.style.display = "block";
+            cambioGroup.style.display = "block";
+        } else {
+            efectivoGroup.style.display = "none";
+            cambioGroup.style.display = "none";
+            efectivoRecibido.value = "";
+            campoCambio.value = "0 COP";
         }
+    });
 
-        agregarProductoBtn.addEventListener("click", () => {
-            const selectedOption = productoSelect.options[productoSelect.selectedIndex];
-            if (!selectedOption.value) return;
+    efectivoRecibido.addEventListener("input", () => {
+        const total = parseFloat(totalOculto.value) || 0;
+        const recibido = parseFloat(efectivoRecibido.value) || 0;
+        const cambio = recibido - total;
+        campoCambio.value = new Intl.NumberFormat('es-CO').format(Math.max(cambio, 0)) + " COP";
+    });
 
-            const productoId = selectedOption.value;
-            const descripcion = selectedOption.textContent.split(" - ")[0];
-            const valorUnitario = parseFloat(selectedOption.dataset.valor);
+    agregarProductoBtn.addEventListener("click", () => {
+        const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+        if (!selectedOption.value) return;
 
-            agregarProducto(descripcion, productoId, valorUnitario);
+        const productoId = selectedOption.value;
+        const descripcion = selectedOption.textContent.split(" - ")[0];
+        const valorUnitario = parseFloat(selectedOption.dataset.valor);
+
+        agregarProducto(descripcion, productoId, valorUnitario);
+    });
+
+    function agregarProducto(descripcion, id, valorUnitario) {
+        const div = document.createElement("div");
+        div.classList.add("producto-seleccionado");
+        div.innerHTML = `
+            <span>${descripcion}</span>
+            <input type="hidden" name="producto_id" value="${id}">
+            <input type="number" name="cantidad" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
+            <button type="button" class="eliminar">Eliminar</button>
+        `;
+
+        div.querySelector(".eliminar").addEventListener("click", () => {
+            div.remove();
+            calcularTotal();
         });
 
-        function agregarProducto(descripcion, id, valorUnitario) {
-            const div = document.createElement("div");
-            div.classList.add("producto-seleccionado");
-            div.innerHTML = `
-                <span>${descripcion}</span>
-                <input type="hidden" name="producto_id" value="${id}">
-                <input type="number" name="cantidad" placeholder="Cantidad" min="1" value="1" data-valor-unitario="${valorUnitario}">
-                <button type="button" class="eliminar">Eliminar</button>
-            `;
+        productosSeleccionados.appendChild(div);
+        calcularTotal();
+    }
 
-            div.querySelector(".eliminar").addEventListener("click", () => {
-                div.remove();
-                calcularTotal();
-            });
+    function calcularTotal() {
+        let total = 0;
+        productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
+            const cantidad = parseInt(input.value, 10) || 0;
+            const valorUnitario = parseFloat(input.dataset.valorUnitario);
+            total += cantidad * valorUnitario;
+        });
 
-            productosSeleccionados.appendChild(div);
+        totalVisible.value = new Intl.NumberFormat('es-CO').format(total) + " COP";
+        totalOculto.value = total.toFixed(2);
+
+        if (metodoPago.value === "efectivo") {
+            efectivoRecibido.dispatchEvent(new Event('input'));
+        }
+    }
+
+    productosSeleccionados.addEventListener("input", (event) => {
+        if (event.target.tagName === "INPUT" && event.target.type === "number") {
             calcularTotal();
         }
+    });
 
-        function calcularTotal() {
-            let total = 0;
-            productosSeleccionados.querySelectorAll("input[type='number']").forEach(input => {
-                const cantidad = parseInt(input.value, 10) || 0;
-                const valorUnitario = parseFloat(input.dataset.valorUnitario);
-                total += cantidad * valorUnitario;
-            });
+    formulario.addEventListener("submit", function (e) {
+        const metodo = metodoPago.value;
+        const total = parseFloat(totalOculto.value) || 0;
 
-            // Mostrar en formato colombiano
-            totalVisible.value = new Intl.NumberFormat('es-CO').format(total) + " COP";
-            // Enviar valor limpio al backend
-            totalOculto.value = total.toFixed(2);
+        if (!metodo) {
+            alert("Por favor selecciona un método de pago.");
+            e.preventDefault();
+            return;
         }
 
-        productosSeleccionados.addEventListener("input", (event) => {
-            if (event.target.tagName === "INPUT" && event.target.type === "number") {
-                calcularTotal();
+        if (metodo === "efectivo") {
+            const recibido = parseFloat(efectivoRecibido.value) || 0;
+            if (!efectivoRecibido.value) {
+                alert("Debes ingresar cuánto efectivo recibió el cliente.");
+                e.preventDefault();
+                return;
             }
-        });
+            if (recibido < total) {
+                alert("El efectivo recibido no puede ser menor al total de la factura.");
+                e.preventDefault();
+                return;
+            }
+        }
 
-        cargarProductos();
+        const confirmar = confirm("¿Deseas guardar y pagar esta factura?");
+        if (!confirmar) {
+            e.preventDefault();
+        }
     });
+});
 </script>
 {% endblock %}
-

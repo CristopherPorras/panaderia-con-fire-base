@@ -1,15 +1,13 @@
+
 {% extends "base.html" %}
 
 {% block title %}Login Page - Delicias Al Horno{% endblock %}
 
 {% block content %}
-
-    <!-- Título secundario -->
     <div class="ttsecundario">
         <h1>Productos</h1>
     </div>
 
-    <!-- Barra de búsqueda -->
     <div class="busqueda-container">
         <form method="GET" action="{{ url_for('productos.productos') }}">
             <div class="input-group">
@@ -26,7 +24,6 @@
         </form>
     </div>
 
-    <!-- Filtro de categoría -->
     <div class="categoria-container">
         <form method="GET" action="{{ url_for('productos.productos') }}">
             <div class="input-group">
@@ -47,7 +44,6 @@
         </form>
     </div>
 
-    <!-- Contenedor de productos -->
     <div class="productos-container">
         {% if productos|length > 0 %}
             {% for producto in productos %}
@@ -61,11 +57,13 @@
                 </a>
                 <p class="producto-nombre">{{ producto.descripcion }}</p>
                 <div class="botones">
-                    <a href="{{ url_for('productos.editar_producto', id=producto.id) }}" class="btn-editar">Editar</a>
+                    {% if vendedor.rol == 'admin' %}
+                        <a href="{{ url_for('productos.editar_producto', id=producto.id) }}" class="btn-editar">Editar</a>
+                        <form method="POST" action="{{ url_for('productos.eliminar_producto', id=producto.id) }}" style="display:inline;">
+                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                        </form>
+                    {% endif %}
                     <a href="{{ url_for('productos.producto_detalle', id=producto.id) }}" class="btn-ver">Detalles</a>
-                    <form method="POST" action="{{ url_for('productos.eliminar_producto', id=producto.id) }}" style="display:inline;">
-                        <button type="submit" class="btn-eliminar">Eliminar</button>
-                    </form>
                 </div>
             </div>
             {% endfor %}
@@ -76,8 +74,6 @@
         {% endif %}
     </div>
 
-    <!-- Scripts de Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
 {% endblock %}
