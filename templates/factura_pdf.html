@@ -102,8 +102,8 @@
 <div class="factura-info">
     <p><strong>Número de Factura:</strong> {{ factura.get('numero_factura', 'No disponible') }}</p>
     <p><strong>Cliente:</strong> {{ cliente.nombre }}</p>
-    <p><strong>Fecha:</strong> {{ factura.fecha.split(" ")[0] }}</p>
-    <p class="hora"><strong>Hora:</strong> {{ factura.fecha.split(" ")[1] }}</p>
+    <p><strong>Fecha:</strong> {{ factura.fecha_formateada }}</p>
+    <p class="hora"><strong>Hora:</strong> {{ factura.hora_formateada }}</p>
     <p class="metodo-pago"><strong>Método de Pago:</strong> {{ factura.metodo_pago | capitalize }}</p>
     <p class="vendedor"><strong>Vendedor:</strong>
         {% if vendedor.nombre %}

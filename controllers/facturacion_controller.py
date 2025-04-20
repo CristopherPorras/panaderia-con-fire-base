@@ -50,14 +50,21 @@ def consultar_facturas():
     fecha = request.args.get('fecha', '')
     if not fecha:
         fecha = datetime.today().strftime('%Y-%m-%d')
+    
+    # Obtenemos las facturas filtradas
     facturas = facturacion.obtener_facturas_filtradas(query=query, fecha=fecha)
-    total_ventas_hoy = (facturacion.obtener_total_ventas_hoy()
-                        if fecha == datetime.today().strftime('%Y-%m-%d')
-                        else sum(f.get('total', 0) for f in facturas))
+    
+    # Calculamos el total de ventas diarias
+    total_ventas_hoy = 0
+    for factura in facturas:
+        total_ventas_hoy += factura.get('total', 0)  # Sumamos el campo 'total' de cada factura
+
+    # Aseguramos que los detalles de cada factura tengan valores predeterminados
     for f in facturas:
         for d in f.get('detalles', []):
             d.setdefault('producto', {'id': 'N/A', 'nombre': 'Desconocido'})
             d.setdefault('total', 0)
+
     return render_template('consultar_facturas.html',
                            facturas=facturas,
                            total_ventas_hoy=total_ventas_hoy,
@@ -109,6 +116,12 @@ def descargar_factura(id):
     factura = facturacion.obtener_factura_por_id(id)
     cliente = facturacion.obtener_cliente_por_factura(factura)
     detalles = facturacion.obtener_detalles_por_factura(id)
+
+    # Formateamos la fecha y hora correctamente
+    if 'fecha' in factura and isinstance(factura['fecha'], datetime):
+        factura['fecha_formateada'] = factura['fecha'].strftime('%Y-%m-%d')
+        factura['hora_formateada'] = factura['fecha'].strftime('%H:%M:%S')
+
     html = render_template('factura_pdf.html',
                            factura=factura,
                            cliente=cliente,
